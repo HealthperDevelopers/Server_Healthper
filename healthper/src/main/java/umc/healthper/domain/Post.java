@@ -5,17 +5,17 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+//@Entity
 @Getter
 public class Post {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "post_id")
+//    @Id
+//    @GeneratedValue
+//    @Column(name = "post_id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id")
     private Member member;
 
     private String title;

@@ -8,6 +8,7 @@ public class HealthperApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HealthperApplication.class, args);
+
 	}
 
 }
