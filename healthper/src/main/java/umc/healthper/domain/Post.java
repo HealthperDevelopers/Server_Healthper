@@ -2,7 +2,7 @@ package umc.healthper.domain;
 
 import lombok.Getter;
 
-import javax.persistence.*;
+//import javax.persistence.*;
 import java.time.LocalDateTime;
 
 //@Entity
