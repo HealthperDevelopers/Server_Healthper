@@ -11,7 +11,6 @@ import umc.healthper.domain.routine.model.PostRoutineRes;
 import java.util.List;
 
 @Controller
-@RestController
 @RequestMapping("/routines")
 public class RoutineController {
     private static RoutineService routineService;
@@ -22,18 +21,21 @@ public class RoutineController {
     }
 
     @PostMapping("/{userId}")
+    @ResponseBody
     public PostRoutineRes makeRoutine(@PathVariable Long userId, @RequestBody PostRoutineReq req){
         PostRoutineRes res = routineService.pushRoutine(userId, req);
         return res;
     }
 
     @GetMapping("/routine/{routineId}")
+    @ResponseBody
     public GetRoutineRes getRoutineInfo(@PathVariable Long routineId){
         GetRoutineRes routineInfo = routineService.getRoutineInfo(routineId);
         return routineInfo;
     }
 
     @GetMapping("/{userId}")
+    @ResponseBody
     public List<GetRoutineRes> getRoutineList(@PathVariable Long userId){
         List<GetRoutineRes> routines = routineService.getRoutines(userId);
         return routines;
@@ -42,18 +44,20 @@ public class RoutineController {
     @PatchMapping("/routine/{routineId}")
     public String fixRoutineInfo(@PathVariable Long routineId, @RequestBody PostRoutineReq req){
         routineService.fixRoutine(routineId, req);
-        return "ok";
+        return "redirect:/routines/routine/"+routineId;
     }
 
     @PostMapping("routine/priori/{routineId}/{target}")
     public String fixRoutinesOrder(@PathVariable Long routineId, @PathVariable int target){
         routineService.reordering(routineId, target);
-        return "ok";
+        Long userId = routineService.getOwner(routineId);
+        return "redirect:/routines/"+userId;
     }
 
     @DeleteMapping("/{routineId}")
     public String deleteRoutine(@PathVariable Long routineId){
         routineService.deleteRoutine(routineId);
-        return "ok";
+        Long userId = routineService.getOwner(routineId);
+        return "redirect:/routines/"+userId;
     }
 }

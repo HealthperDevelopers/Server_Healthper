@@ -38,6 +38,12 @@ public class RoutineService {
     }
 
     public void reordering(Long routineId, int target){
+        int limit = repository.getRoutine(routineId).getPriori();
+        if(target < limit)seqReordering(routineId,target);
+        else reverseOrdering(routineId, target);
+    }
+
+    public void seqReordering(Long routineId, int target){
         Long owner = repository.getOwner(routineId);
         int limit = repository.getRoutine(routineId).getPriori();
         List<GetRoutineRes> routineRes = repository.getAll(owner);
@@ -47,7 +53,21 @@ public class RoutineService {
         }
         repository.changePriory(routineId, target);
     }
+
+    public void reverseOrdering(Long routineId, int target){
+        Long owner = repository.getOwner(routineId);
+        int base = repository.getRoutine(routineId).getPriori();
+        List<GetRoutineRes> routineRes = repository.getAll(owner);
+        for (GetRoutineRes e : routineRes) {
+            if(e.getPriori() > base && e.getPriori() <= target)
+                repository.changePriory(e.getId(),e.getPriori()-1);
+        }
+        repository.changePriory(routineId, target);
+    }
+
     public void deleteRoutine(Long routineId){
         repository.deleteRoutine(routineId);
     }
+
+    public Long getOwner(Long routineId){return repository.getOwner(routineId);}
 }
