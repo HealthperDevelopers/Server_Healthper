@@ -5,8 +5,6 @@ import lombok.Setter;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -16,7 +14,7 @@ public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue
     @Column(name = "comment_id")
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

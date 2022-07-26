@@ -19,7 +19,7 @@ public class MemberService {
      * 회원 가입
      */
     @Transactional
-    public int join(Member member) {
+    public Long join(Member member) {
         validateDuplicateMember(member);
         memberRepository.save(member);
         return member.getId();
@@ -39,7 +39,7 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public Member findOne(int memberId) {
+    public Member findOne(Long memberId) {
         return memberRepository.findById(memberId);
     }
 }

@@ -21,7 +21,7 @@ public class PostService {
      * Post 등록(저장)
      */
     @Transactional
-    public int registration(Post post) {
+    public Long registration(Post post) {
         postRepository.save(post);
         return post.getId();
     }
@@ -33,7 +33,7 @@ public class PostService {
         return postRepository.findPosts(page);
     }
 
-    public Post findOne(int postId) {
+    public Post findOne(Long postId) {
         validatePost(postId);
         return postRepository.findById(postId);
     }
@@ -42,7 +42,7 @@ public class PostService {
      * Post 수정
      */
     @Transactional
-    public void updatePost(int postId, UpdatePostDto postDto) {
+    public void updatePost(Long postId, UpdatePostDto postDto) {
         validatePost(postId);
         Post post = postRepository.findById(postId);
         post.change(postDto.getTitle(), postDto.getContent());
@@ -52,13 +52,13 @@ public class PostService {
      * Post 삭제
      */
     @Transactional
-    public void removePost(int postId) {
+    public void removePost(Long postId) {
         validatePost(postId);
         postRepository.removeById(postId);
     }
 
     // 존재하지 않는 게시글인지, 이미 삭제된 게시글인지 검증
-    private Post validatePost(int postId) {
+    private Post validatePost(Long postId) {
         Post findPost = postRepository.findById(postId);
         if (findPost == null) {
             throw new IllegalStateException("존재하지 않는 게시글입니다.");

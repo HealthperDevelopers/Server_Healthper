@@ -68,7 +68,7 @@ public class PostServiceTest {
         Post post = Post.create(member, "제목1", "테스트입니다");
         postService.registration(post);
 
-        int postId = post.getId();
+        Long postId = post.getId();
 
         // when
         postService.removePost(postId);

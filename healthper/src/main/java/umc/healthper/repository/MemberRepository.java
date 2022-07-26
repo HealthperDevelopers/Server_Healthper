@@ -23,7 +23,7 @@ public class MemberRepository {
     /**
      * 회원 조회
      */
-    public Member findById(int id) {
+    public Member findById(Long id) {
         return em.find(Member.class, id);
     }
 

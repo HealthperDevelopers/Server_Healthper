@@ -16,7 +16,7 @@ public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue
     @Column(name = "member_id")
-    private Integer id;
+    private Long id;
 
     private Long kakaoIdx;
 
