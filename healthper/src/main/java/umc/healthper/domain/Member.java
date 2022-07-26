@@ -1,18 +1,21 @@
 package umc.healthper.domain;
 
 import lombok.Getter;
+import lombok.Setter;
+import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Entity
+@Entity
 @Getter
-public class Member {
+@Setter
+public class Member extends BaseTimeEntity {
 
-//    @Id
-//    @GeneratedValue
-//    @Column(name = "member_id")
+    @Id
+    @GeneratedValue
+    @Column(name = "member_id")
     private Integer id;
 
     private Long kakaoIdx;
@@ -21,12 +24,12 @@ public class Member {
 
     private Integer warnCount;
 
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
-//    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 }
