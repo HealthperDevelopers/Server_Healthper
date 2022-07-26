@@ -1,44 +1,49 @@
 package umc.healthper.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import umc.healthper.domain.Member;
 import umc.healthper.domain.Post;
+import umc.healthper.domain.PostStatus;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Map;
 
 @Repository
+@RequiredArgsConstructor
 public class PostRepository {
 
-    @PersistenceContext
-    EntityManager em;
-    private static Map<Integer, Post> store = new HashMap<>();
-    private static long sequence = 0;
+    private final EntityManager em;
 
-    // 게시글 등록
+    private final int numberOfPagingPosts = 30;
+
+    /**
+     * 게시글 등록
+     */
     public void save(Post post) {
         em.persist(post);
-        post.setId(++sequence);
     }
 
-    // 게시글 조회 - Id로 조회
-    public Post findById(int postId) {
-        return em.find(Post.class, postId);
+    /**
+     * 게시글 조회
+     */
+    public Post findById(int id) {
+        return em.find(Post.class, id);
     }
 
-    // 게시글 조회 - 전체 게시글 리스트 조회 (Paging 적용 필요. 한 페이지에 개의 게시글)
-    public List<Post> findPostList(int pageNum) {
-        return em.createQuery("select p from Post p order by p.createdDate desc", Post.class)
-                .setFirstResult(10 * (pageNum-1))
-                .setMaxResult(10)
+    public List<Post> findPosts(int page) {
+        return em.createQuery("select p from Post p where p.postStatus<>'REMOVED' order by p.createdAt desc", Post.class)
+                .setFirstResult(numberOfPagingPosts * (page - 1))
+                .setMaxResults(numberOfPagingPosts)
                 .getResultList();
     }
 
-    // 게시글 수정
-
-    // 게시글 삭제
-    public void removeById(int postId) {
+    /**
+     * 게시글 삭제
+     */
+    public void removeById(int id) {
+        Post findPost = em.find(Post.class, id);
+        // 댓글들도 삭제해야 하는가?
+        // -> 아니다. 댓글정보 클릭해서 게시글 조회하려고 할 때는 "삭제된 게시글입니다"만 띄워주면 될 것
+        findPost.setPostStatus(PostStatus.REMOVED);
     }
 }

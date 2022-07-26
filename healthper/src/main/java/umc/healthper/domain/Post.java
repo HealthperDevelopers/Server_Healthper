@@ -10,6 +10,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * How to create Post Object?
+ * - Post.create(String title, String content)
+ * - Post.create(Member member, String title, String content)
+ */
+
 @Entity
 @Getter
 @Setter
@@ -39,11 +45,22 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    //== Constructor ==//
-    public Post(String title, String content, PostStatus postStatus) {
-        this.setTitle(title);
-        this.setContent(content);
-        this.setPostStatus(postStatus);
+    //== 생성 메서드 ==//
+    public static Post create(String title, String content) {
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        post.setPostStatus(PostStatus.NORMAL);
+        return post;
+    }
+
+    public static Post create(Member member, String title, String content) {
+        Post post = new Post();
+        post.setMember(member);
+        post.setTitle(title);
+        post.setContent(content);
+        post.setPostStatus(PostStatus.NORMAL);
+        return post;
     }
 
     //== 수정 메서드 ==//
