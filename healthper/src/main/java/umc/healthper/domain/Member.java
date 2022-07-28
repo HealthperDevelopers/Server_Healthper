@@ -22,7 +22,7 @@ public class Member extends BaseTimeEntity {
 
     private String nickName;
 
-    private Integer warnCount;
+    private Integer reportedCount;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
