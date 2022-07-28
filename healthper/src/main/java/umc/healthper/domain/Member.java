@@ -18,11 +18,11 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
-    private Long kakaoIdx;
+    private Long kakaoKey;
 
     private String nickName;
 
-    private Integer warnCount;
+    private Integer reportedCount;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
