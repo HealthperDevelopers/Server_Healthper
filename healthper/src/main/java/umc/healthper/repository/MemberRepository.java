@@ -38,9 +38,9 @@ public class MemberRepository {
                 .getResultList();
     }
 
-    public List<Member> findByKakaoIdx(Long kakaoIdx) {
-        return em.createQuery("select m from Member m where m.kakaoIdx = :kakaoIdx")
-                .setParameter("kakaoIdx", kakaoIdx)
+    public List<Member> findByKakaoKey(Long kakaoKey) {
+        return em.createQuery("select m from Member m where m.kakaoKey = :kakaoKey")
+                .setParameter("kakaoKey", kakaoKey)
                 .getResultList();
     }
 }
