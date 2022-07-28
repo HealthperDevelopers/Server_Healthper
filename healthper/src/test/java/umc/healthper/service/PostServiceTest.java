@@ -9,10 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Member;
 import umc.healthper.domain.MemberStatus;
 import umc.healthper.domain.Post;
-import umc.healthper.dto.UpdatePostDto;
+import umc.healthper.dto.post.UpdatePostDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -21,10 +23,13 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 public class PostServiceTest {
 
-    @PersistenceContext EntityManager em;
+    @PersistenceContext
+    EntityManager em;
 
-    @Autowired PostService postService;
-    @Autowired MemberService memberService;
+    @Autowired
+    PostService postService;
+    @Autowired
+    MemberService memberService;
 
     @Test
 //    @Rollback(value = false)
@@ -33,7 +38,7 @@ public class PostServiceTest {
         Member member = createMember(100L, "woogie");
         memberService.join(member);
         Post post = Post.create(member, "제목1", "테스트입니다");
-        postService.registration(post);
+        postService.savePost(post);
 
         // when
         Post findPost = postService.findOne(post.getId());
@@ -43,12 +48,31 @@ public class PostServiceTest {
     }
 
     @Test
+    public void 게시글_목록_조회() throws Exception {
+        // given
+        Member member = createMember(100L, "우기");
+        memberService.join(member);
+        Post post1 = Post.create(member, "제목1", "테스트입니다");
+        postService.savePost(post1);
+        Post post2 = Post.create(member, "제목2", "테스트입니다");
+        postService.savePost(post2);
+        Post post3 = Post.create(member, "제목3", "테스트입니다");
+        postService.savePost(post3);
+
+        // when
+        List<Post> posts = postService.findPosts(1);
+
+        // then
+        assertThat(posts.size()).isEqualTo(3);
+    }
+
+    @Test
     public void 게시글_수정() throws Exception {
         // given
         Member member = createMember(100L, "woogie");
         memberService.join(member);
         Post post = Post.create(member, "제목1", "테스트입니다");
-        postService.registration(post);
+        postService.savePost(post);
 
         // when
         postService.updatePost(post.getId(), new UpdatePostDto("수정테스트", "수정이 잘 될까?"));
@@ -66,7 +90,7 @@ public class PostServiceTest {
         Member member = createMember(100L, "woogie");
         memberService.join(member);
         Post post = Post.create(member, "제목1", "테스트입니다");
-        postService.registration(post);
+        postService.savePost(post);
 
         Long postId = post.getId();
 
@@ -80,9 +104,9 @@ public class PostServiceTest {
 
     private Member createMember(Long kakaoIdx, String nickName) {
         Member member = new Member();
-        member.setKakaoIdx(kakaoIdx);
+        member.setKakaoKey(kakaoIdx);
         member.setNickName(nickName);
-        member.setWarnCount(0);
+        member.setReportedCount(0);
         member.setStatus(MemberStatus.NORMAL);
         return member;
     }

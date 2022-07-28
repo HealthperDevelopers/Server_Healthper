@@ -38,7 +38,7 @@ public class Post extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PostStatus postStatus;
 
-//    private Integer likeCount;
+//    좋아요 기능
 
     // Images
 
