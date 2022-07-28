@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Post;
 import umc.healthper.domain.PostStatus;
-import umc.healthper.dto.UpdatePostDto;
+import umc.healthper.dto.post.UpdatePostDto;
 import umc.healthper.repository.PostRepository;
 
 import java.util.List;

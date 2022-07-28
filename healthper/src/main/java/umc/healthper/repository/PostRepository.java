@@ -14,7 +14,7 @@ public class PostRepository {
 
     private final EntityManager em;
 
-    private final int numberOfPagingPosts = 30;
+    private final int NUMBER_OF_PAGING_POSTS = 30;
 
     /**
      * 게시글 등록
@@ -31,9 +31,12 @@ public class PostRepository {
     }
 
     public List<Post> findPosts(int page) {
-        return em.createQuery("select p from Post p where p.postStatus<>'REMOVED' order by p.createdAt desc", Post.class)
-                .setFirstResult(numberOfPagingPosts * (page - 1))
-                .setMaxResults(numberOfPagingPosts)
+        return em.createQuery("select p from Post p" +
+                        " join fetch p.member" +
+                        " where p.postStatus<>'REMOVED'" +
+                        " order by p.createdAt desc", Post.class)
+                .setFirstResult(NUMBER_OF_PAGING_POSTS * (page - 1))
+                .setMaxResults(NUMBER_OF_PAGING_POSTS)
                 .getResultList();
     }
 
