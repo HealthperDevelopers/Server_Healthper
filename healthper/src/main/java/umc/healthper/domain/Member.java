@@ -18,7 +18,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
-    private Long kakaoIdx;
+    private Long kakaoKey;
 
     private String nickName;
 
