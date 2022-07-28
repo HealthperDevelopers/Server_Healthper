@@ -21,7 +21,7 @@ public class PostService {
      * Post 등록(저장)
      */
     @Transactional
-    public Long registration(Post post) {
+    public Long savePost(Post post) {
         postRepository.save(post);
         return post.getId();
     }
