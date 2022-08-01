@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +22,16 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @NotNull
     private Long kakaoKey;
 
+    @NotNull
     private String nickname;
 
+    @NotNull
     private Integer reportedCount;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private MemberStatus status;    // NORMAL, RESIGNED, BLOCKED
 
