@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Member;
-import umc.healthper.domain.MemberStatus;
 import umc.healthper.domain.Post;
 import umc.healthper.dto.post.UpdatePostDto;
 
@@ -39,21 +38,6 @@ public class PostServiceTest {
 
 //    @Test
 //    public void 게시글_목록_조회() throws Exception {
-//        // given
-//        Member member = Member.createNewMember()(100L, "우기");
-//        memberService.join(member);
-//        Post post1 = Post.createNewPost()(member, "제목1", "테스트입니다");
-//        postService.savePost(post1);
-//        Post post2 = Post.createNewPost()(member, "제목2", "테스트입니다");
-//        postService.savePost(post2);
-//        Post post3 = Post.createNewPost()(member, "제목3", "테스트입니다");
-//        postService.savePost(post3);
-//
-//        // when
-//        List<Post> posts = postService.findPosts(1);
-//
-//        // then
-//        assertThat(posts.size()).isEqualTo(3);
 //    }
 
     @Test

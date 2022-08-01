@@ -7,10 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import umc.healthper.domain.Post;
 import umc.healthper.domain.PostStatus;
 
-import java.util.List;
-
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
 
     @EntityGraph(attributePaths = {"member"})
-    Page<Post> findAllByPostStatusNot(Pageable pageable, PostStatus postStatus);
+    Page<Post> findAllByStatusNot(Pageable pageable, PostStatus postStatus);
 }

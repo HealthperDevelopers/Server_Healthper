@@ -29,7 +29,7 @@ public class Member extends BaseTimeEntity {
     private Integer reportedCount;
 
     @Enumerated(EnumType.STRING)
-    private MemberStatus status;
+    private MemberStatus status;    // NORMAL, RESIGNED, BLOCKED
 
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();

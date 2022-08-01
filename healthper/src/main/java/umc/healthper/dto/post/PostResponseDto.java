@@ -29,6 +29,6 @@ public class PostResponseDto {
         this.setPostId(post.getId());
         this.setTitle(post.getTitle());
         this.setContent(post.getContent());
-        this.setPostStatus(post.getPostStatus());
+        this.setPostStatus(post.getStatus());
     }
 }

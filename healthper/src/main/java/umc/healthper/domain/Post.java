@@ -3,7 +3,6 @@ package umc.healthper.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -32,7 +31,7 @@ public class Post extends BaseTimeEntity {
     private String content;
 
     @Enumerated(EnumType.STRING)
-    private PostStatus postStatus;
+    private PostStatus status;  // NORMAL, REMOVED, BLOCKED
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
@@ -54,8 +53,8 @@ public class Post extends BaseTimeEntity {
         this.content = content;
     }
 
-    private void setPostStatus(PostStatus postStatus) {
-        this.postStatus = postStatus;
+    private void setStatus(PostStatus postStatus) {
+        this.status = postStatus;
     }
 
     private void setComments(List<Comment> comments) {
@@ -67,7 +66,7 @@ public class Post extends BaseTimeEntity {
         this.member = member;
         this.title = title;
         this.content = content;
-        this.postStatus = postStatus;
+        this.status = postStatus;
     }
 
     //== 생성 메서드 ==//
@@ -82,6 +81,6 @@ public class Post extends BaseTimeEntity {
     }
 
     public void delete() {
-        this.setPostStatus(REMOVED);
+        this.setStatus(REMOVED);
     }
 }

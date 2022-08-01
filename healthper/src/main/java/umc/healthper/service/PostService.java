@@ -10,8 +10,6 @@ import umc.healthper.domain.PostStatus;
 import umc.healthper.dto.post.UpdatePostDto;
 import umc.healthper.repository.PostRepository;
 
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class PostService {
      * Post 목록 조회 - Paging
      */
     public Page<Post> findPosts(Pageable pageable) {
-        return postRepository.findAllByPostStatusNot(pageable, PostStatus.REMOVED);
+        return postRepository.findAllByStatusNot(pageable, PostStatus.REMOVED);
     }
 
     /**
@@ -67,7 +65,7 @@ public class PostService {
         if (findPost == null) {
             throw new IllegalStateException("존재하지 않는 게시글입니다.");
         }
-        else if (findPost.getPostStatus() == PostStatus.REMOVED) {
+        else if (findPost.getStatus() == PostStatus.REMOVED) {
             throw new IllegalStateException("이미 삭제된 게시글입니다.");
         }
         return findPost;
