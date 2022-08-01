@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Comment;
-import umc.healthper.domain.Post;
 import umc.healthper.repository.CommentRepository;
 
 @Service

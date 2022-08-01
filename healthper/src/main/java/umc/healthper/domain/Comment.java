@@ -4,6 +4,7 @@ import lombok.Getter;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +21,21 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "comment_id")
     private Long id;
 
+    @NotNull
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @NotNull
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @NotNull
+    @Column(columnDefinition = "TEXT")
     private String Content;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private CommentStatus status;    // NORMAL, REMOVED, BLOCKED
 
@@ -68,10 +74,6 @@ public class Comment extends BaseTimeEntity {
     }
 
     //== Setter ==//
-    private void setId(Long id) {
-        this.id = id;
-    }
-
     private void setMember(Member member) {
         this.member = member;
     }
