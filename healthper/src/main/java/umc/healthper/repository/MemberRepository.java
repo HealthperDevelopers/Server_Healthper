@@ -1,46 +1,11 @@
 package umc.healthper.repository;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import umc.healthper.domain.Member;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
-@Repository
-@RequiredArgsConstructor
-public class MemberRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    private final EntityManager em;
-
-    /**
-     * 회원 등록
-     */
-    public void save(Member member) {
-        em.persist(member);
-    }
-
-    /**
-     * 회원 조회
-     */
-    public Member findById(Long id) {
-        return em.find(Member.class, id);
-    }
-
-    public List<Member> findAll() {
-        return em.createQuery("select m from Member m")
-                .getResultList();
-    }
-
-    public List<Member> findByNickName(String nickName) {
-        return em.createQuery("select m from Member m where m.nickname = :name")
-                .setParameter("name", nickName)
-                .getResultList();
-    }
-
-    public List<Member> findByKakaoKey(Long kakaoKey) {
-        return em.createQuery("select m from Member m where m.kakaoKey = :kakaoKey")
-                .setParameter("kakaoKey", kakaoKey)
-                .getResultList();
-    }
+    List<Member> findByKakaoKey(Long kakaoKey);
 }

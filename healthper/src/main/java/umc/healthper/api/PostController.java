@@ -10,7 +10,6 @@ import umc.healthper.service.MemberService;
 import umc.healthper.service.PostService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class PostController {
      */
     @PostMapping("/post")
     public CreatePostResponseDto createPost(@RequestBody @Valid CreatePostRequestDto request) {
-        Member member = memberService.findOne(request.getMemberId());
+        Member member = memberService.findById(request.getMemberId());
         Post post = new Post(member, request.getTitle(), request.getContent());
 
         Long id = postService.savePost(post).getId();
