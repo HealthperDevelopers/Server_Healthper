@@ -1,12 +1,16 @@
 package umc.healthper.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Post;
 import umc.healthper.domain.PostStatus;
 import umc.healthper.dto.post.UpdatePostDto;
 import umc.healthper.repository.PostRepository;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,9 +30,9 @@ public class PostService {
     /**
      * Post 목록 조회 - Paging
      */
-//    public List<Post> findPosts(int page) {
-//        return postRepository.findPosts(page);
-//    }
+    public Page<Post> findPosts(Pageable pageable) {
+        return postRepository.findAllByPostStatusNot(pageable, PostStatus.REMOVED);
+    }
 
     /**
      * Post 조회 - id
