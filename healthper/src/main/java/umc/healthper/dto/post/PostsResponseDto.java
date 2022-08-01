@@ -1,4 +1,4 @@
-package umc.healthper.api;
+package umc.healthper.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

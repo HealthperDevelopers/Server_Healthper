@@ -8,8 +8,6 @@ import umc.healthper.domain.PostStatus;
 import umc.healthper.dto.post.UpdatePostDto;
 import umc.healthper.repository.PostRepository;
 
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -21,21 +19,23 @@ public class PostService {
      * Post 등록(저장)
      */
     @Transactional
-    public Long savePost(Post post) {
-        postRepository.save(post);
-        return post.getId();
+    public Post savePost(Post post) {
+        return postRepository.save(post);
     }
 
     /**
-     * Post 조회
+     * Post 목록 조회 - Paging
      */
-    public List<Post> findPosts(int page) {
-        return postRepository.findPosts(page);
-    }
+//    public List<Post> findPosts(int page) {
+//        return postRepository.findPosts(page);
+//    }
 
-    public Post findOne(Long postId) {
+    /**
+     * Post 조회 - id
+     */
+    public Post findById(Long postId) {
         validatePost(postId);
-        return postRepository.findById(postId);
+        return postRepository.findById(postId).get();
     }
 
     /**
@@ -44,7 +44,7 @@ public class PostService {
     @Transactional
     public void updatePost(Long postId, UpdatePostDto postDto) {
         validatePost(postId);
-        Post post = postRepository.findById(postId);
+        Post post = postRepository.findById(postId).get();
         post.change(postDto.getTitle(), postDto.getContent());
     }
 
@@ -54,12 +54,12 @@ public class PostService {
     @Transactional
     public void removePost(Long postId) {
         validatePost(postId);
-        postRepository.removeById(postId);
+        postRepository.removePost(postId);
     }
 
-    // 존재하지 않는 게시글인지, 이미 삭제된 게시글인지 검증
+    // 존재하지 않는 게시글인지, 이미 삭제된 게시글인지. 게시글 유효성 검증
     private Post validatePost(Long postId) {
-        Post findPost = postRepository.findById(postId);
+        Post findPost = postRepository.findById(postId).get();
         if (findPost == null) {
             throw new IllegalStateException("존재하지 않는 게시글입니다.");
         }

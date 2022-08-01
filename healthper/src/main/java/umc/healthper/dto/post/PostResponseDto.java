@@ -25,7 +25,7 @@ public class PostResponseDto {
     // 이미지 파일
 
     public PostResponseDto(Post post) {
-        this.setWriter(new MemberInfoDto(post.getMember().getId(), post.getMember().getNickName(), post.getMember().getStatus()));
+        this.setWriter(new MemberInfoDto(post.getMember().getId(), post.getMember().getNickname(), post.getMember().getStatus()));
         this.setPostId(post.getId());
         this.setTitle(post.getTitle());
         this.setContent(post.getContent());
