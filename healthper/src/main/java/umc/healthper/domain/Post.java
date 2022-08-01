@@ -36,6 +36,29 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
+    //== 생성 메서드 ==//
+    public static Post createPost(Member member, String title, String content) {
+        return new Post(member, title, content, NORMAL);
+    }
+
+    //== 수정 메서드 ==//
+    public void change(String title, String content) {
+        this.setTitle(title);
+        this.setContent(content);
+    }
+
+    public void delete() {
+        this.setStatus(REMOVED);
+    }
+
+    //== Constructor ==//
+    private Post(Member member, String title, String content, PostStatus postStatus) {
+        this.member = member;
+        this.title = title;
+        this.content = content;
+        this.status = postStatus;
+    }
+
     //== Setter ==//
     private void setId(Long id) {
         this.id = id;
@@ -55,32 +78,5 @@ public class Post extends BaseTimeEntity {
 
     private void setStatus(PostStatus postStatus) {
         this.status = postStatus;
-    }
-
-    private void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    //== Constructor ==//
-    private Post(Member member, String title, String content, PostStatus postStatus) {
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.status = postStatus;
-    }
-
-    //== 생성 메서드 ==//
-    public static Post createPost(Member member, String title, String content) {
-        return new Post(member, title, content, NORMAL);
-    }
-
-    //== 수정 메서드 ==//
-    public void change(String title, String content) {
-        this.setTitle(title);
-        this.setContent(content);
-    }
-
-    public void delete() {
-        this.setStatus(REMOVED);
     }
 }

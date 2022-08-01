@@ -36,6 +36,19 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
+    //== 생성 메서드 ==//
+    public static Member createMember(Long kakaoKey, String nickname) {
+        return new Member(kakaoKey, nickname, 0, NORMAL);
+    }
+
+    //== Constructor ==//
+    private Member(Long kakaoKey, String nickname, Integer reportedCount, MemberStatus status) {
+        this.kakaoKey = kakaoKey;
+        this.nickname = nickname;
+        this.reportedCount = reportedCount;
+        this.status = status;
+    }
+
     //== Setter ==//
     private void setId(Long id) {
         this.id = id;
@@ -63,18 +76,5 @@ public class Member extends BaseTimeEntity {
 
     private void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    //== Constructor ==//
-    private Member(Long kakaoKey, String nickname, Integer reportedCount, MemberStatus status) {
-        this.kakaoKey = kakaoKey;
-        this.nickname = nickname;
-        this.reportedCount = reportedCount;
-        this.status = status;
-    }
-
-    //== 생성 메서드 ==//
-    public static Member createMember(Long kakaoKey, String nickname) {
-        return new Member(kakaoKey, nickname, 0, NORMAL);
     }
 }

@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Data
 public class ListPostResponseDto {
 
-    private MemberInfoDto writer;
     private Long postId;
+    private MemberInfoDto writer;
     private String title;
     private LocalDateTime createdAt;
 
