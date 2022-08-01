@@ -62,7 +62,7 @@ public class Post extends BaseTimeEntity {
     }
 
     //== Constructor ==//
-    public Post(Member member, String title, String content, PostStatus postStatus) {
+    private Post(Member member, String title, String content, PostStatus postStatus) {
         this.member = member;
         this.title = title;
         this.content = content;
@@ -70,7 +70,7 @@ public class Post extends BaseTimeEntity {
     }
 
     //== 생성 메서드 ==//
-    public static Post createNewPost(Member member, String title, String content) {
+    public static Post createPost(Member member, String title, String content) {
         return new Post(member, title, content, NORMAL);
     }
 

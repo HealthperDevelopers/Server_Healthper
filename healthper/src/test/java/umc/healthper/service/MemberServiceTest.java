@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import umc.healthper.domain.Member;
-import umc.healthper.domain.MemberStatus;
 
 import javax.transaction.Transactional;
 
@@ -25,7 +24,7 @@ public class MemberServiceTest {
     @Test
     public void 회원_등록() throws Exception {
         // given
-        Member member = Member.createNewMember(100L, "우기");
+        Member member = Member.createMember(100L, "우기");
         memberService.join(member);
 
         // when
@@ -38,11 +37,11 @@ public class MemberServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 회원_중복_등록() throws Exception {
         // given
-        Member member1 = Member.createNewMember(100L, "우기");
+        Member member1 = Member.createMember(100L, "우기");
         memberService.join(member1);
 
         // when
-        Member member2 = Member.createNewMember(100L, "피터");
+        Member member2 = Member.createMember(100L, "피터");
         memberService.join(member2);
 
         // then
@@ -52,13 +51,13 @@ public class MemberServiceTest {
     @Test
     public void 회원_목록_조회() throws Exception {
         // given
-        Member member1 = Member.createNewMember(100L, "회원1");
+        Member member1 = Member.createMember(100L, "회원1");
         memberService.join(member1);
-        Member member2 = Member.createNewMember(101L, "회원2");
+        Member member2 = Member.createMember(101L, "회원2");
         memberService.join(member2);
-        Member member3 = Member.createNewMember(102L, "회원3");
+        Member member3 = Member.createMember(102L, "회원3");
         memberService.join(member3);
-        Member member4 = Member.createNewMember(103L, "회원4");
+        Member member4 = Member.createMember(103L, "회원4");
         memberService.join(member4);
 
         // when

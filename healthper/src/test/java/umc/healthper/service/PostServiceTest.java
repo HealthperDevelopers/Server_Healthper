@@ -24,9 +24,9 @@ public class PostServiceTest {
     @Test
     public void 게시글_등록() throws Exception {
         // given
-        Member member = Member.createNewMember(100L, "woogie");
+        Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
-        Post post = Post.createNewPost(member, "제목1", "테스트입니다");
+        Post post = Post.createPost(member, "제목1", "테스트입니다");
         postService.savePost(post);
 
         // when
@@ -43,9 +43,9 @@ public class PostServiceTest {
     @Test
     public void 게시글_수정() throws Exception {
         // given
-        Member member = Member.createNewMember(100L, "woogie");
+        Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
-        Post post = Post.createNewPost(member, "제목1", "테스트입니다");
+        Post post = Post.createPost(member, "제목1", "테스트입니다");
         postService.savePost(post);
 
         // when
@@ -61,9 +61,9 @@ public class PostServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 게시글_삭제() throws Exception {
         // given
-        Member member = Member.createNewMember(100L, "woogie");
+        Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
-        Post post = Post.createNewPost(member, "제목1", "테스트입니다");
+        Post post = Post.createPost(member, "제목1", "테스트입니다");
         postService.savePost(post);
 
         Long postId = post.getId();

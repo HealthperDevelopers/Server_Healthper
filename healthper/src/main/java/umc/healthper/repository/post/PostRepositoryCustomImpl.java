@@ -1,8 +1,7 @@
-package umc.healthper.repository;
+package umc.healthper.repository.post;
 
 import lombok.RequiredArgsConstructor;
 import umc.healthper.domain.Post;
-import umc.healthper.domain.PostStatus;
 
 import javax.persistence.EntityManager;
 

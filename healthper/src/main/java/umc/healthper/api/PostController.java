@@ -29,7 +29,7 @@ public class PostController {
     @PostMapping("/post")
     public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto request) {
         Member member = memberService.findById(request.getMemberId());
-        Post post = Post.createNewPost(member, request.getTitle(), request.getContent());
+        Post post = Post.createPost(member, request.getTitle(), request.getContent());
 
         Long id = postService.savePost(post).getId();
         return new CreatePostResponseDto(id);

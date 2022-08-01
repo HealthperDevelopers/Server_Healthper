@@ -1,4 +1,4 @@
-package umc.healthper.repository;
+package umc.healthper.repository.post;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

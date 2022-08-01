@@ -3,7 +3,6 @@ package umc.healthper.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -67,7 +66,7 @@ public class Member extends BaseTimeEntity {
     }
 
     //== Constructor ==//
-    public Member(Long kakaoKey, String nickname, Integer reportedCount, MemberStatus status) {
+    private Member(Long kakaoKey, String nickname, Integer reportedCount, MemberStatus status) {
         this.kakaoKey = kakaoKey;
         this.nickname = nickname;
         this.reportedCount = reportedCount;
@@ -75,7 +74,7 @@ public class Member extends BaseTimeEntity {
     }
 
     //== 생성 메서드 ==//
-    public static Member createNewMember(Long kakaoKey, String nickname) {
+    public static Member createMember(Long kakaoKey, String nickname) {
         return new Member(kakaoKey, nickname, 0, NORMAL);
     }
 }
