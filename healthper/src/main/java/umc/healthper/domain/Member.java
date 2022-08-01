@@ -20,7 +20,7 @@ public class Member extends BaseTimeEntity {
 
     private Long kakaoKey;
 
-    private String nickName;
+    private String nickname;
 
     private Integer reportedCount;
 
