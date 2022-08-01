@@ -25,7 +25,7 @@ public class MemberServiceTest {
     @Test
     public void 회원_등록() throws Exception {
         // given
-        Member member = createMember(100L, "우기");
+        Member member = Member.createNewMember(100L, "우기");
         memberService.join(member);
 
         // when
@@ -38,11 +38,11 @@ public class MemberServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 회원_중복_등록() throws Exception {
         // given
-        Member member1 = createMember(100L, "우기");
+        Member member1 = Member.createNewMember(100L, "우기");
         memberService.join(member1);
 
         // when
-        Member member2 = createMember(100L, "피터");
+        Member member2 = Member.createNewMember(100L, "피터");
         memberService.join(member2);
 
         // then
@@ -52,13 +52,13 @@ public class MemberServiceTest {
     @Test
     public void 회원_목록_조회() throws Exception {
         // given
-        Member member1 = createMember(100L, "회원1");
+        Member member1 = Member.createNewMember(100L, "회원1");
         memberService.join(member1);
-        Member member2 = createMember(101L, "회원2");
+        Member member2 = Member.createNewMember(101L, "회원2");
         memberService.join(member2);
-        Member member3 = createMember(102L, "회원3");
+        Member member3 = Member.createNewMember(102L, "회원3");
         memberService.join(member3);
-        Member member4 = createMember(103L, "회원4");
+        Member member4 = Member.createNewMember(103L, "회원4");
         memberService.join(member4);
 
         // when
@@ -66,14 +66,5 @@ public class MemberServiceTest {
 
         // then
         assertThat(members.size()).isEqualTo(4);
-    }
-
-    private Member createMember(Long kakaoKey, String nickName) {
-        Member member = new Member();
-        member.setKakaoKey(kakaoKey);
-        member.setNickname(nickName);
-        member.setReportedCount(0);
-        member.setStatus(MemberStatus.NORMAL);
-        return member;
     }
 }

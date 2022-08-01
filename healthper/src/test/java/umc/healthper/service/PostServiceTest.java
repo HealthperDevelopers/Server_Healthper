@@ -25,9 +25,9 @@ public class PostServiceTest {
     @Test
     public void 게시글_등록() throws Exception {
         // given
-        Member member = createMember(100L, "woogie");
+        Member member = Member.createNewMember(100L, "woogie");
         memberService.join(member);
-        Post post = new Post(member, "제목1", "테스트입니다");
+        Post post = Post.createNewPost(member, "제목1", "테스트입니다");
         postService.savePost(post);
 
         // when
@@ -40,13 +40,13 @@ public class PostServiceTest {
 //    @Test
 //    public void 게시글_목록_조회() throws Exception {
 //        // given
-//        Member member = createMember(100L, "우기");
+//        Member member = Member.createNewMember()(100L, "우기");
 //        memberService.join(member);
-//        Post post1 = new Post(member, "제목1", "테스트입니다");
+//        Post post1 = Post.createNewPost()(member, "제목1", "테스트입니다");
 //        postService.savePost(post1);
-//        Post post2 = new Post(member, "제목2", "테스트입니다");
+//        Post post2 = Post.createNewPost()(member, "제목2", "테스트입니다");
 //        postService.savePost(post2);
-//        Post post3 = new Post(member, "제목3", "테스트입니다");
+//        Post post3 = Post.createNewPost()(member, "제목3", "테스트입니다");
 //        postService.savePost(post3);
 //
 //        // when
@@ -59,9 +59,9 @@ public class PostServiceTest {
     @Test
     public void 게시글_수정() throws Exception {
         // given
-        Member member = createMember(100L, "woogie");
+        Member member = Member.createNewMember(100L, "woogie");
         memberService.join(member);
-        Post post = new Post(member, "제목1", "테스트입니다");
+        Post post = Post.createNewPost(member, "제목1", "테스트입니다");
         postService.savePost(post);
 
         // when
@@ -77,9 +77,9 @@ public class PostServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 게시글_삭제() throws Exception {
         // given
-        Member member = createMember(100L, "woogie");
+        Member member = Member.createNewMember(100L, "woogie");
         memberService.join(member);
-        Post post = new Post(member, "제목1", "테스트입니다");
+        Post post = Post.createNewPost(member, "제목1", "테스트입니다");
         postService.savePost(post);
 
         Long postId = post.getId();
@@ -90,14 +90,5 @@ public class PostServiceTest {
 
         // then
         fail("게시글이 삭제되었기 때문에 Exception이 발생해야 한다.");
-    }
-
-    private Member createMember(Long kakaoKey, String nickName) {
-        Member member = new Member();
-        member.setKakaoKey(kakaoKey);
-        member.setNickname(nickName);
-        member.setReportedCount(0);
-        member.setStatus(MemberStatus.NORMAL);
-        return member;
     }
 }

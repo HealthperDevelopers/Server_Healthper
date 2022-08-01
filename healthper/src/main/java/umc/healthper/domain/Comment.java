@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 public class Comment extends BaseTimeEntity {
 
     @Id

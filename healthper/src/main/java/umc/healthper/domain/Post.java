@@ -37,18 +37,6 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    //== Constructor ==//
-    public Post(Member member, String title, String content) {
-        this(member, title, content, NORMAL);
-    }
-
-    public Post(Member member, String title, String content, PostStatus postStatus) {
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.postStatus = postStatus;
-    }
-
     //== Setter ==//
     private void setId(Long id) {
         this.id = id;
@@ -72,6 +60,19 @@ public class Post extends BaseTimeEntity {
 
     private void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    //== Constructor ==//
+    public Post(Member member, String title, String content, PostStatus postStatus) {
+        this.member = member;
+        this.title = title;
+        this.content = content;
+        this.postStatus = postStatus;
+    }
+
+    //== 생성 메서드 ==//
+    public static Post createNewPost(Member member, String title, String content) {
+        return new Post(member, title, content, NORMAL);
     }
 
     //== 수정 메서드 ==//

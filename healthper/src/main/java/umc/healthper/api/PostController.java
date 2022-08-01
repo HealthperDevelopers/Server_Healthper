@@ -27,9 +27,9 @@ public class PostController {
      * 게시글 등록
      */
     @PostMapping("/post")
-    public CreatePostResponseDto createPost(@RequestBody @Valid CreatePostRequestDto request) {
+    public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto request) {
         Member member = memberService.findById(request.getMemberId());
-        Post post = new Post(member, request.getTitle(), request.getContent());
+        Post post = Post.createNewPost(member, request.getTitle(), request.getContent());
 
         Long id = postService.savePost(post).getId();
         return new CreatePostResponseDto(id);
@@ -39,7 +39,7 @@ public class PostController {
      * 게시글 조회
      */
     @GetMapping("/post/{postId}")
-    public PostResponseDto postInfo(@PathVariable Long postId) {
+    public PostResponseDto getPostInfo(@PathVariable Long postId) {
         Post findPost = postService.findById(postId);
         return new PostResponseDto(findPost);
     }
@@ -48,7 +48,7 @@ public class PostController {
      * 게시글 목록 조회
      */
     @GetMapping("/posts")
-    public Page<ListPostResponseDto> posts(@PageableDefault(size = 30, sort = "createdAt",
+    public Page<ListPostResponseDto> getPosts(@PageableDefault(size = 30, sort = "createdAt",
             direction = Sort.Direction.DESC) Pageable pageable) {
         return (postService.findPosts(pageable).map(ListPostResponseDto::new));
     }
