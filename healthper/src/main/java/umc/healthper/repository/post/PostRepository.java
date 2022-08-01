@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
 
     @Override
     @EntityGraph(attributePaths = {"member"})
-    Optional<Post> findById(Long aLong);
+    Optional<Post> findById(Long id);
 
     @EntityGraph(attributePaths = {"member"})
     Page<Post> findAllByStatusNot(Pageable pageable, PostStatus postStatus);
