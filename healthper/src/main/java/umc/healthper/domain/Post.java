@@ -48,7 +48,7 @@ public class Post extends BaseTimeEntity {
     }
 
     //== 수정 메서드 ==//
-    public void change(String title, String content) {
+    public void update(String title, String content) {
         this.setTitle(title);
         this.setContent(content);
     }

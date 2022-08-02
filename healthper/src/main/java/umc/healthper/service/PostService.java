@@ -46,8 +46,8 @@ public class PostService {
     @Transactional
     public void updatePost(Long postId, UpdatePostDto postDto) {
         validatePost(postId);
-        Post post = postRepository.findById(postId).get();
-        post.change(postDto.getTitle(), postDto.getContent());
+        Post findPost = postRepository.findById(postId).get();
+        findPost.update(postDto.getTitle(), postDto.getContent());
     }
 
     /**
@@ -60,14 +60,12 @@ public class PostService {
     }
 
     // 존재하지 않는 게시글인지, 이미 삭제된 게시글인지. 게시글 유효성 검증
-    private Post validatePost(Long postId) {
+    private void validatePost(Long postId) {
         Post findPost = postRepository.findById(postId).get();
         if (findPost == null) {
             throw new IllegalStateException("존재하지 않는 게시글입니다.");
-        }
-        else if (findPost.getStatus() == PostStatus.REMOVED) {
+        } else if (findPost.getStatus() == PostStatus.REMOVED) {
             throw new IllegalStateException("이미 삭제된 게시글입니다.");
         }
-        return findPost;
     }
 }
