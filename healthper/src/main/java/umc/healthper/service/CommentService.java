@@ -23,6 +23,13 @@ public class CommentService {
     }
 
     /**
+     * Comment 조회
+     */
+    public Comment findById(Long commentId) {
+        return commentRepository.findById(commentId).get();
+    }
+
+    /**
      * Comment 수정
      */
     @Transactional
