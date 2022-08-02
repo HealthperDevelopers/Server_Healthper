@@ -11,6 +11,7 @@ import java.util.List;
 
 import static javax.persistence.FetchType.*;
 import static umc.healthper.domain.CommentStatus.*;
+import static umc.healthper.domain.CommentType.*;
 
 @Entity
 @Getter
@@ -37,6 +38,10 @@ public class Comment extends BaseTimeEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    private CommentType commentType;    // COMMENT, NESTED
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private CommentStatus status;    // NORMAL, REMOVED, BLOCKED
 
     @ManyToOne(fetch = LAZY)
@@ -52,13 +57,8 @@ public class Comment extends BaseTimeEntity {
         comment.setMember(member);
         comment.setPost(post);
         comment.setContent(content);
+        comment.setCommentType(COMMENT);
         comment.setStatus(NORMAL);
-        return comment;
-    }
-
-    public static Comment createNestedComment(Member member, Post post, Comment parent, String content) {
-        Comment comment = createComment(member, post, content);
-        parent.addChildComment(comment);
         return comment;
     }
 
@@ -72,7 +72,7 @@ public class Comment extends BaseTimeEntity {
     }
 
     //== 연관관계 편의 Method ==//
-    public void setPost(Post post) {
+    private void setPost(Post post) {
         this.post = post;
         post.getComments().add(this);
     }
@@ -80,6 +80,7 @@ public class Comment extends BaseTimeEntity {
     public void addChildComment(Comment child) {
         this.getChildren().add(child);
         child.setParent(this);
+        child.setCommentType(NESTED);
     }
 
     //== Setter ==//
@@ -89,6 +90,10 @@ public class Comment extends BaseTimeEntity {
 
     private void setContent(String content) {
         Content = content;
+    }
+
+    private void setCommentType(CommentType commentType) {
+        this.commentType = commentType;
     }
 
     private void setStatus(CommentStatus status) {

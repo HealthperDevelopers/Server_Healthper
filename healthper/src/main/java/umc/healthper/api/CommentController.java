@@ -31,6 +31,12 @@ public class CommentController {
         Post findPost = postService.findById(request.getPostId());
         Comment comment = Comment.createComment(findMember, findPost, request.getContent());
 
+        Long parentId = request.getParentId();
+        if (parentId != null) {
+            Comment parentComment = commentService.findById(parentId);
+            parentComment.addChildComment(comment);
+        }
+
         Long id = commentService.saveComment(comment).getId();
         return new CreateCommentResponseDto(id);
     }
