@@ -17,7 +17,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -57,13 +56,9 @@ public class PostController {
      * 게시글 수정
      */
     @PatchMapping("/post/{postId}")
-    public PostResponseDto updatePost(@PathVariable Long postId,
+    public void updatePost(@PathVariable Long postId,
                                       @RequestBody @Valid UpdatePostDto request) {
-        UpdatePostDto updatePost = new UpdatePostDto(request.getTitle(), request.getContent());
-        postService.updatePost(postId, updatePost);
-
-        Post findPost = postService.findById(postId);
-        return new PostResponseDto(findPost);
+        postService.updatePost(postId, request);
     }
 
     /**
