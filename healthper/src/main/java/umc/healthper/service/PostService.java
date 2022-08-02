@@ -1,12 +1,14 @@
 package umc.healthper.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Post;
 import umc.healthper.domain.PostStatus;
-import umc.healthper.dto.post.UpdatePostDto;
-import umc.healthper.repository.PostRepository;
+import umc.healthper.dto.post.UpdatePostRequestDto;
+import umc.healthper.repository.post.PostRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,9 +28,9 @@ public class PostService {
     /**
      * Post 목록 조회 - Paging
      */
-//    public List<Post> findPosts(int page) {
-//        return postRepository.findPosts(page);
-//    }
+    public Page<Post> findPosts(Pageable pageable) {
+        return postRepository.findAllByStatusNot(pageable, PostStatus.REMOVED);
+    }
 
     /**
      * Post 조회 - id
@@ -42,10 +44,10 @@ public class PostService {
      * Post 수정
      */
     @Transactional
-    public void updatePost(Long postId, UpdatePostDto postDto) {
+    public void updatePost(Long postId, UpdatePostRequestDto postDto) {
         validatePost(postId);
-        Post post = postRepository.findById(postId).get();
-        post.change(postDto.getTitle(), postDto.getContent());
+        Post findPost = postRepository.findById(postId).get();
+        findPost.update(postDto.getTitle(), postDto.getContent());
     }
 
     /**
@@ -58,14 +60,12 @@ public class PostService {
     }
 
     // 존재하지 않는 게시글인지, 이미 삭제된 게시글인지. 게시글 유효성 검증
-    private Post validatePost(Long postId) {
+    private void validatePost(Long postId) {
         Post findPost = postRepository.findById(postId).get();
         if (findPost == null) {
             throw new IllegalStateException("존재하지 않는 게시글입니다.");
-        }
-        else if (findPost.getPostStatus() == PostStatus.REMOVED) {
+        } else if (findPost.getStatus() == PostStatus.REMOVED) {
             throw new IllegalStateException("이미 삭제된 게시글입니다.");
         }
-        return findPost;
     }
 }

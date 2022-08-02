@@ -1,5 +1,5 @@
 package umc.healthper.domain;
 
-public enum PostStatus {
+public enum CommentStatus {
     NORMAL, REMOVED, BLOCKED
 }
