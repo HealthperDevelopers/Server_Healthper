@@ -62,6 +62,15 @@ public class Comment extends BaseTimeEntity {
         return comment;
     }
 
+    //== 수정 메서드 ==//
+    public void update(String content) {
+        this.setContent(content);
+    }
+
+    public void delete() {
+        this.setStatus(REMOVED);
+    }
+
     //== 연관관계 편의 Method ==//
     public void setPost(Post post) {
         this.post = post;
