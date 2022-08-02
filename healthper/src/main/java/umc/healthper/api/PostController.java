@@ -1,7 +1,6 @@
 package umc.healthper.api;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -57,7 +56,7 @@ public class PostController {
      */
     @PatchMapping("/post/{postId}")
     public void updatePost(@PathVariable Long postId,
-                                      @RequestBody @Valid UpdatePostDto request) {
+                                      @RequestBody @Valid UpdatePostRequestDto request) {
         postService.updatePost(postId, request);
     }
 

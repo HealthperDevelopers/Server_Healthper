@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Member;
 import umc.healthper.domain.Post;
-import umc.healthper.dto.post.UpdatePostDto;
+import umc.healthper.dto.post.UpdatePostRequestDto;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -49,7 +49,7 @@ public class PostServiceTest {
         postService.savePost(post);
 
         // when
-        postService.updatePost(post.getId(), new UpdatePostDto("수정테스트", "수정이 잘 될까?"));
+        postService.updatePost(post.getId(), new UpdatePostRequestDto("수정테스트", "수정이 잘 될까?"));
 
         // then
         Post findPost = postService.findById(post.getId());
