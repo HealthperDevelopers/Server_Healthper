@@ -3,6 +3,7 @@ package umc.healthper.dto.post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import umc.healthper.domain.CommentType;
 import umc.healthper.domain.Member;
 import umc.healthper.domain.Post;
 import umc.healthper.domain.PostStatus;
@@ -40,6 +41,8 @@ public class PostResponseDto {
         this.setContent(post.getContent());
         this.setPostStatus(post.getStatus());
         this.setCreatedAt(post.getCreatedAt());
-        post.getComments().forEach(comment -> this.getComments().add(new CommentResponseDto(comment)));
+        post.getComments().stream()
+                .filter(comment -> comment.getCommentType() == CommentType.COMMENT)
+                .forEach(comment -> this.getComments().add(new CommentResponseDto(comment)));
     }
 }
