@@ -21,7 +21,7 @@ public class PostLikeServiceTest {
     @Autowired PostLikeService postLikeService;
 
     @Test
-    public void 좋아요_추가() throws Exception {
+    public void 좋아요_추가() {
         // given
         Member member1 = Member.createMember(100L, "James");
         memberService.join(member1);
@@ -53,7 +53,7 @@ public class PostLikeServiceTest {
         assertThat(post3.getLikes().size()).isEqualTo(1);
     }
     @Test(expected = IllegalStateException.class)
-    public void 좋아요_중복_추가() throws Exception {
+    public void 좋아요_중복_추가() {
         // given
         Member member1 = Member.createMember(100L, "James");
         memberService.join(member1);
@@ -66,11 +66,11 @@ public class PostLikeServiceTest {
         postLikeService.addLike(member1.getId(), post1.getId());
 
         // then
-        fail("중복으로 좋아요 했기 때문에 exception이 발생해야 한다.");
+        fail("중복으로 좋아요 했기 때문에 예외가 발생해야 한다.");
     }
 
     @Test
-    public void 좋아요_취소() throws Exception {
+    public void 좋아요_취소() {
         // given
         Member member1 = Member.createMember(100L, "James");
         memberService.join(member1);
@@ -94,5 +94,21 @@ public class PostLikeServiceTest {
         assertThat(member2.getPostLikes().size()).isEqualTo(0);
         assertThat(post1.getLikes().size()).isEqualTo(1);
         assertThat(post2.getLikes().size()).isEqualTo(1);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void 좋아요_하지_않은_경우의_취소() {
+        // given
+        Member member1 = Member.createMember(100L, "James");
+        memberService.join(member1);
+
+        Post post1 = Post.createPost(member1, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
+        postService.savePost(post1);
+
+        // when
+        postLikeService.cancelLike(member1.getId(), post1.getId());
+
+        // then
+        fail("좋아요 한 적 없는 게시글을 좋아요 취소하고 있기 때문에 예외가 발생해야 한다.");
     }
 }
