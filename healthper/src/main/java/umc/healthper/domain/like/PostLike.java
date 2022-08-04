@@ -11,7 +11,6 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
-@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLike extends BaseTimeEntity {
 

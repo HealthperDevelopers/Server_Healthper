@@ -22,7 +22,7 @@ public class PostLikeService {
     /**
      * 좋아요 추가
      */
-    public boolean addLike(Long memberId, Long postId) {
+    public void addLike(Long memberId, Long postId) {
         Member member = memberRepository.findById(memberId).get();
         Post post = postRepository.findById(postId).get();
 
@@ -30,12 +30,32 @@ public class PostLikeService {
 
         PostLike postLike = PostLike.createPostLike(member, post);
         postLikeRepository.save(postLike);
-        return true;
+    }
+
+    /**
+     * 좋아요 취소
+     */
+    public void cancelLike(Long memberId, Long postId) {
+        Member member = memberRepository.findById(memberId).get();
+        Post post = postRepository.findById(postId).get();
+
+        validateNotLike(member, post);
+
+        PostLike postLike = postLikeRepository.findByMemberAndPost(member, post).get();
+        member.getPostLikes().remove(postLike);
+        post.getLikes().remove(postLike);
+        postLikeRepository.delete(postLike);
     }
 
     private void validateAlreadyLike(Member member, Post post) {
         if (!postLikeRepository.findByMemberAndPost(member, post).isEmpty()) {
             throw new IllegalStateException("이미 좋아요 하셨습니다.");
+        }
+    }
+
+    private void validateNotLike(Member member, Post post) {
+        if (postLikeRepository.findByMemberAndPost(member, post).isEmpty()) {
+            throw new IllegalStateException("좋아요 하지 않은 게시글은 좋아요를 취소할 수 없습니다.");
         }
     }
 }

@@ -8,11 +8,9 @@ import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
 import static umc.healthper.domain.PostStatus.*;
 
@@ -45,7 +43,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = ALL)
     private Set<PostLike> likes = new HashSet<>();
 
     //== 생성 메서드 ==//
@@ -72,10 +70,6 @@ public class Post extends BaseTimeEntity {
     }
 
     //== Setter ==//
-    private void setMember(Member member) {
-        this.member = member;
-    }
-
     private void setTitle(String title) {
         this.title = title;
     }

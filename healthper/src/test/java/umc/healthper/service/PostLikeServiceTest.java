@@ -44,9 +44,6 @@ public class PostLikeServiceTest {
         postLikeService.addLike(member2.getId(), post3.getId());
         postLikeService.addLike(member3.getId(), post1.getId());
 
-        System.out.println("post1.getLikes() = " + post1.getLikes().toString());
-        System.out.println("member1.getPostLikes() = " + member1.getPostLikes().toString());
-
         // then
         assertThat(member1.getPostLikes().size()).isEqualTo(2);
         assertThat(member2.getPostLikes().size()).isEqualTo(2);
@@ -55,9 +52,8 @@ public class PostLikeServiceTest {
         assertThat(post2.getLikes().size()).isEqualTo(1);
         assertThat(post3.getLikes().size()).isEqualTo(1);
     }
-
     @Test(expected = IllegalStateException.class)
-    public void 중복_좋아요() throws Exception {
+    public void 좋아요_중복_추가() throws Exception {
         // given
         Member member1 = Member.createMember(100L, "James");
         memberService.join(member1);
@@ -71,5 +67,32 @@ public class PostLikeServiceTest {
 
         // then
         fail("중복으로 좋아요 했기 때문에 exception이 발생해야 한다.");
+    }
+
+    @Test
+    public void 좋아요_취소() throws Exception {
+        // given
+        Member member1 = Member.createMember(100L, "James");
+        memberService.join(member1);
+        Member member2 = Member.createMember(101L, "Anne");
+        memberService.join(member2);
+
+        Post post1 = Post.createPost(member1, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
+        postService.savePost(post1);
+        Post post2 = Post.createPost(member1, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글");
+        postService.savePost(post2);
+
+        postLikeService.addLike(member1.getId(), post1.getId());
+        postLikeService.addLike(member1.getId(), post2.getId());
+        postLikeService.addLike(member2.getId(), post1.getId());
+
+        // when
+        postLikeService.cancelLike(member2.getId(), post1.getId());
+
+        // then
+        assertThat(member1.getPostLikes().size()).isEqualTo(2);
+        assertThat(member2.getPostLikes().size()).isEqualTo(0);
+        assertThat(post1.getLikes().size()).isEqualTo(1);
+        assertThat(post2.getLikes().size()).isEqualTo(1);
     }
 }
