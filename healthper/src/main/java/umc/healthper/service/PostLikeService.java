@@ -22,6 +22,7 @@ public class PostLikeService {
     /**
      * 좋아요 추가
      */
+    @Transactional
     public void addLike(Long memberId, Long postId) {
         Member member = memberRepository.findById(memberId).get();
         Post post = postRepository.findById(postId).get();
@@ -35,6 +36,7 @@ public class PostLikeService {
     /**
      * 좋아요 취소
      */
+    @Transactional
     public void cancelLike(Long memberId, Long postId) {
         Member member = memberRepository.findById(memberId).get();
         Post post = postRepository.findById(postId).get();
@@ -49,7 +51,7 @@ public class PostLikeService {
 
     private void validateAlreadyLike(Member member, Post post) {
         if (postLikeRepository.existsByMemberAndPost(member, post)) {
-            throw new IllegalStateException("이미 좋아요 하셨습니다.");
+            throw new IllegalStateException("이미 좋아요 했던 게시글입니다.");
         }
     }
 
