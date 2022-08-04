@@ -48,7 +48,8 @@ public class PostController {
     @GetMapping("/posts")
     public Page<ListPostResponseDto> getPosts(@PageableDefault(size = 30, sort = "createdAt",
             direction = Sort.Direction.DESC) Pageable pageable) {
-        return (postService.findPosts(pageable).map(ListPostResponseDto::new));
+        return postService.findPosts(pageable)
+                .map(ListPostResponseDto::new);
     }
 
     /**

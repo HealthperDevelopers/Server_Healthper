@@ -3,12 +3,15 @@ package umc.healthper.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import umc.healthper.domain.like.PostLike;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static umc.healthper.domain.MemberStatus.*;
 
@@ -40,6 +43,9 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private Set<PostLike> postLikes = new HashSet<>();
 
     //== 생성 메서드 ==//
     public static Member createMember(Long kakaoKey, String nickname) {
