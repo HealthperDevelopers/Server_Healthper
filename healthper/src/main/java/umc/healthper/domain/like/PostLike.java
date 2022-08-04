@@ -1,18 +1,22 @@
 package umc.healthper.domain.like;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import umc.healthper.domain.Member;
 import umc.healthper.domain.Post;
-import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
+
+import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.*;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostLike extends BaseTimeEntity {
+public class PostLike {
 
     @Id
     @GeneratedValue
@@ -26,6 +30,10 @@ public class PostLike extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
     //== 생성 메서드 ==//
     public static PostLike createPostLike(Member member, Post post) {
