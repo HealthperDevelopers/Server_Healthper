@@ -37,6 +37,9 @@ public class Post extends BaseTimeEntity {
     private String content;
 
     @NotNull
+    private Integer viewCount;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     private PostStatus status;  // NORMAL, REMOVED, BLOCKED
 
@@ -48,10 +51,14 @@ public class Post extends BaseTimeEntity {
 
     //== 생성 메서드 ==//
     public static Post createPost(Member member, String title, String content) {
-        return new Post(member, title, content, NORMAL);
+        return new Post(member, title, content, 0, NORMAL);
     }
 
     //== 수정 메서드 ==//
+    public void addViewCount() {
+        this.viewCount++;
+    }
+
     public void update(String title, String content) {
         this.setTitle(title);
         this.setContent(content);
@@ -62,10 +69,11 @@ public class Post extends BaseTimeEntity {
     }
 
     //== Constructor ==//
-    private Post(Member member, String title, String content, PostStatus postStatus) {
+    private Post(Member member, String title, String content, int viewCount, PostStatus postStatus) {
         this.member = member;
         this.title = title;
         this.content = content;
+        this.viewCount = viewCount;
         this.status = postStatus;
     }
 

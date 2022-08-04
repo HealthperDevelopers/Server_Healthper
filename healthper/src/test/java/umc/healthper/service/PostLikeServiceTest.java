@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Member;
 import umc.healthper.domain.Post;
 
+import javax.persistence.EntityManager;
+
 import static org.assertj.core.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
@@ -19,6 +21,7 @@ public class PostLikeServiceTest {
     @Autowired MemberService memberService;
     @Autowired PostService postService;
     @Autowired PostLikeService postLikeService;
+    @Autowired EntityManager em;
 
     @Test
     public void 좋아요_추가() {

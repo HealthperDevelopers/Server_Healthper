@@ -28,7 +28,7 @@ public class CommentController {
     @PostMapping("/comment")
     public CreateCommentResponseDto saveComment(@RequestBody @Valid CreateCommentRequestDto request) {
         Member findMember = memberService.findById(request.getMemberId());
-        Post findPost = postService.findById(request.getPostId());
+        Post findPost = postService.findPost(request.getPostId());
         Comment comment = Comment.createComment(findMember, findPost, request.getContent());
 
         Long parentId = request.getParentId();
