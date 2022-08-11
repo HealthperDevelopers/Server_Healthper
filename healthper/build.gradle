@@ -19,11 +19,13 @@ repositories {
 }
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'junit:junit:4.13.2'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'	// p6psy - DB에 날아가는 query를 확인할 수 있도록 logging하는 library. 필요 없으시다면 주석처리 하시면 되겠습니다.
 	compileOnly 'org.projectlombok:lombok'
-//	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
