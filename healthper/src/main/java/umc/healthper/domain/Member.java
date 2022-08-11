@@ -45,6 +45,9 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private Set<PostLike> postLikes = new HashSet<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<RecordJPA> records = new ArrayList<>();
+
     //== 생성 메서드 ==//
     public static Member createMember(Long kakaoKey, String nickname) {
         return new Member(kakaoKey, nickname, 0, NORMAL);
