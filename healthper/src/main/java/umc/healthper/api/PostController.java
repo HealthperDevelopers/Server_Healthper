@@ -3,7 +3,6 @@ package umc.healthper.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import umc.healthper.domain.Member;
@@ -13,6 +12,8 @@ import umc.healthper.service.MemberService;
 import umc.healthper.service.PostService;
 
 import javax.validation.Valid;
+
+import static org.springframework.data.domain.Sort.Direction.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class PostController {
      */
     @GetMapping("/post/{postId}")
     public PostResponseDto getPostInfo(@PathVariable Long postId) {
-        Post findPost = postService.findById(postId);
+        Post findPost = postService.findPost(postId);
         return new PostResponseDto(findPost);
     }
 
@@ -46,9 +47,9 @@ public class PostController {
      * 게시글 목록 조회
      */
     @GetMapping("/posts")
-    public Page<ListPostResponseDto> getPosts(@PageableDefault(size = 30, sort = "createdAt",
-            direction = Sort.Direction.DESC) Pageable pageable) {
-        return (postService.findPosts(pageable).map(ListPostResponseDto::new));
+    public Page<ListPostResponseDto> getPosts(@PageableDefault(size = 30, sort = "createdAt", direction = DESC) Pageable pageable) {
+        return postService.findPosts(pageable)
+                .map(ListPostResponseDto::new);
     }
 
     /**
@@ -56,7 +57,7 @@ public class PostController {
      */
     @PatchMapping("/post/{postId}")
     public void updatePost(@PathVariable Long postId,
-                                      @RequestBody @Valid UpdatePostRequestDto request) {
+                           @RequestBody @Valid UpdatePostRequestDto request) {
         postService.updatePost(postId, request);
     }
 

@@ -3,13 +3,14 @@ package umc.healthper.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import umc.healthper.domain.like.PostLike;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import static javax.persistence.CascadeType.*;
 import static umc.healthper.domain.MemberStatus.*;
 
 @Entity
@@ -40,6 +41,9 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = ALL)
+    private Set<PostLike> postLikes = new HashSet<>();
 
     @OneToMany(mappedBy = "member")
     private List<RecordJPA> records = new ArrayList<>();
@@ -76,13 +80,5 @@ public class Member extends BaseTimeEntity {
 
     private void setStatus(MemberStatus status) {
         this.status = status;
-    }
-
-    private void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
-    private void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 }

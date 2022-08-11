@@ -10,6 +10,8 @@ import umc.healthper.domain.PostStatus;
 import umc.healthper.dto.post.UpdatePostRequestDto;
 import umc.healthper.repository.post.PostRepository;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -35,9 +37,11 @@ public class PostService {
     /**
      * Post 조회 - id
      */
-    public Post findById(Long postId) {
+    public Post findPost(Long postId) {
         validatePost(postId);
-        return postRepository.findById(postId).get();
+        Post post = postRepository.findById(postId).get();
+        post.addViewCount();
+        return post;
     }
 
     /**
@@ -61,10 +65,10 @@ public class PostService {
 
     // 존재하지 않는 게시글인지, 이미 삭제된 게시글인지. 게시글 유효성 검증
     private void validatePost(Long postId) {
-        Post findPost = postRepository.findById(postId).get();
-        if (findPost == null) {
+        Optional<Post> findPost = postRepository.findById(postId);
+        if (findPost.isEmpty()) {
             throw new IllegalStateException("존재하지 않는 게시글입니다.");
-        } else if (findPost.getStatus() == PostStatus.REMOVED) {
+        } else if (findPost.get().getStatus() == PostStatus.REMOVED) {
             throw new IllegalStateException("이미 삭제된 게시글입니다.");
         }
     }

@@ -22,7 +22,7 @@ public class PostServiceTest {
     MemberService memberService;
 
     @Test
-    public void 게시글_등록() throws Exception {
+    public void 게시글_등록() {
         // given
         Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
@@ -30,7 +30,7 @@ public class PostServiceTest {
         postService.savePost(post);
 
         // when
-        Post findPost = postService.findById(post.getId());
+        Post findPost = postService.findPost(post.getId());
 
         // then
         assertThat(post).isEqualTo(findPost);
@@ -41,7 +41,7 @@ public class PostServiceTest {
 //    }
 
     @Test
-    public void 게시글_수정() throws Exception {
+    public void 게시글_수정() {
         // given
         Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
@@ -52,14 +52,14 @@ public class PostServiceTest {
         postService.updatePost(post.getId(), new UpdatePostRequestDto("수정테스트", "수정이 잘 될까?"));
 
         // then
-        Post findPost = postService.findById(post.getId());
+        Post findPost = postService.findPost(post.getId());
 
         assertThat(findPost.getTitle()).isEqualTo("수정테스트");
         assertThat(findPost.getContent()).isEqualTo("수정이 잘 될까?");
     }
 
     @Test(expected = IllegalStateException.class)
-    public void 게시글_삭제() throws Exception {
+    public void 게시글_삭제() {
         // given
         Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
@@ -70,7 +70,7 @@ public class PostServiceTest {
 
         // when
         postService.removePost(postId);
-        postService.findById(postId);
+        postService.findPost(postId);
 
         // then
         fail("게시글이 삭제되었기 때문에 Exception이 발생해야 한다.");
