@@ -40,7 +40,7 @@ public class LoginController {
         }
         HttpSession session = request.getSession();
         //세션에 로그인 회원 정보 보관
-        Long userId = kakaoKey;//userService.getId(kakaoKey);//카카오 키에 해당 되는 유저 아이디 가져외
+        Long userId = memberService.findByKakaoKey(kakaoKey).getId();
         session.setAttribute(SessionConst.LOGIN_MEMBER, userId);
 
         LocalDate now = LocalDate.now();
