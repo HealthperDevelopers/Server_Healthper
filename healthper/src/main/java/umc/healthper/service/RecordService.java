@@ -10,10 +10,12 @@ import umc.healthper.domain.RecordJPA;
 import umc.healthper.dto.record.GetCalenderRes;
 import umc.healthper.dto.record.GetRecordRes;
 import umc.healthper.dto.record.PostRecordReq;
+import umc.healthper.global.BaseExerciseEntity;
 import umc.healthper.repository.RecordRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -38,20 +40,27 @@ public class RecordService {
         return res;
     }
 
-    public List<GetRecordRes> theDate(Long loginId, int year, int month, int day){
-        List<RecordJPA> records = repository.dayExerciseInfo(loginId, LocalDate.of(year,month,day));
+    public List<GetRecordRes> theDate(Long loginId, LocalDate theDay){
+        List<RecordJPA> records = repository.dayExerciseInfo(loginId, theDay);
 
         List<GetRecordRes> res = new ArrayList<>();
 
-        for (RecordJPA record : records) {
-            Long record_id = record.getId();
-            Long total_exercise_time = 100l;
-            Long total_volume = 20l;
-            String comment = record.getComment();
-            List<Section> sections = Section.strToSection(record.getSections());
-            res.add(new GetRecordRes(record_id, total_exercise_time, total_volume, comment, sections));
-        }
+        for (RecordJPA record : records)
+            res.add(transpose(record));
+
         return res;
+    }
+
+    private GetRecordRes transpose(RecordJPA record){
+        Long record_id = record.getId();
+        Long totalExerciseTime = record.getExerciseEntity().getTotalExerciseTime();
+        Long totalVolume = record.getExerciseEntity().getTotalVolume();
+        String comment = record.getComment();
+        List<Section> sections = Section.strToSection(record.getSections());
+        BaseExerciseEntity exerciseInfo = new BaseExerciseEntity(totalExerciseTime, totalVolume);
+
+        GetRecordRes getRecordRes = new GetRecordRes(record_id, comment, sections, exerciseInfo);
+        return getRecordRes;
     }
 
     @Transactional
