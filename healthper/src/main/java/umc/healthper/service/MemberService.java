@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Member;
+import umc.healthper.exception.member.MemberDuplicateException;
+import umc.healthper.exception.member.MemberNotFoundByIdException;
+import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
 import umc.healthper.repository.MemberRepository;
 
 import java.util.List;
@@ -26,13 +29,6 @@ public class MemberService {
         return member.getId();
     }
 
-    private void validateDuplicateMember(Member member) {
-        Optional<Member> findMember = memberRepository.findByKakaoKey(member.getKakaoKey());
-        if (findMember.isPresent()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
-        }
-    }
-
     /**
      * 회원 목록 조회
      */
@@ -44,10 +40,17 @@ public class MemberService {
      * 회원 조회
      */
     public Member findById(Long memberId) {
-        return memberRepository.findById(memberId).get();
+        return memberRepository.findById(memberId).orElseThrow(MemberNotFoundByIdException::new);
     }
 
     public Member findByKakaoKey(Long kakaoKey) {
-        return memberRepository.findByKakaoKey(kakaoKey).get();
+        return memberRepository.findByKakaoKey(kakaoKey).orElseThrow(MemberNotFoundByKakaoKeyException::new);
+    }
+
+    private void validateDuplicateMember(Member member) {
+        Optional<Member> findMember = memberRepository.findByKakaoKey(member.getKakaoKey());
+        if (findMember.isPresent()) {
+            throw new MemberDuplicateException();
+        }
     }
 }

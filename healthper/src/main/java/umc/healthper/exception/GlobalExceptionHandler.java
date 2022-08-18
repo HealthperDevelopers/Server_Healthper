@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import umc.healthper.exception.member.MemberDuplicateException;
+import umc.healthper.exception.member.MemberNotFoundByIdException;
+import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.postlike.AlreadyPostLikeException;
@@ -19,6 +22,31 @@ import umc.healthper.exception.postlike.PostLikeNotFoundException;
 public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
+
+    /**
+     * Member
+     */
+    @ExceptionHandler({MemberNotFoundByIdException.class, MemberNotFoundByKakaoKeyException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse memberNotFoundExceptionHandle(Exception e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.NOT_FOUND,
+                getMessage("memberNotFound.code"),
+                getMessage("memberNotFound.message")
+        );
+    }
+
+    @ExceptionHandler(MemberDuplicateException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse memberDuplicateExceptionHandle(MemberDuplicateException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                getMessage("memberDuplicate.code"),
+                getMessage("memberDuplicate.message")
+        );
+    }
 
     /**
      * Post, PostLike
