@@ -21,8 +21,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/home","/member/add","/login","logout",
-                        "/css/**","/*.ico","/error");
+                .excludePathPatterns("/home", "/member/add", "/login", "logout",
+                        "/css/**", "/*.ico", "/error")
+                .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**");
     }
 }
 
