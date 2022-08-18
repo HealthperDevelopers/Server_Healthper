@@ -12,8 +12,8 @@ import umc.healthper.dto.post.UpdatePostRequestDto;
 
 import static org.assertj.core.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 @Transactional
 public class PostServiceTest {
     @Autowired
@@ -21,7 +21,7 @@ public class PostServiceTest {
     @Autowired
     MemberService memberService;
 
-    @Test
+  //  @Test
     public void 게시글_등록() {
         // given
         Member member = Member.createMember(100L, "woogie");
@@ -40,7 +40,7 @@ public class PostServiceTest {
 //    public void 게시글_목록_조회() throws Exception {
 //    }
 
-    @Test
+    //@Test
     public void 게시글_수정() {
         // given
         Member member = Member.createMember(100L, "woogie");
@@ -58,7 +58,7 @@ public class PostServiceTest {
         assertThat(findPost.getContent()).isEqualTo("수정이 잘 될까?");
     }
 
-    @Test(expected = IllegalStateException.class)
+    //@Test(expected = IllegalStateException.class)
     public void 게시글_삭제() {
         // given
         Member member = Member.createMember(100L, "woogie");
