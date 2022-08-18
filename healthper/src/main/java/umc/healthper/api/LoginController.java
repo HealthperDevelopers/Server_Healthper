@@ -31,9 +31,8 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String login(@RequestParam(defaultValue = "-1") Long kakaoId,
+    public String login(@RequestParam(defaultValue = "-1", name="kakaoId") Long kakaoKey,
                         @RequestParam(defaultValue = "/record/calender") String redirectURL, HttpServletRequest request) throws JsonProcessingException {
-        Long kakaoKey = kakaoId;
 
         if(kakaoKey == null || kakaoKey == -1){
             return "redirect:/home";
