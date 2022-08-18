@@ -6,6 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Member;
 import umc.healthper.domain.Post;
 import umc.healthper.domain.like.PostLike;
+import umc.healthper.exception.member.MemberNotFoundByIdException;
+import umc.healthper.exception.post.PostNotFoundException;
+import umc.healthper.exception.postlike.AlreadyPostLikeException;
+import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.repository.MemberRepository;
 import umc.healthper.repository.like.PostLikeRepository;
 import umc.healthper.repository.post.PostRepository;
@@ -24,8 +28,8 @@ public class PostLikeService {
      */
     @Transactional
     public void addLike(Long memberId, Long postId) {
-        Member member = memberRepository.findById(memberId).get();
-        Post post = postRepository.findById(postId).get();
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundByIdException::new);
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
         validateAlreadyLike(member, post);
 
@@ -38,12 +42,12 @@ public class PostLikeService {
      */
     @Transactional
     public void cancelLike(Long memberId, Long postId) {
-        Member member = memberRepository.findById(memberId).get();
-        Post post = postRepository.findById(postId).get();
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundByIdException::new);
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
         validateNotLike(member, post);
 
-        PostLike postLike = postLikeRepository.findByMemberAndPost(member, post).get();
+        PostLike postLike = postLikeRepository.findByMemberAndPost(member, post).orElseThrow(PostLikeNotFoundException::new);
         member.getPostLikes().remove(postLike);
         post.getLikes().remove(postLike);
         postLikeRepository.delete(postLike);
@@ -51,13 +55,13 @@ public class PostLikeService {
 
     private void validateAlreadyLike(Member member, Post post) {
         if (postLikeRepository.existsByMemberAndPost(member, post)) {
-            throw new IllegalStateException("이미 좋아요 했던 게시글입니다.");
+            throw new AlreadyPostLikeException();
         }
     }
 
     private void validateNotLike(Member member, Post post) {
         if (!postLikeRepository.existsByMemberAndPost(member, post)) {
-            throw new IllegalStateException("좋아요 하지 않은 게시글은 좋아요를 취소할 수 없습니다.");
+            throw new PostLikeNotFoundException();
         }
     }
 }

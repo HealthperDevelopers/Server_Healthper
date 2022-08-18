@@ -1,6 +1,7 @@
 package umc.healthper.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -24,12 +25,15 @@ public class LoginController {
 
     @GetMapping("/home")
     @ResponseBody
-    public String home(@Login Long userId){
+    public String home(@Login Long userId) {
         if(userId == null)
             return "로그인 해주세요.";
         return "로그인 완료";
     }
 
+
+    @Operation(summary = "Login",
+            description = "Login")
     @GetMapping("/login")
     public String login(@RequestParam(defaultValue = "-1", name="kakaoId") Long kakaoKey,
                         @RequestParam(defaultValue = "/record/calender") String redirectURL, HttpServletRequest request) throws JsonProcessingException {

@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Custom By Woogie ###
+/src/main/java/umc/healthper/InitDb.java

@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.Post;
 import umc.healthper.domain.PostStatus;
 import umc.healthper.dto.post.UpdatePostRequestDto;
+import umc.healthper.exception.post.PostAlreadyRemovedException;
+import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.repository.post.PostRepository;
-
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,6 +29,7 @@ public class PostService {
 
     /**
      * Post 목록 조회 - Paging
+     * 삭제되지 않은 게시글만 조회
      */
     public Page<Post> findPosts(Pageable pageable) {
         return postRepository.findAllByStatusNot(pageable, PostStatus.REMOVED);
@@ -38,8 +39,7 @@ public class PostService {
      * Post 조회 - id
      */
     public Post findPost(Long postId) {
-        validatePost(postId);
-        Post post = postRepository.findById(postId).get();
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
         post.addViewCount();
         return post;
     }
@@ -49,9 +49,9 @@ public class PostService {
      */
     @Transactional
     public void updatePost(Long postId, UpdatePostRequestDto postDto) {
-        validatePost(postId);
-        Post findPost = postRepository.findById(postId).get();
-        findPost.update(postDto.getTitle(), postDto.getContent());
+        Post post = postRepository.findById(postId).orElseThrow(PostAlreadyRemovedException::new);
+        validateAlreadyRemovedPost(post);
+        post.update(postDto.getTitle(), postDto.getContent());
     }
 
     /**
@@ -59,17 +59,15 @@ public class PostService {
      */
     @Transactional
     public void removePost(Long postId) {
-        validatePost(postId);
-        postRepository.removePost(postId);
+        Post post = postRepository.findById(postId).orElseThrow(PostAlreadyRemovedException::new);
+        validateAlreadyRemovedPost(post);
+        postRepository.removePost(post);
     }
 
-    // 존재하지 않는 게시글인지, 이미 삭제된 게시글인지. 게시글 유효성 검증
-    private void validatePost(Long postId) {
-        Optional<Post> findPost = postRepository.findById(postId);
-        if (findPost.isEmpty()) {
-            throw new IllegalStateException("존재하지 않는 게시글입니다.");
-        } else if (findPost.get().getStatus() == PostStatus.REMOVED) {
-            throw new IllegalStateException("이미 삭제된 게시글입니다.");
+    // 이미 삭제된 게시글인지 검증
+    private void validateAlreadyRemovedPost(Post post) {
+        if (post.getStatus() == PostStatus.REMOVED) {
+            throw new PostAlreadyRemovedException();
         }
     }
 }

@@ -1,5 +1,7 @@
 package umc.healthper.repository.comment;
 
+import umc.healthper.domain.Comment;
+
 public interface CommentRepositoryCustom {
-    void removeComment(Long id);
+    void removeComment(Comment comment);
 }
