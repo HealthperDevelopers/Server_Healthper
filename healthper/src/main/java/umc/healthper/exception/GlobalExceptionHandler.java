@@ -7,13 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import umc.healthper.exception.comment.CommentAlreadyRemovedException;
+import umc.healthper.exception.comment.CommentNotFoundException;
 import umc.healthper.exception.member.MemberDuplicateException;
 import umc.healthper.exception.member.MemberNotFoundByIdException;
 import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.postlike.AlreadyPostLikeException;
-import umc.healthper.exception.postlike.NeverPostLikeException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
 
 @Slf4j
@@ -63,11 +64,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PostAlreadyRemovedException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionResponse postAlreadyRemovedExceptionHandle(PostAlreadyRemovedException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.NOT_FOUND,
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 getMessage("postAlreadyRemoved.code"),
                 getMessage("postAlreadyRemoved.message")
         );
@@ -95,17 +96,30 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(NeverPostLikeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionResponse neverPostLikeExceptionHandle(NeverPostLikeException e) {
+    /**
+     * Comment
+     */
+    @ExceptionHandler(CommentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse commentNotFoundExceptionHandle(CommentNotFoundException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                getMessage("neverPostLikeException.code"),
-                getMessage("neverPostLikeException.message")
+                HttpStatus.NOT_FOUND,
+                getMessage("commentNotFound.code"),
+                getMessage("commentNotFound.message")
         );
     }
 
+    @ExceptionHandler(CommentAlreadyRemovedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse commentAlreadyRemovedExceptionHandle(CommentAlreadyRemovedException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                getMessage("commentAlreadyRemoved.code"),
+                getMessage("commentAlreadyRemoved.message")
+        );
+    }
 
     private String getMessage(String code) {
         return messageSource.getMessage(code, null, null);

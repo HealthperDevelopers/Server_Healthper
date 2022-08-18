@@ -11,8 +11,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom{
     private final EntityManager em;
 
     @Override
-    public void removeComment(Long id) {
-        Comment findComment = em.find(Comment.class, id);
-        findComment.delete();
+    public void removeComment(Comment comment) {
+        comment.delete();
     }
 }

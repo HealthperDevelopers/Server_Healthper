@@ -9,7 +9,6 @@ import umc.healthper.domain.like.PostLike;
 import umc.healthper.exception.member.MemberNotFoundByIdException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.postlike.AlreadyPostLikeException;
-import umc.healthper.exception.postlike.NeverPostLikeException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.repository.MemberRepository;
 import umc.healthper.repository.like.PostLikeRepository;
@@ -62,7 +61,7 @@ public class PostLikeService {
 
     private void validateNotLike(Member member, Post post) {
         if (!postLikeRepository.existsByMemberAndPost(member, post)) {
-            throw new NeverPostLikeException();
+            throw new PostLikeNotFoundException();
         }
     }
 }
