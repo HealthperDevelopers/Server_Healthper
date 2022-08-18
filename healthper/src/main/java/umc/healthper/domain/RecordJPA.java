@@ -4,11 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import umc.healthper.domain.completeExercise.CompleteExercise;
 import umc.healthper.global.BaseExerciseEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -34,6 +37,9 @@ public class RecordJPA{
     private String sections;
     @CreatedDate
     private LocalDate createdDay;
+
+    @OneToMany(mappedBy = "record")
+    private List<CompleteExercise> comExs = new ArrayList<>();
 
     public void addMemberList(Member member){
         this.setMember(member);

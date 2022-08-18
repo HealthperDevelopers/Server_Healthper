@@ -36,9 +36,8 @@ public class RecordController {
 
     @PostMapping
     @ResponseBody
-    public String pushRecord(@Login Long loginId, @RequestBody PostRecordReq req){
-        service.completeToday(loginId, req);
-        return "ok";
+    public Long pushRecord(@Login Long loginId, @RequestBody PostRecordReq req){
+        return service.completeToday(loginId, req);
     }
 }
 

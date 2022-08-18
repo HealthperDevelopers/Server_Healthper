@@ -64,10 +64,18 @@ public class RecordService {
     }
 
     @Transactional
-    public void completeToday(Long loginId, PostRecordReq req){
+    public Long completeToday(Long loginId, PostRecordReq req){
         Member member = memberService.findById(loginId);
-
-        repository.add(member, req);
+        RecordJPA records = new RecordJPA();
+        List<Section> sections = req.getSections();
+        records.addMemberList(member);
+        records.setComment(req.getComment());
+        records.setSections(Section.listTostr(sections));
+        records.setCreatedDay(LocalDate.now());
+        return repository.add(records);
     }
 
+    public RecordJPA findById(Long recordId){
+        return repository.findById(recordId);
+    }
 }
