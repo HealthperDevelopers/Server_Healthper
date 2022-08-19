@@ -31,13 +31,18 @@ public class RecordController {
     @GetMapping("/info")
     @ResponseBody
     public List<GetRecordRes> getDetail(@Login Long loginId, @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate theDay){
-        return service.theDate(loginId, theDay);
+        int year = theDay.getYear();
+        int month = theDay.getMonthValue();
+        int day = theDay.getDayOfMonth();
+        return service.theDate(loginId, year, month, day);
     }
 
     @PostMapping
     @ResponseBody
-    public Long pushRecord(@Login Long loginId, @RequestBody PostRecordReq req){
-        return service.completeToday(loginId, req);
+    public String pushRecord(@Login Long loginId, @RequestBody PostRecordReq req){
+        //log.info("finish: {}", req.toString());
+        service.completeToday(loginId, req);
+        return "ok";
     }
 }
 

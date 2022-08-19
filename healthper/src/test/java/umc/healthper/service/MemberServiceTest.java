@@ -12,15 +12,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @Transactional
 public class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
 
-    //@Test
+    @Test
     public void 회원_등록() throws Exception {
         // given
         Member member = Member.createMember(100L, "우기");
@@ -33,7 +33,7 @@ public class MemberServiceTest {
         assertThat(findMember).isEqualTo(member);
     }
 
-    //@Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void 회원_중복_등록() throws Exception {
         // given
         Member member1 = Member.createMember(100L, "우기");
@@ -47,7 +47,7 @@ public class MemberServiceTest {
         fail("중복 회원이 저장되기 때문에 exception이 발생해야 한다.");
     }
 
-    //@Test
+    @Test
     public void 회원_목록_조회() throws Exception {
         // given
         Member member1 = Member.createMember(100L, "회원1");

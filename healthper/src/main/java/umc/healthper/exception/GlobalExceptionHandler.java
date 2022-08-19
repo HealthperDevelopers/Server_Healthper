@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import umc.healthper.exception.comment.CommentAlreadyRemovedException;
 import umc.healthper.exception.comment.CommentNotFoundException;
 import umc.healthper.exception.member.MemberDuplicateException;
@@ -23,6 +25,20 @@ import umc.healthper.exception.postlike.PostLikeNotFoundException;
 public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
+
+    /**
+     * Default Exception Handle
+     */
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse badRequestExceptionHandle(Exception e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                "",
+                "Bad Request"
+        );
+    }
 
     /**
      * Member

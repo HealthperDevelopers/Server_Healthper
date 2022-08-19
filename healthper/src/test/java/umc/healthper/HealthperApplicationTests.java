@@ -3,10 +3,10 @@ package umc.healthper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-//@SpringBootTest
+@SpringBootTest
 class HealthperApplicationTests {
 
-	//@Test
+	@Test
 	void contextLoads() {
 	}
 
