@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class CompleteExerciseInfoEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    private Long id; 
     @Embedded
     private CompleteExerciseInfo detail;
 

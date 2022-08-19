@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor  
 @RequestMapping("/finish")
 public class CompleteExerciseController {
     private final CompleteExerciseService service;

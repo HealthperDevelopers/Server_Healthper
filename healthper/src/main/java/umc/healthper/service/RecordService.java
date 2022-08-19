@@ -67,10 +67,10 @@ public class RecordService {
     public Long completeToday(Long loginId, PostRecordReq req){
         Member member = memberService.findById(loginId);
         RecordJPA records = new RecordJPA();
-        List<Section> sections = req.getSections();
+        //List<Long> sections = req.getSections();
         records.addMemberList(member);
         records.setComment(req.getComment());
-        records.setSections(Section.listTostr(sections));
+        //records.setSections(Section.listTostr(sections));
         records.setCreatedDay(LocalDate.now());
         return repository.add(records);
     }

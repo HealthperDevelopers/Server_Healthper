@@ -16,6 +16,6 @@ import java.util.Objects;
 public class CompleteExerciseInfo {
 
     private Integer setNumber;
-    private Integer repeatTime;
+    private Integer repeatTime; 
     private Integer weight;
 }

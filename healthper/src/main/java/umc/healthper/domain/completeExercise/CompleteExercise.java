@@ -19,7 +19,7 @@ import java.util.List;
 public class CompleteExercise {
     @Id
     @GeneratedValue
-    private Long id;
+    private Long id; 
 
     @CreatedDate
     private LocalDate createdDay;
