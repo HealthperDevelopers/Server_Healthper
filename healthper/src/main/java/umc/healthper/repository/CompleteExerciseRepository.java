@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-@Slf4j
+//@Slf4j
 public class CompleteExerciseRepository {
 
     private final EntityManager em;

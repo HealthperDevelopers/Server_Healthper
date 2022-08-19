@@ -3,17 +3,18 @@ package umc.healthper.domain.completeExercise;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 
-@Entity
+@Entity @Slf4j
 @Table(name ="DETAILS")
 @Getter @Setter
 @NoArgsConstructor
 public class CompleteExerciseInfoEntity {
     @Id
     @GeneratedValue
-    private Long id; 
+    private Long id;
     @Embedded
     private CompleteExerciseInfo detail;
 

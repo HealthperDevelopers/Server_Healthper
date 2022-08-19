@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
+//@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor

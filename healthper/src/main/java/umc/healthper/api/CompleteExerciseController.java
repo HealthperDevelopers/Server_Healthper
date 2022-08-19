@@ -12,7 +12,7 @@ import umc.healthper.service.CompleteExerciseService;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
+//@Slf4j
 @RestController
 @RequiredArgsConstructor  
 @RequestMapping("/finish")
