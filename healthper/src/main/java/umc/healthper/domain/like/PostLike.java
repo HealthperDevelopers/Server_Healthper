@@ -3,8 +3,8 @@ package umc.healthper.domain.like;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import umc.healthper.domain.Member;
-import umc.healthper.domain.Post;
+import umc.healthper.domain.member.Member;
+import umc.healthper.domain.post.Post;
 
 import javax.persistence.*;
 

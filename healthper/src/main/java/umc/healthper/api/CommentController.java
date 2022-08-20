@@ -2,9 +2,9 @@ package umc.healthper.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import umc.healthper.domain.Comment;
-import umc.healthper.domain.Member;
-import umc.healthper.domain.Post;
+import umc.healthper.domain.comment.Comment;
+import umc.healthper.domain.member.Member;
+import umc.healthper.domain.post.Post;
 import umc.healthper.dto.comment.CreateCommentResponseDto;
 import umc.healthper.dto.comment.CreateCommentRequestDto;
 import umc.healthper.dto.comment.UpdateCommentRequestDto;

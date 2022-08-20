@@ -3,7 +3,7 @@ package umc.healthper.dto.member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import umc.healthper.domain.MemberStatus;
+import umc.healthper.domain.member.MemberStatus;
 
 @Data
 @NoArgsConstructor

@@ -3,6 +3,7 @@ package umc.healthper.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import umc.healthper.domain.member.Member;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;

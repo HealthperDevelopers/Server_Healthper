@@ -1,7 +1,7 @@
 package umc.healthper.repository.post;
 
 import lombok.RequiredArgsConstructor;
-import umc.healthper.domain.Post;
+import umc.healthper.domain.post.Post;
 
 @RequiredArgsConstructor
 public class PostRepositoryCustomImpl implements PostRepositoryCustom {

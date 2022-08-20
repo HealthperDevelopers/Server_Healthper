@@ -1,6 +1,8 @@
-package umc.healthper.domain;
+package umc.healthper.domain.comment;
 
 import lombok.Getter;
+import umc.healthper.domain.member.Member;
+import umc.healthper.domain.post.Post;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -10,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.*;
-import static umc.healthper.domain.CommentStatus.*;
-import static umc.healthper.domain.CommentType.*;
+import static umc.healthper.domain.comment.CommentStatus.*;
+import static umc.healthper.domain.comment.CommentType.*;
 
 @Entity
 @Getter

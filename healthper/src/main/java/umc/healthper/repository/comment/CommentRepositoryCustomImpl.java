@@ -1,7 +1,7 @@
 package umc.healthper.repository.comment;
 
 import lombok.RequiredArgsConstructor;
-import umc.healthper.domain.Comment;
+import umc.healthper.domain.comment.Comment;
 
 import javax.persistence.EntityManager;
 
