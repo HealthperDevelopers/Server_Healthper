@@ -1,6 +1,7 @@
 package umc.healthper.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,7 +24,7 @@ import javax.validation.Valid;
 
 import static org.springframework.data.domain.Sort.Direction.*;
 
-@Tag(name = "Post", description = "게시글 관련 API")
+@Tag(name = "Post", description = "게시글 API")
 @RestController
 @RequiredArgsConstructor
 public class PostController {
@@ -41,7 +42,8 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @PostMapping("/post")
-    public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto request, @Login Long loginMemberId) {
+    public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto request,
+                                          @Parameter(hidden = true) @Login Long loginMemberId) {
         Member member = memberService.findById(loginMemberId);
         Post post = Post.createPost(member, request.getTitle(), request.getContent());
 
@@ -89,7 +91,8 @@ public class PostController {
     }
 
     @Operation(summary = "게시글 수정",
-            description = "게시글 수정에 관한 데이터들을 전달받아 `postId`에 해당하는 게시글을 수정합니다.")
+            description = "게시글 수정에 관한 데이터들을 전달받아 `postId`에 해당하는 게시글을 수정합니다.\n\n" +
+                    "<del>작성자만 수정이 가능합니다. (미구현)</del>")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
@@ -99,13 +102,15 @@ public class PostController {
     })
     @PatchMapping("/post/{postId}")
     public void updatePost(@PathVariable Long postId,
-                           @RequestBody @Valid UpdatePostRequestDto request) {
+                           @RequestBody @Valid UpdatePostRequestDto request,
+                           @Parameter(hidden = true) @Login Long loginMemberId) {
         postService.updatePost(postId, request);
     }
 
     @Operation(summary = "게시글 삭제",
             description = "`postId`에 해당하는 게시글을 삭제합니다.\n\n" +
-                    "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`postStatus=REMOVED`)로 변합니다.\n\n")
+                    "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`postStatus=REMOVED`)로 변합니다.\n\n" +
+                    "<del>작성자만 삭제가 가능합니다. (미구현)</del>")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
@@ -114,7 +119,8 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @DeleteMapping("/post/{postId}")
-    public void removePost(@PathVariable Long postId) {
+    public void removePost(@PathVariable Long postId,
+                           @Parameter(hidden = true) @Login Long loginMemberId) {
         postService.removePost(postId);
     }
 }
