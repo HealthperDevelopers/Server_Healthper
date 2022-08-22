@@ -1,5 +1,6 @@
 package umc.healthper.global.login;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +15,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
 
         if(session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null){
-            response.sendRedirect("/home");
+            response.sendRedirect("/error-page/406");
             return false;
         }
 
