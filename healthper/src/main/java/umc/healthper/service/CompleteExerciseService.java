@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.Section;
-import umc.healthper.domain.Member;
+import umc.healthper.domain.member.Member;
 import umc.healthper.domain.RecordJPA;
 import umc.healthper.domain.completeExercise.CompleteExercise;
 import umc.healthper.domain.completeExercise.CompleteExerciseInfoEntity;
