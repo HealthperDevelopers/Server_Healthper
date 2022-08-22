@@ -13,8 +13,8 @@ import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.*;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @Transactional
 public class PostLikeServiceTest {
 
@@ -23,7 +23,7 @@ public class PostLikeServiceTest {
     @Autowired PostLikeService postLikeService;
     @Autowired EntityManager em;
 
-  //  @Test
+    @Test
     public void 좋아요_추가() {
         // given
         Member member1 = Member.createMember(100L, "James");
@@ -55,7 +55,7 @@ public class PostLikeServiceTest {
         assertThat(post2.getLikes().size()).isEqualTo(1);
         assertThat(post3.getLikes().size()).isEqualTo(1);
     }
-    //@Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void 좋아요_중복_추가() {
         // given
         Member member1 = Member.createMember(100L, "James");
@@ -72,7 +72,7 @@ public class PostLikeServiceTest {
         fail("중복으로 좋아요 했기 때문에 예외가 발생해야 한다.");
     }
 
-    //@Test
+    @Test
     public void 좋아요_취소() {
         // given
         Member member1 = Member.createMember(100L, "James");
@@ -99,7 +99,7 @@ public class PostLikeServiceTest {
         assertThat(post2.getLikes().size()).isEqualTo(1);
     }
 
-    //@Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void 좋아요_하지_않은_경우의_취소() {
         // given
         Member member1 = Member.createMember(100L, "James");

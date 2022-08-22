@@ -3,7 +3,6 @@ package umc.healthper.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import umc.healthper.domain.completeExercise.CompleteExercise;
 import umc.healthper.domain.like.PostLike;
 import umc.healthper.global.BaseTimeEntity;
 
@@ -48,9 +47,6 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<RecordJPA> records = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<CompleteExercise> completeExercises = new ArrayList<>();
 
     //== 생성 메서드 ==//
     public static Member createMember(Long kakaoKey, String nickname) {

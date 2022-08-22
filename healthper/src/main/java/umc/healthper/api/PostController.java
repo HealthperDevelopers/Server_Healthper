@@ -30,13 +30,13 @@ public class PostController {
     private final PostService postService;
     private final MemberService memberService;
 
-
     @Operation(summary = "게시글 생성",
             description = "게시글 정보를 받아 새로운 게시글을 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = CreatePostResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = Object.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @PostMapping("/post")
     public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto request) {
@@ -52,7 +52,7 @@ public class PostController {
                     "`postStatus`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PostResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = Object.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
@@ -64,7 +64,7 @@ public class PostController {
 
     @Operation(summary = "게시글 목록 조회",
             description = "게시글 목록을 조회합니다. Paging, Sorting이 지원됩니다.\n\n" +
-                    "해당 API는 수정할 예정이라 참고만 해주세요. 입력 값이랑 응답 데이터 전부 수정될 것 같습니다." +
+                    "해당 API는 수정할 예정이라 참고만 해주세요. 입력 값이랑 응답 데이터 전부 수정될 것 같습니다.\n\n" +
                     "**Query Parameter**\n\n" +
                     "- `page`: 페이지 번호 (0부터 시작, 기본값 0)\n\n" +
                     "- `size`: 한 페이지에 받을 데이터 개수 (기본값 30)\n\n" +
@@ -75,7 +75,7 @@ public class PostController {
                     "    - <del>`/posts?page=0&size=10`: 가장 최근 10개의 게시글 목록 조회</del>")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Page.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = Object.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
     })
     @GetMapping("/posts")
     public Page<ListPostResponseDto> getPosts(@PageableDefault(size = 30, sort = "createdAt", direction = DESC) Pageable pageable) {
@@ -86,8 +86,8 @@ public class PostController {
     @Operation(summary = "게시글 수정",
             description = "게시글 수정에 관한 데이터들을 전달받아 `postId`에 해당하는 게시글을 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Void.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = Object.class))),
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
@@ -101,8 +101,8 @@ public class PostController {
             description = "`postId`에 해당하는 게시글을 삭제합니다.\n\n" +
                     "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`postStatus=REMOVED`)로 변합니다.\n\n")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = Void.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = Object.class))),
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })

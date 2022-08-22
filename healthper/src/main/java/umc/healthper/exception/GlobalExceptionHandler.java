@@ -5,12 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import umc.healthper.exception.comment.CommentAlreadyRemovedException;
 import umc.healthper.exception.comment.CommentNotFoundException;
 import umc.healthper.exception.member.MemberDuplicateException;
@@ -28,52 +28,22 @@ import umc.healthper.exception.record.RecordNotFoundByIdException;
 public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
+
     /**
-     * global
+     * Global
      */
-    @ExceptionHandler//인자 타입이 잘못된 경우
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class,
+            MissingServletRequestParameterException.class, MismatchedInputException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse illegalArgs(IllegalArgumentException e){
+    public ExceptionResponse badRequestExceptionHandle(Exception e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
-                getMessage("illegalArgs.code"),
-                getMessage("illegalArgs.message")
+                "",
+                "Bad Request"
         );
     }
 
-//    @ExceptionHandler
-//    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)//로그인 해야하는 경우
-//    public ExceptionResponse illegalAccess(AccessException e){
-//        log.error(String.valueOf(e));
-//        return new ExceptionResponse(
-//                HttpStatus.NOT_ACCEPTABLE,
-//                getMessage("illegalAccess.code"),
-//                getMessage("illegalAccess.message")
-//        );
-//    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)//kakaID처럼 잘못된 인자 명을 넘긴 경우
-    public ExceptionResponse illegalAccess(MissingServletRequestParameterException e){
-        log.error(String.valueOf(e));
-        return new ExceptionResponse(
-                HttpStatus.BAD_REQUEST,
-                getMessage("badRequest.code"),
-                getMessage("badRequest.message")
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)//json 형식이 잘못된 경우
-    public ExceptionResponse badJSON(MismatchedInputException e){
-        log.error(String.valueOf(e));
-        return new ExceptionResponse(
-                HttpStatus.BAD_REQUEST,
-                getMessage("badRequestJSON.code"),
-                getMessage("badRequestJSON.message")
-        );
-    }
     /**
      * Member
      */
@@ -96,6 +66,20 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 getMessage("memberDuplicate.code"),
                 getMessage("memberDuplicate.message")
+        );
+    }
+
+    /**
+     * record
+     */
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse illegalAccess(RecordNotFoundByIdException e){
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                getMessage("recordNotFound.code"),
+                getMessage("recordNotFound.message")
         );
     }
 
@@ -168,20 +152,6 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 getMessage("commentAlreadyRemoved.code"),
                 getMessage("commentAlreadyRemoved.message")
-        );
-    }
-
-    /**
-     * record
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse illegalAccess(RecordNotFoundByIdException e){
-        log.error(String.valueOf(e));
-        return new ExceptionResponse(
-                HttpStatus.BAD_REQUEST,
-                getMessage("recordNotFound.code"),
-                getMessage("recordNotFound.message")
         );
     }
 
