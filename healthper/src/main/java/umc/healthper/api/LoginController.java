@@ -39,7 +39,7 @@ public class LoginController {
                         @RequestParam(defaultValue = "/record/calender") String redirectURL, HttpServletRequest request) throws JsonProcessingException {
         Long kakaoKey = kakaoId;
 
-        if(kakaoKey == null || kakaoKey == -1){
+        if(kakaoKey == null){
             return "redirect:/home";
         }
         HttpSession session = request.getSession();

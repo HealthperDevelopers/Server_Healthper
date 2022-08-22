@@ -1,10 +1,12 @@
 package umc.healthper.exception;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,6 +20,7 @@ import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.postlike.AlreadyPostLikeException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
+import umc.healthper.exception.record.RecordNotFoundByIdException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,9 +30,10 @@ public class GlobalExceptionHandler {
     private final MessageSource messageSource;
 
     /**
-     * Default Exception Handle
+     * Global
      */
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class,
+            MissingServletRequestParameterException.class, MismatchedInputException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse badRequestExceptionHandle(Exception e) {
         log.error(String.valueOf(e));
@@ -62,6 +66,20 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 getMessage("memberDuplicate.code"),
                 getMessage("memberDuplicate.message")
+        );
+    }
+
+    /**
+     * record
+     */
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse illegalAccess(RecordNotFoundByIdException e){
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                getMessage("recordNotFound.code"),
+                getMessage("recordNotFound.message")
         );
     }
 
