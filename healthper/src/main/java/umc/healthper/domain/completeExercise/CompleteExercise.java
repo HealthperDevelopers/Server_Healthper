@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import umc.healthper.Section;
-import umc.healthper.domain.Member;
+import umc.healthper.domain.member.Member;
 import umc.healthper.domain.RecordJPA;
 
 import javax.persistence.*;
