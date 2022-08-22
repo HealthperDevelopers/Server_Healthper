@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreatePostRequestDto {
-    private Long memberId;
     private String title;
     private String content;
 }
