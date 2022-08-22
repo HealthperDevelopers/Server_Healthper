@@ -3,7 +3,7 @@ package umc.healthper.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import umc.healthper.domain.Member;
+import umc.healthper.domain.member.Member;
 import umc.healthper.exception.member.MemberDuplicateException;
 import umc.healthper.exception.member.MemberNotFoundByIdException;
 import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;

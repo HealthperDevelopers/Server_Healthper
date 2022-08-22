@@ -1,7 +1,7 @@
 package umc.healthper.dto.post;
 
 import lombok.Data;
-import umc.healthper.domain.Post;
+import umc.healthper.domain.post.Post;
 import umc.healthper.dto.member.MemberInfoDto;
 
 import java.time.LocalDateTime;

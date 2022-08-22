@@ -3,13 +3,11 @@ package umc.healthper.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import umc.healthper.domain.completeExercise.CompleteExercise;
-import umc.healthper.global.BaseExerciseEntity;
+import umc.healthper.domain.member.Member;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -32,11 +30,6 @@ public class RecordJPA {
     @Size(min = 10, max = 10)
     private String sections;
     private LocalDate createdDay;
-
-    private BaseExerciseEntity exerciseEntity;
-
-    @OneToMany(mappedBy = "record")
-    private List<CompleteExercise> comExs;
 
     public void addMemberList(Member member){
         this.setMember(member);

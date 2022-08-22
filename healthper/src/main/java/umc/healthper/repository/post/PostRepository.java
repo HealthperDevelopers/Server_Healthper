@@ -4,8 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import umc.healthper.domain.Post;
-import umc.healthper.domain.PostStatus;
+import umc.healthper.domain.post.Post;
+import umc.healthper.domain.post.PostStatus;
 
 import java.util.Optional;
 

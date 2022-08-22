@@ -1,9 +1,11 @@
-package umc.healthper.domain;
+package umc.healthper.domain.post;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import umc.healthper.domain.comment.Comment;
 import umc.healthper.domain.like.PostLike;
+import umc.healthper.domain.member.Member;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -12,7 +14,7 @@ import java.util.*;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
-import static umc.healthper.domain.PostStatus.*;
+import static umc.healthper.domain.post.PostStatus.*;
 
 @Entity
 @Getter

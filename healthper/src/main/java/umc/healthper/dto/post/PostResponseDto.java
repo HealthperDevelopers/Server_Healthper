@@ -3,10 +3,10 @@ package umc.healthper.dto.post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import umc.healthper.domain.CommentType;
-import umc.healthper.domain.Member;
-import umc.healthper.domain.Post;
-import umc.healthper.domain.PostStatus;
+import umc.healthper.domain.comment.CommentType;
+import umc.healthper.domain.member.Member;
+import umc.healthper.domain.post.Post;
+import umc.healthper.domain.post.PostStatus;
 import umc.healthper.dto.comment.CommentResponseDto;
 import umc.healthper.dto.member.MemberInfoDto;
 
