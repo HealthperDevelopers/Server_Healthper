@@ -1,13 +1,10 @@
 package umc.healthper.repository;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import umc.healthper.domain.completeExercise.CompleteExercise;
-import umc.healthper.domain.completeExercise.CompleteExerciseInfoEntity;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository

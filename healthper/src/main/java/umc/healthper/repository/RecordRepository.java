@@ -47,14 +47,12 @@ public class RecordRepository{
         return resultList;
     }
 
-    public void add(Member member, PostRecordReq req) {
-        RecordJPA records = new RecordJPA();
-        List<Section> sections = req.getSections();
-        records.addMemberList(member);
-        records.setComment(req.getComment());
-        records.setSections(Section.listTostr(sections));
-        records.setCreatedDay(LocalDate.now());
-        em.persist(records);
+    public Long add(RecordJPA record) {
+        em.persist(record);
+        return record.getId();
     }
 
+    public RecordJPA findById(Long recordId) {
+        return em.find(RecordJPA.class, recordId);
+    }
 }
