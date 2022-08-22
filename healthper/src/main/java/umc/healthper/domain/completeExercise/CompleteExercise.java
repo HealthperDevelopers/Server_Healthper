@@ -51,6 +51,7 @@ public class CompleteExercise {
         this.exerciseName = exName;
         this.exerciseTime = exTime;
         this.section = section;
+        this.createdDay = LocalDate.now();
         for (CompleteExerciseInfo exDetail : exDetails) {
             this.details.add(new CompleteExerciseInfoEntity(exDetail));
         }

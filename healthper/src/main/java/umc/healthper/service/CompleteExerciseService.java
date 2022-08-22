@@ -1,20 +1,17 @@
 package umc.healthper.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.Section;
 import umc.healthper.domain.Member;
 import umc.healthper.domain.RecordJPA;
 import umc.healthper.domain.completeExercise.CompleteExercise;
-import umc.healthper.domain.completeExercise.CompleteExerciseInfo;
 import umc.healthper.domain.completeExercise.CompleteExerciseInfoEntity;
 import umc.healthper.dto.completeExercise.GetDetails;
 import umc.healthper.dto.completeExercise.PostExercises;
 import umc.healthper.repository.CompleteExerciseRepository;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +38,7 @@ public class CompleteExerciseService {
 
     public List<GetDetails> exList(Long recordId){
         List<GetDetails> res = new ArrayList<>();
-        List<CompleteExercise> details = repository.getDetails(recordId);
+        List<CompleteExercise> details = repository.getDetails(recordService.findById(recordId).getId());
         for (CompleteExercise detail : details) {
             GetDetails ex = new GetDetails(detail.getExerciseTime(), detail.getExerciseName(), detail.getSection());
             for (CompleteExerciseInfoEntity detailInfo : detail.getDetails())

@@ -38,7 +38,7 @@ public class LoginController {
     public String login(@RequestParam(defaultValue = "-1", name="kakaoId") Long kakaoKey,
                         @RequestParam(defaultValue = "/record/calender") String redirectURL, HttpServletRequest request) throws JsonProcessingException {
 
-        if(kakaoKey == null || kakaoKey == -1){
+        if(kakaoKey == null){
             return "redirect:/home";
         }
         HttpSession session = request.getSession();

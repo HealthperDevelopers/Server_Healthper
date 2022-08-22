@@ -3,10 +3,7 @@ package umc.healthper.repository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import umc.healthper.Section;
-import umc.healthper.domain.Member;
 import umc.healthper.domain.RecordJPA;
-import umc.healthper.dto.record.PostRecordReq;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;

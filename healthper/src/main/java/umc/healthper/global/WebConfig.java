@@ -1,7 +1,10 @@
 package umc.healthper.global;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import umc.healthper.global.argumentresolver.LoginMemberArgResolver;
@@ -22,8 +25,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/home", "/member/add", "/login", "logout",
-                        "/css/**", "/*.ico", "/error")
+                        "/css/**", "/*.ico", "/error","/error-page/**")
                 .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**");
     }
+//    @Bean
+//    DispatcherServlet dispatcherServlet () {
+//        DispatcherServlet ds = new DispatcherServlet();
+//        ds.setThrowExceptionIfNoHandlerFound(true);
+//        return ds;
+//    }
 }
 

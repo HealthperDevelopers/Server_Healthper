@@ -28,11 +28,7 @@ public class CompleteExerciseController {
     @GetMapping("/{recordId}")
     public List<GetDetails> getList(@PathVariable Long recordId){
         List<GetDetails> details = service.exList(recordId);
-//        List<GetDetailsRes> res = new ArrayList<>();
-//        for (GetDetails detail : details) {
-//            String info = JSONArray.toJSONString(detail.getDetails());
-//            res.add(new GetDetailsRes(detail.getExerciseTime(), detail.getExerciseName(), detail.getSection(),info));
-//        }
+
         return details;
     }
 }
