@@ -97,7 +97,7 @@ public class PostController {
 
     @Operation(summary = "게시글 수정",
             description = "게시글 수정에 관한 데이터들을 전달받아 `postId`에 해당하는 게시글을 수정합니다.\n\n" +
-                    "<del>작성자만 수정이 가능합니다. (미구현)</del>")
+                    "작성자만 수정이 가능합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
@@ -115,7 +115,7 @@ public class PostController {
     @Operation(summary = "게시글 삭제",
             description = "`postId`에 해당하는 게시글을 삭제합니다.\n\n" +
                     "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`postStatus=REMOVED`)로 변합니다.\n\n" +
-                    "<del>작성자만 삭제가 가능합니다. (미구현)</del>")
+                    "작성자만 삭제가 가능합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
