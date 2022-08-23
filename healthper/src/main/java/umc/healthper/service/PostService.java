@@ -47,6 +47,7 @@ public class PostService {
     public Post findPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        validateRemovedPost(post);
         post.addViewCount();
         return post;
     }
@@ -60,7 +61,7 @@ public class PostService {
     public void updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostAlreadyRemovedException::new);
-        validateAlreadyRemovedPost(post);
+        validateRemovedPost(post);
         post.update(updatePostRequestDto.getTitle(), updatePostRequestDto.getContent());
     }
 
@@ -72,15 +73,15 @@ public class PostService {
     public void removePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostAlreadyRemovedException::new);
-        validateAlreadyRemovedPost(post);
+        validateRemovedPost(post);
         postRepository.removePost(post);
     }
 
     /**
-     * 이미 삭제된 게시글인지 검증. 이미 삭제되었다면 PostAlreadyRemovedException throw
+     * 삭제된 게시글인지 검증. 삭제된 게시글이라면 PostAlreadyRemovedException throw
      * @param post
      */
-    private void validateAlreadyRemovedPost(Post post) {
+    private void validateRemovedPost(Post post) {
         if (post.getStatus() == PostStatus.REMOVED) {
             throw new PostAlreadyRemovedException();
         }

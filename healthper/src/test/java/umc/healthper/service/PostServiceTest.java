@@ -10,6 +10,7 @@ import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.UpdatePostRequestDto;
+import umc.healthper.exception.post.PostAlreadyRemovedException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -59,7 +60,7 @@ public class PostServiceTest {
         assertThat(findPost.getContent()).isEqualTo("수정이 잘 될까?");
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = PostAlreadyRemovedException.class)
     public void 게시글_삭제() {
         // given
         Member member = Member.createMember(100L, "woogie");
@@ -71,7 +72,7 @@ public class PostServiceTest {
 
         // when
         postService.removePost(postId);
-        System.out.println(postService.findPost(postId));
+        postService.findPost(postId);
 
         // then
         fail("게시글이 삭제되었기 때문에 Exception이 발생해야 한다.");
