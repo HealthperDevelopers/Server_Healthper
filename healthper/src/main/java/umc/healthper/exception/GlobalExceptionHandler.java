@@ -20,6 +20,7 @@ import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.postlike.AlreadyPostLikeException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
+import umc.healthper.exception.record.EmptySectionException;
 import umc.healthper.exception.record.RecordNotFoundByIdException;
 
 @Slf4j
@@ -39,8 +40,8 @@ public class GlobalExceptionHandler {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
-                "",
-                "Bad Request"
+                "100",
+                "요청 정보를 확인해 주세요."
         );
     }
 
@@ -74,12 +75,23 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse illegalAccess(RecordNotFoundByIdException e){
+    public ExceptionResponse nonRecord(RecordNotFoundByIdException e){
         log.error(String.valueOf(e));
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 getMessage("recordNotFound.code"),
                 getMessage("recordNotFound.message")
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse emptySection(EmptySectionException e){
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                getMessage("sectionEmpty.code"),
+                getMessage("sectionEmpty.message")
         );
     }
 

@@ -15,7 +15,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
 
         if(session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null){
-            response.sendRedirect("/error-page/406");
+            response.sendRedirect("/error-page/401");
             return false;
         }
 

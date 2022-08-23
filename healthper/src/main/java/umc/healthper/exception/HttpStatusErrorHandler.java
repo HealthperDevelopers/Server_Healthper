@@ -43,12 +43,12 @@ public class HttpStatusErrorHandler {
         );
     }
 
-    @RequestMapping("/error-page/406")
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @RequestMapping("/error-page/401")
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ExceptionResponse unAuth(){
-        log.error("406 error");
+        log.error("401 error");
         return new ExceptionResponse(
-                HttpStatus.NOT_ACCEPTABLE,
+                HttpStatus.UNAUTHORIZED,
                 getMessage("illegalAccess.code"),
                 getMessage("illegalAccess.message")
         );
