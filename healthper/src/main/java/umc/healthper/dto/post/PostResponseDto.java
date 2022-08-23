@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import umc.healthper.domain.comment.CommentType;
 import umc.healthper.domain.member.Member;
-import umc.healthper.domain.post.Post;
-import umc.healthper.domain.post.PostStatus;
+import umc.healthper.domain.post.*;
 import umc.healthper.dto.comment.CommentResponseDto;
 import umc.healthper.dto.member.MemberInfoDto;
 
@@ -24,6 +23,7 @@ import java.util.List;
 public class PostResponseDto {
 
     private Long postId;
+    private PostType postType;
     private MemberInfoDto writer;
     private String title;
     private String content;
@@ -34,8 +34,11 @@ public class PostResponseDto {
     // 이미지 파일
 
     public PostResponseDto(Post post) {
+        this.setPostType(PostType.getPostType(post));
+
         Member writer = post.getMember();
         this.setWriter(new MemberInfoDto(writer.getId(), writer.getNickname(), writer.getStatus()));
+
         this.setPostId(post.getId());
         this.setTitle(post.getTitle());
         this.setContent(post.getContent());

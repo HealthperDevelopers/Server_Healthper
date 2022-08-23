@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
+import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.*;
 import umc.healthper.exception.ExceptionResponse;
 import umc.healthper.global.argumentresolver.Login;
@@ -33,7 +34,8 @@ public class PostController {
     private final MemberService memberService;
 
     @Operation(summary = "게시글 생성",
-            description = "게시글 정보를 받아 새로운 게시글을 생성합니다.")
+            description = "게시글 정보를 받아 새로운 게시글을 생성합니다.\n\n" +
+                    "- `postType`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = CreatePostResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
@@ -42,10 +44,12 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @PostMapping("/post")
-    public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto request,
+    public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto requestDto,
                                           @Parameter(hidden = true) @Login Long loginMemberId) {
         Member member = memberService.findById(loginMemberId);
-        Post post = Post.createPost(member, request.getTitle(), request.getContent());
+
+        PostType postType = PostType.transferFromString(requestDto.getPostType());
+        Post post = Post.createPost(member, postType, requestDto.getTitle(), requestDto.getContent());
 
         Long id = postService.savePost(post).getId();
         return new CreatePostResponseDto(id);
@@ -53,7 +57,8 @@ public class PostController {
 
     @Operation(summary = "게시글 조회",
             description = "`posdId`에 해당하는 게시글을 조회합니다. 댓글과 대댓글 목록도 함께 반환됩니다.\n\n" +
-                    "`postStatus`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
+                    "- `postType`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)\n\n" +
+                    "- `postStatus`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = PostResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),

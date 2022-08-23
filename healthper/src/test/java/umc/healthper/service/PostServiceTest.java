@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
+import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.UpdatePostRequestDto;
 
 import static org.assertj.core.api.Assertions.*;
@@ -26,7 +27,7 @@ public class PostServiceTest {
         // given
         Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
-        Post post = Post.createPost(member, "제목1", "테스트입니다");
+        Post post = Post.createPost(member, PostType.NORMAL, "제목1", "테스트입니다");
         postService.savePost(post);
 
         // when
@@ -45,7 +46,7 @@ public class PostServiceTest {
         // given
         Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
-        Post post = Post.createPost(member, "제목1", "테스트입니다");
+        Post post = Post.createPost(member, PostType.NORMAL, "제목1", "테스트입니다");
         postService.savePost(post);
 
         // when
@@ -58,19 +59,19 @@ public class PostServiceTest {
         assertThat(findPost.getContent()).isEqualTo("수정이 잘 될까?");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = Exception.class)
     public void 게시글_삭제() {
         // given
         Member member = Member.createMember(100L, "woogie");
         memberService.join(member);
-        Post post = Post.createPost(member, "제목1", "테스트입니다");
+        Post post = Post.createPost(member, PostType.NORMAL, "제목1", "테스트입니다");
         postService.savePost(post);
 
         Long postId = post.getId();
 
         // when
         postService.removePost(postId);
-        postService.findPost(postId);
+        System.out.println(postService.findPost(postId));
 
         // then
         fail("게시글이 삭제되었기 때문에 Exception이 발생해야 한다.");

@@ -13,7 +13,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import umc.healthper.dto.post.CreatePostResponseDto;
 import umc.healthper.dto.record.GetCalenderRes;
 import umc.healthper.dto.record.GetRecordRes;
 import umc.healthper.dto.record.PostRecordReq;
@@ -23,7 +22,7 @@ import umc.healthper.service.RecordService;
 
 import java.time.LocalDate;
 import java.util.List;
-@Tag(name = "Post", description = "기록 API")
+@Tag(name = "Record", description = "기록 API")
 @Controller
 @RequestMapping("record")
 @Slf4j

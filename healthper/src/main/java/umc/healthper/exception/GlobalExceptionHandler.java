@@ -34,14 +34,14 @@ public class GlobalExceptionHandler {
      * Global
      */
     @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class,
-            MissingServletRequestParameterException.class, MismatchedInputException.class})
+            MissingServletRequestParameterException.class, MismatchedInputException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse badRequestExceptionHandle(Exception e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
-                "100",
-                "요청 정보를 확인해 주세요."
+                "badRequest.code",
+                "badRequest.message"
         );
     }
 
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse nonRecord(RecordNotFoundByIdException e){
+    public ExceptionResponse nonRecord(RecordNotFoundByIdException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse emptySection(EmptySectionException e){
+    public ExceptionResponse emptySection(EmptySectionException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,

@@ -8,6 +8,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
+import umc.healthper.domain.post.PostType;
+import umc.healthper.exception.postlike.AlreadyPostLikeException;
+import umc.healthper.exception.postlike.PostLikeNotFoundException;
 
 import javax.persistence.EntityManager;
 
@@ -33,11 +36,11 @@ public class PostLikeServiceTest {
         Member member3 = Member.createMember(102L, "Max");
         memberService.join(member3);
 
-        Post post1 = Post.createPost(member1, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
+        Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
         postService.savePost(post1);
-        Post post2 = Post.createPost(member1, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글");
+        Post post2 = Post.createPost(member1, PostType.NORMAL, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글");
         postService.savePost(post2);
-        Post post3 = Post.createPost(member1, "제목" + 3, "테스트를 위한 " + 3 + "번 게시글");
+        Post post3 = Post.createPost(member1, PostType.NORMAL, "제목" + 3, "테스트를 위한 " + 3 + "번 게시글");
         postService.savePost(post3);
 
         // when
@@ -55,13 +58,13 @@ public class PostLikeServiceTest {
         assertThat(post2.getLikes().size()).isEqualTo(1);
         assertThat(post3.getLikes().size()).isEqualTo(1);
     }
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = AlreadyPostLikeException.class)
     public void 좋아요_중복_추가() {
         // given
         Member member1 = Member.createMember(100L, "James");
         memberService.join(member1);
 
-        Post post1 = Post.createPost(member1, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
+        Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
         postService.savePost(post1);
 
         // when
@@ -80,9 +83,9 @@ public class PostLikeServiceTest {
         Member member2 = Member.createMember(101L, "Anne");
         memberService.join(member2);
 
-        Post post1 = Post.createPost(member1, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
+        Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
         postService.savePost(post1);
-        Post post2 = Post.createPost(member1, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글");
+        Post post2 = Post.createPost(member1, PostType.NORMAL, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글");
         postService.savePost(post2);
 
         postLikeService.addLike(member1.getId(), post1.getId());
@@ -99,13 +102,13 @@ public class PostLikeServiceTest {
         assertThat(post2.getLikes().size()).isEqualTo(1);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = PostLikeNotFoundException.class)
     public void 좋아요_하지_않은_경우의_취소() {
         // given
         Member member1 = Member.createMember(100L, "James");
         memberService.join(member1);
 
-        Post post1 = Post.createPost(member1, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
+        Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
         postService.savePost(post1);
 
         // when
