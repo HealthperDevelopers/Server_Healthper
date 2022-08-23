@@ -2,12 +2,19 @@ package umc.healthper.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import umc.healthper.dto.completeExercise.GetDetails;
+import umc.healthper.exception.ExceptionResponse;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.global.login.SessionConst;
 import umc.healthper.service.MemberService;
@@ -23,9 +30,18 @@ public class LoginController {
 
     private final MemberService memberService;
 
+    @Operation(summary = "임시 시작 페이지",
+            description = "로그인 여부를 확인할 수 있습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
+    })
     @GetMapping("/home")
     @ResponseBody
-    public String home(@Login Long userId) {
+    public String home(@Parameter(hidden = true)@Login Long userId) {
         if(userId == null)
             return "로그인 해주세요.";
         return "로그인 완료";
@@ -33,9 +49,16 @@ public class LoginController {
 
 
     @Operation(summary = "Login",
-            description = "Login")
+            description = "kakaoId를 통해 로그인 합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = Void.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
+    })
     @GetMapping("/login")
-    public String login(@RequestParam(defaultValue = "-1") Long kakaoId,
+    public String login(@RequestParam Long kakaoId,
                         @RequestParam(defaultValue = "/record/calender") String redirectURL, HttpServletRequest request) throws JsonProcessingException {
         Long kakaoKey = kakaoId;
 
@@ -51,6 +74,15 @@ public class LoginController {
         return "redirect:"+redirectURL+"?year="+now.getYear()+"&month="+now.getMonthValue();
     }
 
+    @Operation(summary = "Logout",
+            description = "세션에서 MEMBER 정보를 제거합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = Void.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
+    })
     @GetMapping("/logout")
     public String logout(HttpServletRequest request){
         HttpSession session = request.getSession(false);

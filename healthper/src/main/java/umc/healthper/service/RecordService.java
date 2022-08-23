@@ -10,6 +10,7 @@ import umc.healthper.domain.RecordJPA;
 import umc.healthper.dto.record.GetCalenderRes;
 import umc.healthper.dto.record.GetRecordRes;
 import umc.healthper.dto.record.PostRecordReq;
+import umc.healthper.exception.record.EmptySectionException;
 import umc.healthper.exception.record.RecordNotFoundByIdException;
 import umc.healthper.global.BaseExerciseEntity;
 import umc.healthper.repository.RecordRepository;
@@ -66,15 +67,20 @@ public class RecordService {
     @Transactional
     public Long completeToday(Long loginId, PostRecordReq req){
         Member member = memberService.findById(loginId);
+        RecordJPA records = postDTOtoDomain(member, req);
+        return repository.add(records);
+    }
+
+    private RecordJPA postDTOtoDomain(Member member,PostRecordReq req){
         RecordJPA records = new RecordJPA();
         List<Section> sections = req.getSections();
+        if(sections.size() == 0)throw new EmptySectionException();
         records.addMemberList(member);
         records.setComment(req.getComment());
         records.setSections(Section.listTostr(sections));
         records.setCreatedDay(LocalDate.now());
         records.setExerciseEntity(req.getExerciseInfo());
-
-        return repository.add(records);
+        return records;
     }
 
     public RecordJPA findById(Long recordId){
