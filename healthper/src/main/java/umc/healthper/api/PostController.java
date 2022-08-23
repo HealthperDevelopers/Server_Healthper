@@ -109,7 +109,7 @@ public class PostController {
     public void updatePost(@PathVariable Long postId,
                            @RequestBody @Valid UpdatePostRequestDto request,
                            @Parameter(hidden = true) @Login Long loginMemberId) {
-        postService.updatePost(postId, request);
+        postService.updatePost(loginMemberId, postId, request);
     }
 
     @Operation(summary = "게시글 삭제",
@@ -126,6 +126,6 @@ public class PostController {
     @DeleteMapping("/post/{postId}")
     public void removePost(@PathVariable Long postId,
                            @Parameter(hidden = true) @Login Long loginMemberId) {
-        postService.removePost(postId);
+        postService.removePost(loginMemberId, postId);
     }
 }

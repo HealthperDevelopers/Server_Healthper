@@ -18,6 +18,7 @@ import umc.healthper.exception.member.MemberNotFoundByIdException;
 import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
+import umc.healthper.exception.post.PostUnauthorizedException;
 import umc.healthper.exception.postlike.AlreadyPostLikeException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.exception.record.EmptySectionException;
@@ -117,6 +118,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 getMessage("postAlreadyRemoved.code"),
                 getMessage("postAlreadyRemoved.message")
+        );
+    }
+
+    @ExceptionHandler(PostUnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionResponse postUnauthorizedExceptionHandle(PostUnauthorizedException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.UNAUTHORIZED,
+                getMessage("postUnauthorized.code"),
+                getMessage("postUnauthorized.message")
         );
     }
 
