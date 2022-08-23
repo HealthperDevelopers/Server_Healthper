@@ -14,12 +14,13 @@ import java.util.*;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
-import static umc.healthper.domain.post.PostStatus.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "post_type")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post extends BaseTimeEntity {
+public abstract class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -52,8 +53,17 @@ public class Post extends BaseTimeEntity {
     private Set<PostLike> likes = new HashSet<>();
 
     //== 생성 메서드 ==//
-    public static Post createPost(Member member, String title, String content) {
-        return new Post(member, title, content, 0, NORMAL);
+    public static Post createPost(Member member, PostType postType, String title, String content) {
+        switch (postType) {
+            case NORMAL:
+                return new NormalPost(member, title, content, 0, PostStatus.NORMAL);
+            case QUESTION:
+                return new QuestionPost(member, title, content, 0, PostStatus.NORMAL);
+            case AUDIO:
+                return new AudioPost(member, title, content, 0, PostStatus.NORMAL);
+            default:
+                throw new IllegalArgumentException("잘못된 PostType");
+        }
     }
 
     //== 수정 메서드 ==//
@@ -67,11 +77,11 @@ public class Post extends BaseTimeEntity {
     }
 
     public void delete() {
-        this.setStatus(REMOVED);
+        this.setStatus(PostStatus.REMOVED);
     }
 
     //== Constructor ==//
-    private Post(Member member, String title, String content, int viewCount, PostStatus postStatus) {
+    protected Post(Member member, String title, String content, int viewCount, PostStatus postStatus) {
         this.member = member;
         this.title = title;
         this.content = content;

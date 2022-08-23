@@ -21,6 +21,8 @@ public class PostService {
 
     /**
      * Post 등록(저장)
+     * @param post
+     * @return 생성된 Post 객체 return
      */
     @Transactional
     public Post savePost(Post post) {
@@ -30,6 +32,8 @@ public class PostService {
     /**
      * Post 목록 조회 - Paging
      * 삭제되지 않은 게시글만 조회
+     * @param pageable
+     * @return Post 객체들이 담긴 Page 객체 return
      */
     public Page<Post> findPosts(Pageable pageable) {
         return postRepository.findAllByStatusNot(pageable, PostStatus.REMOVED);
@@ -37,35 +41,47 @@ public class PostService {
 
     /**
      * Post 조회 - id
+     * @param postId
+     * @return 조회된 Post 객체 return
      */
     public Post findPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+        validateRemovedPost(post);
         post.addViewCount();
         return post;
     }
 
     /**
      * Post 수정
+     * @param postId
+     * @param updatePostRequestDto
      */
     @Transactional
-    public void updatePost(Long postId, UpdatePostRequestDto postDto) {
-        Post post = postRepository.findById(postId).orElseThrow(PostAlreadyRemovedException::new);
-        validateAlreadyRemovedPost(post);
-        post.update(postDto.getTitle(), postDto.getContent());
+    public void updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostAlreadyRemovedException::new);
+        validateRemovedPost(post);
+        post.update(updatePostRequestDto.getTitle(), updatePostRequestDto.getContent());
     }
 
     /**
      * Post 삭제
+     * @param postId
      */
     @Transactional
     public void removePost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(PostAlreadyRemovedException::new);
-        validateAlreadyRemovedPost(post);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostAlreadyRemovedException::new);
+        validateRemovedPost(post);
         postRepository.removePost(post);
     }
 
-    // 이미 삭제된 게시글인지 검증
-    private void validateAlreadyRemovedPost(Post post) {
+    /**
+     * 삭제된 게시글인지 검증. 삭제된 게시글이라면 PostAlreadyRemovedException throw
+     * @param post
+     */
+    private void validateRemovedPost(Post post) {
         if (post.getStatus() == PostStatus.REMOVED) {
             throw new PostAlreadyRemovedException();
         }
