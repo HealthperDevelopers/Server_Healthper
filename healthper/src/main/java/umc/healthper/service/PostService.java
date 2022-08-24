@@ -1,17 +1,18 @@
 package umc.healthper.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostStatus;
+import umc.healthper.dto.post.PostSortingCriteria;
 import umc.healthper.dto.post.UpdatePostRequestDto;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.post.PostUnauthorizedException;
 import umc.healthper.repository.post.PostRepository;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,13 +34,13 @@ public class PostService {
 
     /**
      * Post 목록 조회 - Paging
-     * 삭제되지 않은 게시글만 조회
+     * 삭제된 게시글, 차단된 게시글은 제외하고 조회
      *
-     * @param pageable
-     * @return Post 객체들이 담긴 Page 객체 return
+     * @param sortingCriteria
+     * @return Post 객체들이 담긴 List return
      */
-    public Page<Post> findPosts(Pageable pageable) {
-        return postRepository.findAllByStatusNot(pageable, PostStatus.REMOVED);
+    public List<Post> findPostList(PostSortingCriteria sortingCriteria) {
+        return postRepository.findPostList(sortingCriteria);
     }
 
     /**

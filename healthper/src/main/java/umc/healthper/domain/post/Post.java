@@ -3,6 +3,7 @@ package umc.healthper.domain.post;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 import umc.healthper.domain.comment.Comment;
 import umc.healthper.domain.like.PostLike;
 import umc.healthper.domain.member.Member;
@@ -51,6 +52,16 @@ public abstract class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = ALL)
     private Set<PostLike> likes = new HashSet<>();
+
+    @Formula("(select count(1) " +
+            "from comment c " +
+            "where c.post_id=post_id)")
+    private int commentCount;
+
+    @Formula("(select count(1) " +
+            "from post_like pl " +
+            "where pl.post_id=post_id)")
+    private int postLikeCount;
 
     //== 생성 메서드 ==//
     public static Post createPost(Member member, PostType postType, String title, String content) {

@@ -16,6 +16,7 @@ public class ListPostResponseDto {
     private MemberInfoDto writer;
     private String title;
     private Integer likeCount;
+    private Integer commentCount;
     private LocalDateTime createdAt;
 
     public ListPostResponseDto(Post post) {
@@ -26,6 +27,7 @@ public class ListPostResponseDto {
 
         this.setPostId(post.getId());
         this.setTitle(post.getTitle());
+        this.setCommentCount(post.getComments().size());
         this.setLikeCount(post.getLikes().size());
         this.setCreatedAt(post.getCreatedAt());
     }
