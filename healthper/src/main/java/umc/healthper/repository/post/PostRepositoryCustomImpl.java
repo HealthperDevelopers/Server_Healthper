@@ -12,7 +12,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
     private final EntityManager em;
 
-    private final static int NUMBER_OF_PAGING = 2;
+    private final static int NUMBER_OF_PAGING = 30;
 
     @Override
     public List<Post> findPostList(PostSortingCriteria sortingCriteria, Integer page) {
