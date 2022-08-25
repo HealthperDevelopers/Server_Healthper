@@ -1,6 +1,9 @@
 package umc.healthper.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.post.Post;
@@ -12,14 +15,13 @@ import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.post.PostUnauthorizedException;
 import umc.healthper.repository.post.PostRepository;
 
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
+    private final static int NUMBER_OF_PAGING = 30;
 
     /**
      * Post 등록(저장)
@@ -32,16 +34,44 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    /**
-     * Post 목록 조회 - Paging
+    /*
+     * [JPQL] Post 목록 조회 - Paging
      * 삭제된 게시글, 차단된 게시글은 제외하고 조회
      *
      * @param sortingCriteria
      * @param page
      * @return Post 객체들이 담긴 List return
      */
-    public List<Post> findPostList(PostSortingCriteria sortingCriteria, Integer page) {
-        return postRepository.findPostList(sortingCriteria, page);
+//    public List<Post> findPostList(PostSortingCriteria sortingCriteria, Integer page) {
+//        return postRepository.findPostList(sortingCriteria, page);
+//    }
+
+    /**
+     * [Spring Data] Post 목록 조회 - Paging
+     * 삭제된 게시글, 차단된 게시글은 제외하고 조회
+     *
+     * @param sortingCriteria
+     * @param page
+     * @return Post 객체들이 담긴 Slice 객체 return
+     */
+    public Slice<Post> findPosts(PostSortingCriteria sortingCriteria, Integer page) {
+        Sort sort;
+        switch (sortingCriteria) {
+            case LATEST:
+                sort = Sort.by(Sort.Direction.DESC, "createdAt");
+                break;
+            case LIKE:
+                sort = Sort.by(Sort.Direction.DESC, "postLikeCount");
+                break;
+            case COMMENT:
+                sort = Sort.by(Sort.Direction.DESC, "commentCount");
+                break;
+            default:
+                throw new IllegalArgumentException("잘못된 정렬 기준입니다.");
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, NUMBER_OF_PAGING, sort);
+        return postRepository.findPostsByStatusNotAndStatusNot(pageRequest, PostStatus.REMOVED, PostStatus.BLOCKED);
     }
 
     /**
