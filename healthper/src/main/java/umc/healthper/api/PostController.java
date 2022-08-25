@@ -30,6 +30,7 @@ public class PostController {
 
     @Operation(summary = "게시글 생성",
             description = "게시글 정보를 받아 새로운 게시글을 생성합니다.\n\n" +
+                    "**Request**\n\n" +
                     "- `postType`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = CreatePostResponseDto.class))),
@@ -52,6 +53,7 @@ public class PostController {
 
     @Operation(summary = "게시글 조회",
             description = "`posdId`에 해당하는 게시글을 조회합니다. 댓글과 대댓글 목록도 함께 반환됩니다.\n\n" +
+                    "**Response**\n\n" +
                     "- `postType`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)\n\n" +
                     "- `postStatus`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
     @ApiResponses(value = {
@@ -69,8 +71,9 @@ public class PostController {
 
     @Operation(summary = "게시글 목록 조회",
             description = "게시글 목록을 조회합니다. Paging(30개), Sorting이 지원됩니다.\n\n" +
+                    "삭제된 게시글(`status=REMOVED`)과 차단된 게시글(`status=BLOCKED`)은 제외하고 조회합니다.\n\n" +
                     "요청, 응답 데이터 약간 수정될 수는 있습니다만 최대한 이 상태와 비슷하게 할 예정입니다. 일단 이거 보고 진행하셔도 될 것 같습니다.\n\n" +
-                    "**Query Parameter**\n\n" +
+                    "**Request**\n\n" +
                     "- `sort`: `LATEST`(최신순), `LIKE`(추천순), `COMMENT`(댓글순)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = PostListResponseDto.class))),
