@@ -41,8 +41,8 @@ public class GlobalExceptionHandler {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
-                "badRequest.code",
-                "badRequest.message"
+                getMessage("badRequest.code"),
+                getMessage("badRequest.message")
         );
     }
 
