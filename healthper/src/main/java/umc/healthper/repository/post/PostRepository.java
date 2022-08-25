@@ -26,11 +26,13 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
      * 전달받은 Paging, Sorting 기준으로 정렬된 게시글 목록을 불러온다.
      * - Paging: 30개
      * - 정렬 기준: LATEST(최신순), LIKE(추천순), COMMENT(댓글순)
+     * - Fetch Join을 사용하여 Member, Comment, PostLike Entity도 함께 가져온다.
      *
      * @param pageable - Paging, Sorting 정보
      * @param removed - 게시글 삭제 상태
      * @param blocked - 게시글 차단 상태
      * @return Post 객체들이 담긴 Slice 객체
      */
+    @EntityGraph(attributePaths = {"member", "comments", "likes"})
     Slice<Post> findPostsByStatusNotAndStatusNot(Pageable pageable, PostStatus removed, PostStatus blocked);
 }
