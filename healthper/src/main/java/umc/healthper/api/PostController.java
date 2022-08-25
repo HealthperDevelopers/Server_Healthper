@@ -72,9 +72,10 @@ public class PostController {
     @Operation(summary = "게시글 목록 조회",
             description = "게시글 목록을 조회합니다. Paging(30개), Sorting이 지원됩니다.\n\n" +
                     "삭제된 게시글(`status=REMOVED`)과 차단된 게시글(`status=BLOCKED`)은 제외하고 조회합니다.\n\n" +
-                    "요청, 응답 데이터 약간 수정될 수는 있습니다만 최대한 이 상태와 비슷하게 할 예정입니다. 일단 이거 보고 진행하셔도 될 것 같습니다.\n\n" +
+                    "응답 데이터는 약간 수정될 수 있습니다.\n\n" +
                     "**Request**\n\n" +
-                    "- `sort`: `LATEST`(최신순), `LIKE`(추천순), `COMMENT`(댓글순)")
+                    "- `sort`: `LATEST`(최신순), `LIKE`(추천순), `COMMENT`(댓글순)\n\n" +
+                    "- `page`: 페이지 번호. 0부터 시작합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = PostListResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
@@ -82,9 +83,10 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @GetMapping("/posts")
-    public PostListResponseDto getPostList(@RequestParam(value = "sort") PostSortingCriteria sortingCriteria) {
+    public PostListResponseDto getPostList(@RequestParam(value = "sort", defaultValue = "LATEST") PostSortingCriteria sortingCriteria,
+                                           @RequestParam(defaultValue = "0") Integer page) {
         PostListResponseDto res = new PostListResponseDto();
-        postService.findPostList(sortingCriteria)
+        postService.findPostList(sortingCriteria, page)
                 .forEach(post -> res.getContent().add(new ListPostResponseDto(post)));
         return res;
     }

@@ -37,10 +37,11 @@ public class PostService {
      * 삭제된 게시글, 차단된 게시글은 제외하고 조회
      *
      * @param sortingCriteria
+     * @param page
      * @return Post 객체들이 담긴 List return
      */
-    public List<Post> findPostList(PostSortingCriteria sortingCriteria) {
-        return postRepository.findPostList(sortingCriteria);
+    public List<Post> findPostList(PostSortingCriteria sortingCriteria, Integer page) {
+        return postRepository.findPostList(sortingCriteria, page);
     }
 
     /**

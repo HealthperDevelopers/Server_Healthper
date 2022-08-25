@@ -12,10 +12,10 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
     private final EntityManager em;
 
-    private final static int NUMBER_OF_PAGING = 30;
+    private final static int NUMBER_OF_PAGING = 2;
 
     @Override
-    public List<Post> findPostList(PostSortingCriteria sortingCriteria) {
+    public List<Post> findPostList(PostSortingCriteria sortingCriteria, Integer page) {
 
         // Sorting
         String sortingQuery = "";
@@ -38,7 +38,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         String filteringQuery = "where p.status<>'REMOVED' and p.status<>'BLOCKED' ";
 
         return em.createQuery("select p from Post p " + filteringQuery + sortingQuery)
-                .setFirstResult(0)
+                .setFirstResult(page * NUMBER_OF_PAGING)
                 .setMaxResults(NUMBER_OF_PAGING)
                 .getResultList();
     }
