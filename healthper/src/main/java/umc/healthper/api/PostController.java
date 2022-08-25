@@ -73,22 +73,31 @@ public class PostController {
             description = "게시글 목록을 조회합니다. Paging(30개), Sorting이 지원됩니다.\n\n" +
                     "삭제된 게시글(`status=REMOVED`)과 차단된 게시글(`status=BLOCKED`)은 제외하고 조회합니다.\n\n" +
                     "응답 데이터는 약간 수정될 수 있습니다.\n\n" +
-                    "**Request**\n\n" +
+                    "<br>**Request**\n\n" +
                     "- `sort`: `LATEST`(최신순), `LIKE`(추천순), `COMMENT`(댓글순)\n\n" +
-                    "- `page`: 페이지 번호. 0부터 시작합니다.")
+                    "- `page`: 페이지 번호. 0부터 시작합니다.\n\n" +
+                    "<br>**Response**\n\n" +
+                    "- `content`: 게시글 리스트\n\n" +
+                    "- `sort`: 정렬 기준\n\n" +
+                    "- `pageNum`: 페이지 번호\n\n" +
+                    "- `size`: 한 페이지에 담기는 데이터(게시글)의 최대 개수\n\n" +
+                    "- `numberOfElements`: 현재 페이지에 담긴 데이터(게시글)의 수\n\n" +
+                    "- `first`: 첫 페이지인가?\n\n" +
+                    "- `last`: 마지막 페이지인가?\n\n" +
+                    "- `hasNext`: 다음 페이지가 존재하는지에 대한 여부")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = PostListResponseDto.class))),
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = PostSliceResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @GetMapping("/posts")
-    public PostListResponseDto getPostList(@RequestParam(value = "sort", defaultValue = "LATEST") PostSortingCriteria sortingCriteria,
-                                           @RequestParam(defaultValue = "0") Integer page) {
-        PostListResponseDto res = new PostListResponseDto();
-        postService.findPostList(sortingCriteria, page)
-                .forEach(post -> res.getContent().add(new ListPostResponseDto(post)));
-        return res;
+    public PostSliceResponseDto getPosts(@RequestParam(value = "sort", defaultValue = "LATEST") PostSortingCriteria sortingCriteria,
+                                         @RequestParam(defaultValue = "0") Integer page) {
+        return new PostSliceResponseDto(
+                postService.findPosts(sortingCriteria, page).map(ListPostResponseDto::new),
+                sortingCriteria
+        );
     }
 
     @Operation(summary = "게시글 수정",

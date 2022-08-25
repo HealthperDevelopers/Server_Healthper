@@ -12,7 +12,8 @@ import java.util.TimeZone;
 public class HealthperApplication {
 	@PostConstruct
 	private void start() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));}
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(HealthperApplication.class, args);
