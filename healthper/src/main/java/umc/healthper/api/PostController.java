@@ -16,6 +16,7 @@ import umc.healthper.dto.post.*;
 import umc.healthper.exception.ExceptionResponse;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.service.MemberService;
+import umc.healthper.service.PostLikeService;
 import umc.healthper.service.PostService;
 
 import javax.validation.Valid;
@@ -26,6 +27,7 @@ import javax.validation.Valid;
 public class PostController {
 
     private final PostService postService;
+    private final PostLikeService postLikeService;
     private final MemberService memberService;
 
     @Operation(summary = "게시글 생성",
@@ -132,5 +134,20 @@ public class PostController {
     public void removePost(@PathVariable Long postId,
                            @Parameter(hidden = true) @Login Long loginMemberId) {
         postService.removePost(loginMemberId, postId);
+    }
+
+    @Operation(summary = "게시글 좋아요 추가",
+            description = "로그인 사용자로 게시글 좋아요 등록.")
+    @PostMapping("/post/{postId}/like")
+    public void addPostLike(@Login Long loginMemberId, @PathVariable Long postId) {
+
+        postLikeService.addLike(loginMemberId, postId);
+    }
+
+    @Operation(summary = "게시글 좋아요 취소",
+            description = "로그인 사용자가 게시글에 했던 좋아요 취소.")
+    @DeleteMapping("/post/{postId}/like")
+    public void cancelPostLike(@Login Long loginMemberId, @PathVariable Long postId) {
+        postLikeService.cancelLike(loginMemberId, postId);
     }
 }
