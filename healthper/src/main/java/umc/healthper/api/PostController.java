@@ -64,9 +64,9 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/post/{postId}")
-    public PostResponseDto getPostInfo(@PathVariable Long postId) {
-        Post findPost = postService.findPost(postId);
-        return new PostResponseDto(findPost);
+    public PostResponseDto viewPost(@PathVariable Long postId) {
+        Post post = postService.findPost(postId, true);
+        return new PostResponseDto(post);
     }
 
     @Operation(summary = "게시글 목록 조회",

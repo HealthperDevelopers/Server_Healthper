@@ -46,7 +46,7 @@ public class CommentController {
     public CreateCommentResponseDto saveComment(@RequestBody @Valid CreateCommentRequestDto request,
                                                 @Parameter(hidden = true) @Login Long loginMemberId) {
         Member findMember = memberService.findById(loginMemberId);
-        Post findPost = postService.findPost(request.getPostId());
+        Post findPost = postService.findPost(request.getPostId(), false);
         Comment comment = Comment.createComment(findMember, findPost, request.getContent());
 
         Long parentId = request.getParentId();

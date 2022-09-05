@@ -33,7 +33,7 @@ public class PostServiceTest {
         postService.savePost(post);
 
         // when
-        Post findPost = postService.findPost(post.getId());
+        Post findPost = postService.findPost(post.getId(), false);
 
         // then
         assertThat(post).isEqualTo(findPost);
@@ -55,7 +55,7 @@ public class PostServiceTest {
         postService.updatePost(member.getId(), post.getId(), new UpdatePostRequestDto("수정테스트", "수정이 잘 될까?"));
 
         // then
-        Post findPost = postService.findPost(post.getId());
+        Post findPost = postService.findPost(post.getId(), false);
 
         assertThat(findPost.getTitle()).isEqualTo("수정테스트");
         assertThat(findPost.getContent()).isEqualTo("수정이 잘 될까?");
@@ -91,7 +91,7 @@ public class PostServiceTest {
 
         // when
         postService.removePost(member.getId(), postId);
-        postService.findPost(postId);
+        postService.findPost(postId, false);
 
         // then
         fail("게시글이 삭제되었기 때문에 Exception이 발생해야 한다.");
