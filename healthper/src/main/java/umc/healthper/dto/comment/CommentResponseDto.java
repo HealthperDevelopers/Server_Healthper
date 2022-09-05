@@ -21,8 +21,8 @@ public class CommentResponseDto {
     private MemberInfoDto writer;
     private String content;
     private CommentStatus status;
-    private LocalDateTime createdAt;
     private List<NestedCommentResponseDto> children = new ArrayList<>();
+    private LocalDateTime createdAt;
 
     public CommentResponseDto(Comment comment) {
         Member writer = comment.getMember();

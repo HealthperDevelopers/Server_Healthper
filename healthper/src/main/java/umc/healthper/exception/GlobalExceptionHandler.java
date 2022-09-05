@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import umc.healthper.exception.comment.CommentAlreadyRemovedException;
 import umc.healthper.exception.comment.CommentNotFoundException;
+import umc.healthper.exception.comment.CommentUnauthorizedException;
 import umc.healthper.exception.member.MemberDuplicateException;
 import umc.healthper.exception.member.MemberNotFoundByIdException;
 import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
@@ -23,6 +24,8 @@ import umc.healthper.exception.postlike.AlreadyPostLikeException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.exception.record.EmptySectionException;
 import umc.healthper.exception.record.RecordNotFoundByIdException;
+
+import java.util.Locale;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -179,7 +182,18 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CommentUnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionResponse postUnauthorizedExceptionHandle(CommentUnauthorizedException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.UNAUTHORIZED,
+                getMessage("commentUnauthorized.code"),
+                getMessage("commentUnauthorized.message")
+        );
+    }
+
     private String getMessage(String code) {
-        return messageSource.getMessage(code, null, null);
+        return messageSource.getMessage(code, null, Locale.getDefault());
     }
 }

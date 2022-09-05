@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import umc.healthper.domain.comment.Comment;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
+import umc.healthper.dto.comment.CommentResponseDto;
 import umc.healthper.dto.comment.CreateCommentResponseDto;
 import umc.healthper.dto.comment.CreateCommentRequestDto;
 import umc.healthper.dto.comment.UpdateCommentRequestDto;
@@ -90,7 +91,7 @@ public class CommentController {
     public void updateComment(@PathVariable Long commentId,
                               @RequestBody @Valid UpdateCommentRequestDto request,
                               @Parameter(hidden = true) @Login Long loginMemberId) {
-        commentService.updateComment(commentId, request.getContent());
+        commentService.updateComment(loginMemberId, commentId, request.getContent());
     }
 
     @Operation(summary = "댓글 삭제",
@@ -107,6 +108,6 @@ public class CommentController {
     @DeleteMapping("/comment/{commentId}")
     public void removeComment(@PathVariable Long commentId,
                               @Parameter(hidden = true) @Login Long loginMemberId) {
-        commentService.removeComment(commentId);
+        commentService.removeComment(loginMemberId, commentId);
     }
 }
