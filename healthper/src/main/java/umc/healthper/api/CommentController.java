@@ -59,6 +59,23 @@ public class CommentController {
         return new CreateCommentResponseDto(id);
     }
 
+    @Operation(summary = "댓글 조회",
+            description = "`commentId`에 해당하는 댓글을 조회합니다.\n\n" +
+                    "**Response**\n\n" +
+                    "- `status`: `NORMAL`, `REMOVED`(삭제된 댓글), `BLOCKED`(차단된 댓글)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = CommentResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    })
+    @GetMapping("/comment/{commentId}")
+    public CommentResponseDto getComment(@PathVariable Long commentId) {
+        Comment comment = commentService.findById(commentId);
+        return new CommentResponseDto(comment);
+    }
+
     @Operation(summary = "댓글 수정",
             description = "댓글 수정에 관한 데이터들을 전달받아 `commentId`에 해당하는 댓글을 수정합니다.\n\n" +
                     "<del>작성자만 수정이 가능합니다. (미구현)</del>")
