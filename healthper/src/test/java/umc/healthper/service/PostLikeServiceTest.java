@@ -11,6 +11,8 @@ import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostType;
 import umc.healthper.exception.postlike.AlreadyPostLikeException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
+import umc.healthper.service.post.PostLikeService;
+import umc.healthper.service.post.PostService;
 
 import javax.persistence.EntityManager;
 

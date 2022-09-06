@@ -15,8 +15,8 @@ import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.*;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.service.MemberService;
-import umc.healthper.service.PostLikeService;
-import umc.healthper.service.PostService;
+import umc.healthper.service.post.PostLikeService;
+import umc.healthper.service.post.PostService;
 
 import javax.validation.Valid;
 
@@ -110,7 +110,6 @@ public class PostController {
             description = "로그인 사용자로 게시글 좋아요 등록.")
     @PostMapping("/post/{postId}/like")
     public void addPostLike(@Login Long loginMemberId, @PathVariable Long postId) {
-
         postLikeService.addLike(loginMemberId, postId);
     }
 

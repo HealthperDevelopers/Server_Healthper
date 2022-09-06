@@ -12,6 +12,7 @@ import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.UpdatePostRequestDto;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostUnauthorizedException;
+import umc.healthper.service.post.PostService;
 
 import static org.assertj.core.api.Assertions.*;
 

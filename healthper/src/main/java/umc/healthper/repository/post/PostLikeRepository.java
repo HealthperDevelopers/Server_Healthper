@@ -1,9 +1,9 @@
-package umc.healthper.repository.like;
+package umc.healthper.repository.post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
-import umc.healthper.domain.like.PostLike;
+import umc.healthper.domain.post.PostLike;
 
 import java.util.Optional;
 

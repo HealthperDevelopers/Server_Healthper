@@ -14,9 +14,9 @@ import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.dto.comment.*;
 import umc.healthper.global.argumentresolver.Login;
-import umc.healthper.service.CommentService;
+import umc.healthper.service.comment.CommentService;
 import umc.healthper.service.MemberService;
-import umc.healthper.service.PostService;
+import umc.healthper.service.post.PostService;
 
 import javax.validation.Valid;
 
@@ -80,7 +80,7 @@ public class CommentController {
 
     @Operation(summary = "댓글 삭제",
             description = "`commentId`에 해당하는 댓글을 삭제합니다.\n\n" +
-                    "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`postStatus=REMOVED`)로 변합니다.\n\n" +
+                    "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`status=REMOVED`)로 변합니다.\n\n" +
                     "<del>작성자만 삭제가 가능합니다. (미구현)</del>")
     @DeleteMapping("/comment/{commentId}")
     public void removeComment(@PathVariable Long commentId,

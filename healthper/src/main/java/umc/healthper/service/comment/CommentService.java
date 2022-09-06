@@ -1,4 +1,4 @@
-package umc.healthper.service;
+package umc.healthper.service.comment;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

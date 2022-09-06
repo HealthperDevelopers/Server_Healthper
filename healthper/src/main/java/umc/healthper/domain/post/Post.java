@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 import umc.healthper.domain.comment.Comment;
-import umc.healthper.domain.like.PostLike;
 import umc.healthper.domain.member.Member;
 import umc.healthper.global.BaseTimeEntity;
 

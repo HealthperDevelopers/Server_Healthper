@@ -7,7 +7,7 @@ import umc.healthper.domain.completeExercise.CompleteExercise;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.RecordJPA;
 import umc.healthper.domain.comment.Comment;
-import umc.healthper.domain.like.PostLike;
+import umc.healthper.domain.post.PostLike;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;

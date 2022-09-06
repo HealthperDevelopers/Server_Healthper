@@ -1,4 +1,4 @@
-package umc.healthper.service;
+package umc.healthper.service.post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
