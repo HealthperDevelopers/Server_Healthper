@@ -14,6 +14,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import umc.healthper.exception.comment.CommentAlreadyRemovedException;
 import umc.healthper.exception.comment.CommentNotFoundException;
 import umc.healthper.exception.comment.CommentUnauthorizedException;
+import umc.healthper.exception.commentlike.CommentLikeAlreadyExistException;
+import umc.healthper.exception.commentlike.CommentLikeNotFoundException;
 import umc.healthper.exception.member.MemberDuplicateException;
 import umc.healthper.exception.member.MemberNotFoundByIdException;
 import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
@@ -158,7 +160,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Comment
+     * Comment, CommentLike
      */
     @ExceptionHandler(CommentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -190,6 +192,28 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNAUTHORIZED,
                 getMessage("commentUnauthorized.code"),
                 getMessage("commentUnauthorized.message")
+        );
+    }
+
+    @ExceptionHandler(CommentLikeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse commentLikeNotFoundExceptionHandle(CommentLikeNotFoundException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.NOT_FOUND,
+                getMessage("commentLikeNotFound.code"),
+                getMessage("commentLikeNotFound.message")
+        );
+    }
+
+    @ExceptionHandler(CommentLikeAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse commentLikeAlreadyExistExceptionHandle(CommentLikeAlreadyExistException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.CONFLICT,
+                getMessage("commentLikeAlreadyExist.code"),
+                getMessage("commentLikeAlreadyExist.message")
         );
     }
 

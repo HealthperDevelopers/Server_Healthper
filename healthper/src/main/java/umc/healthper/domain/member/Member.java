@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.healthper.domain.completeExercise.CompleteExercise;
+import umc.healthper.domain.comment.CommentLike;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.RecordJPA;
 import umc.healthper.domain.comment.Comment;
@@ -47,6 +48,9 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private Set<PostLike> postLikes = new HashSet<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private Set<CommentLike> commentLikes = new HashSet<>();
 
     @OneToMany(mappedBy = "member")
     private List<RecordJPA> records = new ArrayList<>();

@@ -14,6 +14,7 @@ import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.dto.comment.*;
 import umc.healthper.global.argumentresolver.Login;
+import umc.healthper.service.comment.CommentLikeService;
 import umc.healthper.service.comment.CommentService;
 import umc.healthper.service.MemberService;
 import umc.healthper.service.post.PostService;
@@ -28,6 +29,7 @@ public class CommentController {
     private final MemberService memberService;
     private final PostService postService;
     private final CommentService commentService;
+    private final CommentLikeService commentLikeService;
 
 
     @Operation(summary = "댓글 생성",
@@ -86,5 +88,21 @@ public class CommentController {
     public void removeComment(@PathVariable Long commentId,
                               @Parameter(hidden = true) @Login Long loginMemberId) {
         commentService.removeComment(loginMemberId, commentId);
+    }
+
+    @Operation(summary = "댓글 좋아요 추가",
+            description = "로그인 사용자로 댓글 좋아요 등록.")
+    @PostMapping("/comment/{commentId}/like")
+    public void addCommentLike(@PathVariable Long commentId,
+                               @Parameter(hidden = true) @Login Long loginMemberId) {
+        commentLikeService.addLike(loginMemberId, commentId);
+    }
+
+    @Operation(summary = "댓글 좋아요 취소",
+            description = "로그인 사용자가 댓글에 했던 좋아요 취소.")
+    @DeleteMapping("/comment/{commentId}/like")
+    public void cancelCommentLike(@PathVariable Long commentId,
+                                  @Parameter(hidden = true) @Login Long loginMemberId) {
+        commentLikeService.cancelLike(loginMemberId, commentId);
     }
 }
