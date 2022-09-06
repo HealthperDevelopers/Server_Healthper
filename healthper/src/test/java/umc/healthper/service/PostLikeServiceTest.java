@@ -60,7 +60,7 @@ public class PostLikeServiceTest {
         assertThat(post2.getLikes().size()).isEqualTo(1);
         assertThat(post3.getLikes().size()).isEqualTo(1);
     }
-    @Test(expected = AlreadyPostLikeException.class)
+    @Test(expected = PostLikeAlreadyExistException.class)
     public void 좋아요_중복_추가() {
         // given
         Member member1 = Member.createMember(100L, "James");
