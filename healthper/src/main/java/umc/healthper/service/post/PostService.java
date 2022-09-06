@@ -1,4 +1,4 @@
-package umc.healthper.service;
+package umc.healthper.service.post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -78,13 +78,19 @@ public class PostService {
      * Post 조회 - id
      *
      * @param postId
+     * @param isView 조회수 증가 여부
      * @return 조회된 Post 객체 return
      */
-    public Post findPost(Long postId) {
+    public Post findPost(Long postId, boolean isView) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+
         validateRemovedPost(post);
-        post.addViewCount();
+
+        if (isView) {
+            post.addViewCount();
+        }
+
         return post;
     }
 
@@ -92,17 +98,17 @@ public class PostService {
      * Post 수정
      *
      * @param postId
-     * @param updateDto
+     * @param dto
      */
     @Transactional
-    public void updatePost(Long loginMemberId, Long postId, UpdatePostRequestDto updateDto) {
+    public void updatePost(Long loginMemberId, Long postId, UpdatePostRequestDto dto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostAlreadyRemovedException::new);
 
-        validatePostAuthority(loginMemberId, post);
         validateRemovedPost(post);
+        validatePostAuthority(loginMemberId, post);
 
-        post.update(updateDto.getTitle(), updateDto.getContent());
+        post.update(dto.getTitle(), dto.getContent());
     }
 
     /**
@@ -115,8 +121,8 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostAlreadyRemovedException::new);
 
-        validatePostAuthority(loginMemberId, post);
         validateRemovedPost(post);
+        validatePostAuthority(loginMemberId, post);
 
         postRepository.removePost(post);
     }

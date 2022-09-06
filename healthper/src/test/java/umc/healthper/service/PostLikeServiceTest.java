@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostType;
-import umc.healthper.exception.postlike.AlreadyPostLikeException;
+import umc.healthper.exception.postlike.PostLikeAlreadyExistException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
+import umc.healthper.service.post.PostLikeService;
+import umc.healthper.service.post.PostService;
 
 import javax.persistence.EntityManager;
 
@@ -58,7 +60,7 @@ public class PostLikeServiceTest {
         assertThat(post2.getLikes().size()).isEqualTo(1);
         assertThat(post3.getLikes().size()).isEqualTo(1);
     }
-    @Test(expected = AlreadyPostLikeException.class)
+    @Test(expected = PostLikeAlreadyExistException.class)
     public void 좋아요_중복_추가() {
         // given
         Member member1 = Member.createMember(100L, "James");

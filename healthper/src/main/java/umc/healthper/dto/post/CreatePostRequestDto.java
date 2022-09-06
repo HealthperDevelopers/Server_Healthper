@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CreatePostRequestDto {
-    private String postType;
+    private String type;
     private String title;
     private String content;
 }

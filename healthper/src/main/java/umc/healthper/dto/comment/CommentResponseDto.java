@@ -20,15 +20,17 @@ public class CommentResponseDto {
     private Long commentId;
     private MemberInfoDto writer;
     private String content;
+    private Integer likeCount;
     private CommentStatus status;
-    private LocalDateTime createdAt;
     private List<NestedCommentResponseDto> children = new ArrayList<>();
+    private LocalDateTime createdAt;
 
     public CommentResponseDto(Comment comment) {
         Member writer = comment.getMember();
         this.setWriter(new MemberInfoDto(writer.getId(), writer.getNickname(), writer.getStatus()));
         this.setCommentId(comment.getId());
         this.setContent(comment.getContent());
+        this.setLikeCount(comment.getLikes().size());
         this.setStatus(comment.getStatus());
         this.setCreatedAt(comment.getCreatedAt());
         comment.getChildren().forEach(child -> this.getChildren().add(new NestedCommentResponseDto(child)));

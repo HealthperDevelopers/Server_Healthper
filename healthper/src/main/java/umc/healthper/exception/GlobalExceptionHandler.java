@@ -13,16 +13,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import umc.healthper.exception.comment.CommentAlreadyRemovedException;
 import umc.healthper.exception.comment.CommentNotFoundException;
+import umc.healthper.exception.comment.CommentUnauthorizedException;
+import umc.healthper.exception.commentlike.CommentLikeAlreadyExistException;
+import umc.healthper.exception.commentlike.CommentLikeNotFoundException;
 import umc.healthper.exception.member.MemberDuplicateException;
 import umc.healthper.exception.member.MemberNotFoundByIdException;
 import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.post.PostUnauthorizedException;
-import umc.healthper.exception.postlike.AlreadyPostLikeException;
+import umc.healthper.exception.postlike.PostLikeAlreadyExistException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.exception.record.EmptySectionException;
 import umc.healthper.exception.record.RecordNotFoundByIdException;
+
+import java.util.Locale;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,11 +66,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MemberDuplicateException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse memberDuplicateExceptionHandle(MemberDuplicateException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.CONFLICT,
                 getMessage("memberDuplicate.code"),
                 getMessage("memberDuplicate.message")
         );
@@ -111,11 +116,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PostAlreadyRemovedException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse postAlreadyRemovedExceptionHandle(PostAlreadyRemovedException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.CONFLICT,
                 getMessage("postAlreadyRemoved.code"),
                 getMessage("postAlreadyRemoved.message")
         );
@@ -143,19 +148,19 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(AlreadyPostLikeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionResponse alreadyPostLikeExceptionHandle(AlreadyPostLikeException e) {
+    @ExceptionHandler(PostLikeAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse alreadyPostLikeExceptionHandle(PostLikeAlreadyExistException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                getMessage("alreadyPostLike.code"),
-                getMessage("alreadyPostLike.message")
+                HttpStatus.CONFLICT,
+                getMessage("postLikeAlreadyExist.code"),
+                getMessage("postLikeAlreadyExist.message")
         );
     }
 
     /**
-     * Comment
+     * Comment, CommentLike
      */
     @ExceptionHandler(CommentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -169,17 +174,50 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CommentAlreadyRemovedException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse commentAlreadyRemovedExceptionHandle(CommentAlreadyRemovedException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.CONFLICT,
                 getMessage("commentAlreadyRemoved.code"),
                 getMessage("commentAlreadyRemoved.message")
         );
     }
 
+    @ExceptionHandler(CommentUnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionResponse postUnauthorizedExceptionHandle(CommentUnauthorizedException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.UNAUTHORIZED,
+                getMessage("commentUnauthorized.code"),
+                getMessage("commentUnauthorized.message")
+        );
+    }
+
+    @ExceptionHandler(CommentLikeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse commentLikeNotFoundExceptionHandle(CommentLikeNotFoundException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.NOT_FOUND,
+                getMessage("commentLikeNotFound.code"),
+                getMessage("commentLikeNotFound.message")
+        );
+    }
+
+    @ExceptionHandler(CommentLikeAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse commentLikeAlreadyExistExceptionHandle(CommentLikeAlreadyExistException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.CONFLICT,
+                getMessage("commentLikeAlreadyExist.code"),
+                getMessage("commentLikeAlreadyExist.message")
+        );
+    }
+
     private String getMessage(String code) {
-        return messageSource.getMessage(code, null, null);
+        return messageSource.getMessage(code, null, Locale.getDefault());
     }
 }

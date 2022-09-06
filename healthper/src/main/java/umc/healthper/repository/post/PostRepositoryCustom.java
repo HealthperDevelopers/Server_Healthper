@@ -19,7 +19,7 @@ public interface PostRepositoryCustom {
     List<Post> findPostList(PostSortingCriteria sortingCriteria, Integer page);
 
     /**
-     * 전달받은 post 객체를 삭제된 상태(postStatus=REMOVED)로 변경
+     * 전달받은 post 객체를 삭제된 상태(status=REMOVED)로 변경
      *
      * @param post
      */

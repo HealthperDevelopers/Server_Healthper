@@ -9,7 +9,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.FetchType.*;
 import static umc.healthper.domain.comment.CommentStatus.*;
@@ -52,6 +54,9 @@ public class Comment extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "parent")
     private List<Comment> children = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private Set<CommentLike> likes = new HashSet<>();
 
     //== 생성 메서드 ==//
     public static Comment createComment(Member member, Post post, String content) {

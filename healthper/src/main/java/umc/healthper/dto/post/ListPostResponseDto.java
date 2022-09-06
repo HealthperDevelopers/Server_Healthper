@@ -28,7 +28,7 @@ public class ListPostResponseDto {
         this.setPostId(post.getId());
         this.setTitle(post.getTitle());
         this.setCommentCount(post.getComments().size());
-        this.setLikeCount(post.getLikes().size());
+        this.setLikeCount(post.getPostLikeCount());
         this.setCreatedAt(post.getCreatedAt());
     }
 }

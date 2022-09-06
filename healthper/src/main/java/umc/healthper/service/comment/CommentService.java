@@ -1,4 +1,4 @@
-package umc.healthper.service;
+package umc.healthper.service.comment;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,6 +7,7 @@ import umc.healthper.domain.comment.Comment;
 import umc.healthper.domain.comment.CommentStatus;
 import umc.healthper.exception.comment.CommentAlreadyRemovedException;
 import umc.healthper.exception.comment.CommentNotFoundException;
+import umc.healthper.exception.comment.CommentUnauthorizedException;
 import umc.healthper.repository.comment.CommentRepository;
 
 @Service
@@ -47,10 +48,13 @@ public class CommentService {
      * @param content
      */
     @Transactional
-    public void updateComment(Long commentId, String content) {
+    public void updateComment(Long loginMemberId, Long commentId, String content) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
+
         validateRemovedComment(comment);
+        validateCommentAuthority(loginMemberId, comment);
+
         comment.update(content);
     }
 
@@ -60,10 +64,13 @@ public class CommentService {
      * @param commentId
      */
     @Transactional
-    public void removeComment(Long commentId) {
+    public void removeComment(Long loginMemberId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
+
         validateRemovedComment(comment);
+        validateCommentAuthority(loginMemberId, comment);
+
         commentRepository.removeComment(comment);
     }
 
@@ -75,6 +82,19 @@ public class CommentService {
     private void validateRemovedComment(Comment comment) {
         if (comment.getStatus() == CommentStatus.REMOVED) {
             throw new CommentAlreadyRemovedException();
+        }
+    }
+
+    /**
+     * 게시글에 대한 수정/삭제 권한이 있는지 검증. 작성자에게만 write 권한이 부여된다.
+     * 게시글의 수정/삭제 권한이 없는 사용자라면 PostUnauthorizedException throw
+     *
+     * @param memberId
+     * @param comment
+     */
+    private void validateCommentAuthority(Long memberId, Comment comment) {
+        if (!memberId.equals(comment.getMember().getId())) {
+            throw new CommentUnauthorizedException();
         }
     }
 }

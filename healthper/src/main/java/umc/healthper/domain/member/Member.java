@@ -4,17 +4,17 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.healthper.domain.completeExercise.CompleteExercise;
+import umc.healthper.domain.comment.CommentLike;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.RecordJPA;
 import umc.healthper.domain.comment.Comment;
-import umc.healthper.domain.like.PostLike;
+import umc.healthper.domain.post.PostLike;
 import umc.healthper.global.BaseTimeEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-import static javax.persistence.CascadeType.*;
 import static umc.healthper.domain.member.MemberStatus.*;
 
 @Entity
@@ -46,8 +46,11 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private Set<PostLike> postLikes = new HashSet<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private Set<CommentLike> commentLikes = new HashSet<>();
 
     @OneToMany(mappedBy = "member")
     private List<RecordJPA> records = new ArrayList<>();
@@ -66,27 +69,6 @@ public class Member extends BaseTimeEntity {
         this.kakaoKey = kakaoKey;
         this.nickname = nickname;
         this.reportedCount = reportedCount;
-        this.status = status;
-    }
-
-    //== Setter ==//
-    private void setId(Long id) {
-        this.id = id;
-    }
-
-    private void setKakaoKey(Long kakaoKey) {
-        this.kakaoKey = kakaoKey;
-    }
-
-    private void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    private void setReportedCount(Integer reportedCount) {
-        this.reportedCount = reportedCount;
-    }
-
-    private void setStatus(MemberStatus status) {
         this.status = status;
     }
 }

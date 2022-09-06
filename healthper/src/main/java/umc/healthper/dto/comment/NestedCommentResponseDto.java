@@ -14,6 +14,7 @@ public class NestedCommentResponseDto {
     private Long commentId;
     private MemberInfoDto writer;
     private String content;
+    private Integer likeCount;
     private CommentStatus status;
     private LocalDateTime createdAt;
 
@@ -22,6 +23,7 @@ public class NestedCommentResponseDto {
         this.setWriter(new MemberInfoDto(writer.getId(), writer.getNickname(), writer.getStatus()));
         this.setCommentId(child.getId());
         this.setContent(child.getContent());
+        this.setLikeCount(child.getLikes().size());
         this.setStatus(child.getStatus());
         this.setCreatedAt(child.getCreatedAt());
     }

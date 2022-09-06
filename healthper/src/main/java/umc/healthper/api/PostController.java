@@ -13,10 +13,10 @@ import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.*;
-import umc.healthper.exception.ExceptionResponse;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.service.MemberService;
-import umc.healthper.service.PostService;
+import umc.healthper.service.post.PostLikeService;
+import umc.healthper.service.post.PostService;
 
 import javax.validation.Valid;
 
@@ -26,47 +26,36 @@ import javax.validation.Valid;
 public class PostController {
 
     private final PostService postService;
+    private final PostLikeService postLikeService;
     private final MemberService memberService;
 
     @Operation(summary = "게시글 생성",
             description = "게시글 정보를 받아 새로운 게시글을 생성합니다.\n\n" +
                     "**Request**\n\n" +
-                    "- `postType`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = CreatePostResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
-    })
+                    "- `type`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)")
     @PostMapping("/post")
-    public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto requestDto,
-                                          @Parameter(hidden = true) @Login Long loginMemberId) {
+    public void savePost(@RequestBody @Valid CreatePostRequestDto requestDto,
+                         @Parameter(hidden = true) @Login Long loginMemberId) {
         Member member = memberService.findById(loginMemberId);
 
-        PostType postType = PostType.transferFromString(requestDto.getPostType());
+        PostType postType = PostType.transferFromString(requestDto.getType());
         Post post = Post.createPost(member, postType, requestDto.getTitle(), requestDto.getContent());
 
-        Long id = postService.savePost(post).getId();
-        return new CreatePostResponseDto(id);
+        postService.savePost(post);
     }
 
     @Operation(summary = "게시글 조회",
             description = "`posdId`에 해당하는 게시글을 조회합니다. 댓글과 대댓글 목록도 함께 반환됩니다.\n\n" +
                     "**Response**\n\n" +
-                    "- `postType`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)\n\n" +
-                    "- `postStatus`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
+                    "- `type`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)\n\n" +
+                    "- `status`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = PostResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PostResponseDto.class)))
     })
     @GetMapping("/post/{postId}")
-    public PostResponseDto getPostInfo(@PathVariable Long postId) {
-        Post findPost = postService.findPost(postId);
-        return new PostResponseDto(findPost);
+    public PostResponseDto viewPost(@PathVariable Long postId) {
+        Post post = postService.findPost(postId, true);
+        return new PostResponseDto(post);
     }
 
     @Operation(summary = "게시글 목록 조회",
@@ -86,10 +75,7 @@ public class PostController {
                     "- `last`: 마지막 페이지인가?\n\n" +
                     "- `hasNext`: 다음 페이지가 존재하는지에 대한 여부")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = PostSliceResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Void.class)))
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PostSliceResponseDto.class)))
     })
     @GetMapping("/posts")
     public PostSliceResponseDto getPosts(@RequestParam(value = "sort", defaultValue = "LATEST") PostSortingCriteria sortingCriteria,
@@ -103,13 +89,6 @@ public class PostController {
     @Operation(summary = "게시글 수정",
             description = "게시글 수정에 관한 데이터들을 전달받아 `postId`에 해당하는 게시글을 수정합니다.\n\n" +
                     "작성자만 수정이 가능합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
-    })
     @PatchMapping("/post/{postId}")
     public void updatePost(@PathVariable Long postId,
                            @RequestBody @Valid UpdatePostRequestDto request,
@@ -119,18 +98,27 @@ public class PostController {
 
     @Operation(summary = "게시글 삭제",
             description = "`postId`에 해당하는 게시글을 삭제합니다.\n\n" +
-                    "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`postStatus=REMOVED`)로 변합니다.\n\n" +
+                    "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`status=REMOVED`)로 변합니다.\n\n" +
                     "작성자만 삭제가 가능합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
-    })
     @DeleteMapping("/post/{postId}")
     public void removePost(@PathVariable Long postId,
                            @Parameter(hidden = true) @Login Long loginMemberId) {
         postService.removePost(loginMemberId, postId);
+    }
+
+    @Operation(summary = "게시글 좋아요 추가",
+            description = "로그인 사용자로 게시글 좋아요 등록.")
+    @PostMapping("/post/{postId}/like")
+    public void addPostLike(@Parameter(hidden = true) @Login Long loginMemberId,
+                            @PathVariable Long postId) {
+        postLikeService.addLike(loginMemberId, postId);
+    }
+
+    @Operation(summary = "게시글 좋아요 취소",
+            description = "로그인 사용자가 게시글에 했던 좋아요 취소.")
+    @DeleteMapping("/post/{postId}/like")
+    public void cancelPostLike(@Parameter(hidden = true) @Login Long loginMemberId,
+                               @PathVariable Long postId) {
+        postLikeService.cancelLike(loginMemberId, postId);
     }
 }
