@@ -24,7 +24,10 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
 
     /**
-     * 좋아요 추가
+     * 게시글 좋아요 추가
+     *
+     * @param memberId 좋아요한 Member의 id
+     * @param postId   좋아요한 Post의 id
      */
     @Transactional
     public void addLike(Long memberId, Long postId) {
@@ -38,16 +41,18 @@ public class PostLikeService {
     }
 
     /**
-     * 좋아요 취소
+     * 게시글 좋아요 취소
+     *
+     * @param memberId 좋아요한 Member의 id
+     * @param postId   좋아요한 Post의 id
      */
     @Transactional
     public void cancelLike(Long memberId, Long postId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundByIdException::new);
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
-        validateNotLike(member, post);
-
-        PostLike postLike = postLikeRepository.findByMemberAndPost(member, post).orElseThrow(PostLikeNotFoundException::new);
+        PostLike postLike = postLikeRepository.findByMemberAndPost(member, post)
+                .orElseThrow(PostLikeNotFoundException::new);
         member.getPostLikes().remove(postLike);
         post.getLikes().remove(postLike);
         postLikeRepository.delete(postLike);
@@ -56,12 +61,6 @@ public class PostLikeService {
     private void validateAlreadyLike(Member member, Post post) {
         if (postLikeRepository.existsByMemberAndPost(member, post)) {
             throw new AlreadyPostLikeException();
-        }
-    }
-
-    private void validateNotLike(Member member, Post post) {
-        if (!postLikeRepository.existsByMemberAndPost(member, post)) {
-            throw new PostLikeNotFoundException();
         }
     }
 }
