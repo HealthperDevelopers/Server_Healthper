@@ -64,11 +64,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MemberDuplicateException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse memberDuplicateExceptionHandle(MemberDuplicateException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.CONFLICT,
                 getMessage("memberDuplicate.code"),
                 getMessage("memberDuplicate.message")
         );
@@ -114,11 +114,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PostAlreadyRemovedException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse postAlreadyRemovedExceptionHandle(PostAlreadyRemovedException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.CONFLICT,
                 getMessage("postAlreadyRemoved.code"),
                 getMessage("postAlreadyRemoved.message")
         );
@@ -147,13 +147,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PostLikeAlreadyExistException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse alreadyPostLikeExceptionHandle(PostLikeAlreadyExistException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                getMessage("alreadyPostLike.code"),
-                getMessage("alreadyPostLike.message")
+                HttpStatus.CONFLICT,
+                getMessage("postLikeAlreadyExist.code"),
+                getMessage("postLikeAlreadyExist.message")
         );
     }
 
@@ -172,11 +172,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CommentAlreadyRemovedException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse commentAlreadyRemovedExceptionHandle(CommentAlreadyRemovedException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.CONFLICT,
                 getMessage("commentAlreadyRemoved.code"),
                 getMessage("commentAlreadyRemoved.message")
         );
