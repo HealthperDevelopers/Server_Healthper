@@ -20,7 +20,7 @@ import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.post.PostUnauthorizedException;
-import umc.healthper.exception.postlike.AlreadyPostLikeException;
+import umc.healthper.exception.postlike.PostLikeAlreadyExistException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.exception.record.EmptySectionException;
 import umc.healthper.exception.record.RecordNotFoundByIdException;
@@ -146,9 +146,9 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(AlreadyPostLikeException.class)
+    @ExceptionHandler(PostLikeAlreadyExistException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionResponse alreadyPostLikeExceptionHandle(AlreadyPostLikeException e) {
+    public ExceptionResponse alreadyPostLikeExceptionHandle(PostLikeAlreadyExistException e) {
         log.error(String.valueOf(e));
         return new ExceptionResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
