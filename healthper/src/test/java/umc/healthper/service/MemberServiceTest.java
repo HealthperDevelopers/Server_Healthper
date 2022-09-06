@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.member.Member;
+import umc.healthper.exception.member.MemberDuplicateException;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class MemberServiceTest {
     MemberService memberService;
 
     @Test
-    public void 회원_등록() throws Exception {
+    public void 회원_등록() {
         // given
         Member member = Member.createMember(100L, "우기");
         memberService.join(member);
@@ -33,8 +34,8 @@ public class MemberServiceTest {
         assertThat(findMember).isEqualTo(member);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void 회원_중복_등록() throws Exception {
+    @Test(expected = MemberDuplicateException.class)
+    public void 회원_중복_등록() {
         // given
         Member member1 = Member.createMember(100L, "우기");
         memberService.join(member1);
@@ -48,7 +49,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    public void 회원_목록_조회() throws Exception {
+    public void 회원_목록_조회() {
         // given
         Member member1 = Member.createMember(100L, "회원1");
         memberService.join(member1);
