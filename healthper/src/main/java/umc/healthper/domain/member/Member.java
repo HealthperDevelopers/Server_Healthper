@@ -14,7 +14,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-import static javax.persistence.CascadeType.*;
 import static umc.healthper.domain.member.MemberStatus.*;
 
 @Entity
@@ -46,7 +45,7 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private Set<PostLike> postLikes = new HashSet<>();
 
     @OneToMany(mappedBy = "member")
@@ -66,27 +65,6 @@ public class Member extends BaseTimeEntity {
         this.kakaoKey = kakaoKey;
         this.nickname = nickname;
         this.reportedCount = reportedCount;
-        this.status = status;
-    }
-
-    //== Setter ==//
-    private void setId(Long id) {
-        this.id = id;
-    }
-
-    private void setKakaoKey(Long kakaoKey) {
-        this.kakaoKey = kakaoKey;
-    }
-
-    private void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    private void setReportedCount(Integer reportedCount) {
-        this.reportedCount = reportedCount;
-    }
-
-    private void setStatus(MemberStatus status) {
         this.status = status;
     }
 }

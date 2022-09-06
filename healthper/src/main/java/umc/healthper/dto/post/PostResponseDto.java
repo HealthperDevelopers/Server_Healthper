@@ -27,10 +27,10 @@ public class PostResponseDto {
     private MemberInfoDto writer;
     private String title;
     private String content;
-    private PostStatus postStatus;
+    private Integer likeCount;
+    private PostStatus status;
     private LocalDateTime createdAt;
     private List<CommentResponseDto> comments = new ArrayList<>();
-    // 좋아요 개수
     // 이미지 파일
 
     public PostResponseDto(Post post) {
@@ -39,10 +39,11 @@ public class PostResponseDto {
         Member writer = post.getMember();
         this.setWriter(new MemberInfoDto(writer.getId(), writer.getNickname(), writer.getStatus()));
 
+        this.setLikeCount(post.getPostLikeCount());
         this.setPostId(post.getId());
         this.setTitle(post.getTitle());
         this.setContent(post.getContent());
-        this.setPostStatus(post.getStatus());
+        this.setStatus(post.getStatus());
         this.setCreatedAt(post.getCreatedAt());
         post.getComments().stream()
                 .filter(comment -> comment.getCommentType() == CommentType.COMMENT)

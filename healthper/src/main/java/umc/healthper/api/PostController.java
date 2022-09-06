@@ -32,27 +32,23 @@ public class PostController {
     @Operation(summary = "게시글 생성",
             description = "게시글 정보를 받아 새로운 게시글을 생성합니다.\n\n" +
                     "**Request**\n\n" +
-                    "- `postType`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = CreatePostResponseDto.class)))
-    })
+                    "- `type`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)")
     @PostMapping("/post")
-    public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto requestDto,
-                                          @Parameter(hidden = true) @Login Long loginMemberId) {
+    public void savePost(@RequestBody @Valid CreatePostRequestDto requestDto,
+                         @Parameter(hidden = true) @Login Long loginMemberId) {
         Member member = memberService.findById(loginMemberId);
 
-        PostType postType = PostType.transferFromString(requestDto.getPostType());
+        PostType postType = PostType.transferFromString(requestDto.getType());
         Post post = Post.createPost(member, postType, requestDto.getTitle(), requestDto.getContent());
 
-        Long id = postService.savePost(post).getId();
-        return new CreatePostResponseDto(id);
+        postService.savePost(post);
     }
 
     @Operation(summary = "게시글 조회",
             description = "`posdId`에 해당하는 게시글을 조회합니다. 댓글과 대댓글 목록도 함께 반환됩니다.\n\n" +
                     "**Response**\n\n" +
-                    "- `postType`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)\n\n" +
-                    "- `postStatus`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
+                    "- `type`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)\n\n" +
+                    "- `status`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PostResponseDto.class)))
     })
@@ -102,7 +98,7 @@ public class PostController {
 
     @Operation(summary = "게시글 삭제",
             description = "`postId`에 해당하는 게시글을 삭제합니다.\n\n" +
-                    "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`postStatus=REMOVED`)로 변합니다.\n\n" +
+                    "실제로 DB에서 삭제되지는 않고 \"삭제된 상태\"(`status=REMOVED`)로 변합니다.\n\n" +
                     "작성자만 삭제가 가능합니다.")
     @DeleteMapping("/post/{postId}")
     public void removePost(@PathVariable Long postId,

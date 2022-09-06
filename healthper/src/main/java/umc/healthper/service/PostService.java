@@ -78,7 +78,7 @@ public class PostService {
      * Post 조회 - id
      *
      * @param postId
-     * @param isView - 조회수 증가 여부
+     * @param isView 조회수 증가 여부
      * @return 조회된 Post 객체 return
      */
     public Post findPost(Long postId, boolean isView) {

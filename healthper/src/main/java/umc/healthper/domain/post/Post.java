@@ -13,9 +13,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.*;
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "post_type")
@@ -29,7 +26,7 @@ public abstract class Post extends BaseTimeEntity {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -50,7 +47,7 @@ public abstract class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<PostLike> likes = new HashSet<>();
 
     @Formula("(select count(1) " +
