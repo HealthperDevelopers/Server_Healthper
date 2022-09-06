@@ -109,14 +109,16 @@ public class PostController {
     @Operation(summary = "게시글 좋아요 추가",
             description = "로그인 사용자로 게시글 좋아요 등록.")
     @PostMapping("/post/{postId}/like")
-    public void addPostLike(@Login Long loginMemberId, @PathVariable Long postId) {
+    public void addPostLike(@Parameter(hidden = true) @Login Long loginMemberId,
+                            @PathVariable Long postId) {
         postLikeService.addLike(loginMemberId, postId);
     }
 
     @Operation(summary = "게시글 좋아요 취소",
             description = "로그인 사용자가 게시글에 했던 좋아요 취소.")
     @DeleteMapping("/post/{postId}/like")
-    public void cancelPostLike(@Login Long loginMemberId, @PathVariable Long postId) {
+    public void cancelPostLike(@Parameter(hidden = true) @Login Long loginMemberId,
+                               @PathVariable Long postId) {
         postLikeService.cancelLike(loginMemberId, postId);
     }
 }
