@@ -38,7 +38,7 @@ public class Comment extends BaseTimeEntity {
 
     @NotNull
     @Column(columnDefinition = "TEXT")
-    private String Content;
+    private String content;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -96,7 +96,7 @@ public class Comment extends BaseTimeEntity {
     }
 
     private void setContent(String content) {
-        Content = content;
+        this.content = content;
     }
 
     private void setCommentType(CommentType commentType) {
