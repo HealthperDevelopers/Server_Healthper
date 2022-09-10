@@ -46,7 +46,7 @@ public class CommentController {
     @Operation(summary = "대댓글 생성",
             description = "대댓글 정보를 받아 새로운 대댓글을 생성합니다.")
     @PostMapping("/comment-nested")
-    public void saveComment(@RequestBody @Valid CreateNestedCommentRequestDto requestDto,
+    public void saveNestedComment(@RequestBody @Valid CreateNestedCommentRequestDto requestDto,
                             @Parameter(hidden = true) @Login Long loginMemberId) {
         Member findMember = memberService.findById(loginMemberId);
         Post findPost = postService.findPost(requestDto.getPostId(), false);

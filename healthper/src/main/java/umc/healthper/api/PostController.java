@@ -34,14 +34,14 @@ public class PostController {
                     "**Request**\n\n" +
                     "- `type`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)")
     @PostMapping("/post")
-    public void savePost(@RequestBody @Valid CreatePostRequestDto requestDto,
-                         @Parameter(hidden = true) @Login Long loginMemberId) {
+    public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto requestDto,
+                                          @Parameter(hidden = true) @Login Long loginMemberId) {
         Member member = memberService.findById(loginMemberId);
 
         PostType postType = PostType.transferFromString(requestDto.getType());
         Post post = Post.createPost(member, postType, requestDto.getTitle(), requestDto.getContent());
 
-        postService.savePost(post);
+        return new CreatePostResponseDto(postService.savePost(post).getId());
     }
 
     @Operation(summary = "게시글 조회",
@@ -50,7 +50,7 @@ public class PostController {
                     "- `type`: `NORMAL`(일반), `QUESTION`(질문), `AUDIO`(음성, 음악)\n\n" +
                     "- `status`: `NORMAL`, `REMOVED`(삭제된 게시글), `BLOCKED`(차단된 게시글)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PostResponseDto.class)))
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = PostResponseDto.class)))
     })
     @GetMapping("/post/{postId}")
     public PostResponseDto viewPost(@PathVariable Long postId) {

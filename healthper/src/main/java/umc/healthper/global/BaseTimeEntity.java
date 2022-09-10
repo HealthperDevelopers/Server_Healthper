@@ -11,9 +11,8 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 /**
- * MappedSuperClass: 생성시간과 수정시간이 필요한 entity에서 상속받을 클래스
+ * MappedSuperClass: 생성시간과 수정시간이 필요한 Entity에서 상속받을 클래스
  */
-
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
