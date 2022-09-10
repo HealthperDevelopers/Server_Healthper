@@ -21,6 +21,11 @@ import umc.healthper.global.Swagger;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.service.RecordService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;
 @Tag(name = "Record", description = "기록 API")
@@ -28,6 +33,7 @@ import java.util.List;
 @RequestMapping("record")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class RecordController {
 
     private final RecordService service;
@@ -38,7 +44,7 @@ public class RecordController {
     @GetMapping("/calender")
     @ResponseBody
     public List<GetCalenderRes> initPage(@Parameter(hidden = true)@Login Long loginId,
-                                         @RequestParam Integer year, @RequestParam Integer month){
+                                         @RequestParam @Min(999) @Max(10000) Integer year, @RequestParam @Positive @Max(12) Integer month){
         return service.myCalenderPage(loginId, year, month);
     }
     @Swagger

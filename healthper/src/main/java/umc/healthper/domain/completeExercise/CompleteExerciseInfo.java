@@ -9,14 +9,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Objects;
 
+
 @Embeddable
-@Getter @Slf4j
+@Getter @Slf4j @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
-@NoArgsConstructor
 public class CompleteExerciseInfo {
 
-    private Integer setNumber;
-    private Integer repeatTime;
-    private Integer weight;
+    private Long setNumber;
+    private Long repeatTime;
+    private Long weight;
+
+    public CompleteExerciseInfo() {
+        setNumber = 0l;
+        repeatTime = 0l;
+        weight = 0l;
+    }
 }
