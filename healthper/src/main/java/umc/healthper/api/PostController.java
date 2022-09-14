@@ -39,8 +39,7 @@ public class PostController {
                                           @Parameter(hidden = true) @Login Long loginMemberId) {
         Member member = memberService.findById(loginMemberId);
 
-        PostType postType = PostType.transferFromString(requestDto.getType());
-        Post post = Post.createPost(member, postType, requestDto.getTitle(), requestDto.getContent());
+        Post post = Post.createPost(member, requestDto.getType(), requestDto.getTitle(), requestDto.getContent());
 
         return new CreatePostResponseDto(postService.savePost(post).getId());
     }
@@ -69,11 +68,12 @@ public class PostController {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = PostSliceResponseDto.class)))
     })
     @GetMapping("/posts")
-    public PostListResponseDto getPosts(@RequestParam(value = "sort", defaultValue = "LATEST") PostSortingCriteria sort,
-                                        @RequestParam(defaultValue = "0") Integer page,
+    public PostListResponseDto getPosts(@RequestParam(value = "type", defaultValue = "NORMAL") PostType type,
+                                        @RequestParam(value = "sort", defaultValue = "LATEST") PostSortingCriteria sort,
+                                        @RequestParam(value = "page", defaultValue = "0") Integer page,
                                         @Parameter(hidden = true) @Login Long loginMemberId) {
         return new PostListResponseDto(
-                postService.findPosts(sort, page, loginMemberId).stream()
+                postService.findPosts(type, sort, page, loginMemberId).stream()
                         .map(ListPostResponseDto::new)
                         .collect(Collectors.toList())
         );

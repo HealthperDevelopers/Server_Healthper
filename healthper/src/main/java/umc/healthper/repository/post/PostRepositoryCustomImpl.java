@@ -3,13 +3,13 @@ package umc.healthper.repository.post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import umc.healthper.domain.member.Member;
-import umc.healthper.domain.member.MemberBlock;
 import umc.healthper.domain.post.Post;
+import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.PostSortingCriteria;
 
 import javax.persistence.EntityManager;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,38 +19,55 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
     private final EntityManager em;
 
     @Override
-    public List<Post> findPosts(PostSortingCriteria sort, Integer page, Member loginMember) {
+    public List<Post> findPosts(PostType postType, PostSortingCriteria sort,
+                                Integer page, Member loginMember) {
 
         // Sorting
-        String sortingQuery = "";
+        String sortingQuery = "order by ";
 
         switch (sort) {
             case LATEST:
-                sortingQuery += "order by p.createdAt desc";
                 break;
             case LIKE:
-                sortingQuery += "order by p.postLikeCount desc, p.createdAt desc";
+                sortingQuery += "p.postLikeCount desc, ";
                 break;
             case COMMENT:
-                sortingQuery += "order by p.commentCount desc, p.createdAt desc";
+                sortingQuery += "p.commentCount desc, ";
                 break;
             default:
                 throw new IllegalArgumentException("잘못된 정렬 기준입니다.");
         }
+        sortingQuery += "p.createdAt desc";
 
         // Filtering
-        String filteringQuery = "where p.status<>'REMOVED' and p.status<>'BLOCKED' ";
-        if (!loginMember.getMemberBlocks().isEmpty()) {
-            filteringQuery += "and p.member not in (";
-            Iterator<MemberBlock> iterator = loginMember.getMemberBlocks().iterator();
-            filteringQuery += iterator.next().getBlockedMember().getId();
-            while (iterator.hasNext()) {
-                filteringQuery += ", " + iterator.next().getBlockedMember().getId();
-            }
-            filteringQuery += ") ";
+        String filteringQuery = "where ";
+
+        // 조회하고자 하는 게시글 종류만 Fetch
+        switch (postType) {
+            case NORMAL:
+                filteringQuery += "type(p)=NormalPost ";
+                break;
+            case QUESTION:
+                filteringQuery += "type(p)=QuestionPost ";
+                break;
+            case AUDIO:
+                filteringQuery += "type(p)=AudioPost ";
+                break;
+            default:
+                throw new IllegalArgumentException("잘못된 게시글 종류입니다.");
         }
 
-        return em.createQuery("select p from Post p " + filteringQuery + sortingQuery)
+        // 삭제된 게시글, 신고당해 차단된 게시글 제외
+        filteringQuery += "and p.status<>'REMOVED' and p.status<>'BLOCKED' ";
+
+        // 내가 차단한 회원의 게시글 제외
+        List<Long> blockedMemberIds = loginMember.getMemberBlocks().stream()
+                .map(memberBlock -> memberBlock.getBlockedMember().getId())
+                .collect(Collectors.toList());
+        filteringQuery += "and p.member.id not in :blockedMemberIds ";
+
+        return em.createQuery("select p from Post p " + filteringQuery + sortingQuery, Post.class)
+                .setParameter("blockedMemberIds", blockedMemberIds)
                 .setFirstResult(page * NUMBER_OF_PAGING)
                 .setMaxResults(NUMBER_OF_PAGING)
                 .getResultList();
@@ -58,8 +75,6 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
     @Override
     public void removePost(Post post) {
-        // 댓글들도 삭제해야 하는가?
-        // -> 아니다. 댓글정보 클릭해서 게시글 조회하려고 할 때는 "삭제된 게시글입니다"만 띄워주면 될 것
         post.delete();
     }
 }
