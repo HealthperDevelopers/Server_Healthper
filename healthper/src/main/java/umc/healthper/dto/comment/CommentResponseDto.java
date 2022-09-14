@@ -1,38 +1,36 @@
 package umc.healthper.dto.comment;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import umc.healthper.domain.comment.Comment;
 import umc.healthper.domain.comment.CommentStatus;
 import umc.healthper.domain.member.Member;
 import umc.healthper.dto.member.MemberInfoDto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class CommentResponseDto {
 
     private Long commentId;
     private MemberInfoDto writer;
+    private boolean block;
     private String content;
     private Integer likeCount;
     private CommentStatus status;
-    private List<NestedCommentResponseDto> children = new ArrayList<>();
     private LocalDateTime createdAt;
 
-    public CommentResponseDto(Comment comment) {
+    public CommentResponseDto(Comment comment, boolean block) {
+        this.setCommentId(comment.getId());
+
         Member writer = comment.getMember();
         this.setWriter(new MemberInfoDto(writer.getId(), writer.getNickname(), writer.getStatus()));
-        this.setCommentId(comment.getId());
+
+        this.setBlock(block);
         this.setContent(comment.getContent());
         this.setLikeCount(comment.getLikes().size());
         this.setStatus(comment.getStatus());
         this.setCreatedAt(comment.getCreatedAt());
-        comment.getChildren().forEach(child -> this.getChildren().add(new NestedCommentResponseDto(child)));
     }
 }

@@ -1,5 +1,6 @@
 package umc.healthper.repository.post;
 
+import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.dto.post.PostSortingCriteria;
 
@@ -12,16 +13,17 @@ public interface PostRepositoryCustom {
      * - Paging: 30개
      * - 정렬 기준: LATEST(최신순), LIKE(추천순), COMMENT(댓글순)
      *
-     * @param sortingCriteria
-     * @param page
-     * @return Post 객체가 담긴 List return
+     * @param sort 정렬 기준
+     * @param page 페이지 번호
+     * @param loginMember 로그인 멤버
+     * @return 조회한 Post List
      */
-    List<Post> findPostList(PostSortingCriteria sortingCriteria, Integer page);
+    List<Post> findPosts(PostSortingCriteria sort, Integer page, Member loginMember);
 
     /**
      * 전달받은 post 객체를 삭제된 상태(status=REMOVED)로 변경
      *
-     * @param post
+     * @param post 삭제할 Post 객체
      */
     void removePost(Post post);
 }

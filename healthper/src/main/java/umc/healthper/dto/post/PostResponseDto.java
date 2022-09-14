@@ -1,23 +1,18 @@
 package umc.healthper.dto.post;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import umc.healthper.domain.comment.CommentType;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.*;
-import umc.healthper.dto.comment.CommentResponseDto;
+import umc.healthper.dto.comment.CommentResponseDtoWithChildren;
 import umc.healthper.dto.member.MemberInfoDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Post 객체를 Parameter로 전달받아서 응답하기 위한 Format으로 변환
- */
-
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostResponseDto {
@@ -30,10 +25,14 @@ public class PostResponseDto {
     private Integer likeCount;
     private PostStatus status;
     private LocalDateTime createdAt;
-    private List<CommentResponseDto> comments = new ArrayList<>();
+    private List<CommentResponseDtoWithChildren> comments = new ArrayList<>();
     // 이미지 파일
 
-    public PostResponseDto(Post post) {
+    /**
+     * @param post        DTO로 변환할 Post 객체
+     * @param loginMember 차단된 댓글 존재 여부를 판단해야 하기 때문에 로그인 사용자도 함께 전달받는다.
+     */
+    public PostResponseDto(Post post, Member loginMember) {
         this.setPostType(PostType.getPostType(post));
 
         Member writer = post.getMember();
@@ -47,6 +46,21 @@ public class PostResponseDto {
         this.setCreatedAt(post.getCreatedAt());
         post.getComments().stream()
                 .filter(comment -> comment.getCommentType() == CommentType.COMMENT)
-                .forEach(comment -> this.getComments().add(new CommentResponseDto(comment)));
+                .forEachOrdered(comment -> {
+                    boolean isBlocked = isBlockedComment(loginMember, comment.getMember());
+                    this.getComments().add(new CommentResponseDtoWithChildren(comment, loginMember, isBlocked));
+                });
+    }
+
+    /**
+     * 특정 댓글에 대해 내가 차단한 사용자가 작성한 댓글인지 판별
+     *
+     * @param loginMember   로그인 사용자
+     * @param commentWriter 댓글 작성자
+     * @return 내가 차단한 사용자가 작성한 댓글일 경우 true return, 아닌 경우에는 false return
+     */
+    private boolean isBlockedComment(Member loginMember, Member commentWriter) {
+        return loginMember.getMemberBlocks().stream()
+                .anyMatch(memberBlock -> memberBlock.getBlockedMember() == commentWriter);
     }
 }

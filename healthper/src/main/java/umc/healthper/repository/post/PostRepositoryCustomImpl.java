@@ -1,26 +1,30 @@
 package umc.healthper.repository.post;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import umc.healthper.domain.member.Member;
+import umc.healthper.domain.member.MemberBlock;
 import umc.healthper.domain.post.Post;
 import umc.healthper.dto.post.PostSortingCriteria;
 
 import javax.persistence.EntityManager;
+import java.util.Iterator;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
+    private final static int NUMBER_OF_PAGING = 30;
     private final EntityManager em;
 
-    private final static int NUMBER_OF_PAGING = 30;
-
     @Override
-    public List<Post> findPostList(PostSortingCriteria sortingCriteria, Integer page) {
+    public List<Post> findPosts(PostSortingCriteria sort, Integer page, Member loginMember) {
 
         // Sorting
         String sortingQuery = "";
 
-        switch (sortingCriteria) {
+        switch (sort) {
             case LATEST:
                 sortingQuery += "order by p.createdAt desc";
                 break;
@@ -36,6 +40,15 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
         // Filtering
         String filteringQuery = "where p.status<>'REMOVED' and p.status<>'BLOCKED' ";
+        if (!loginMember.getMemberBlocks().isEmpty()) {
+            filteringQuery += "and p.member not in (";
+            Iterator<MemberBlock> iterator = loginMember.getMemberBlocks().iterator();
+            filteringQuery += iterator.next().getBlockedMember().getId();
+            while (iterator.hasNext()) {
+                filteringQuery += ", " + iterator.next().getBlockedMember().getId();
+            }
+            filteringQuery += ") ";
+        }
 
         return em.createQuery("select p from Post p " + filteringQuery + sortingQuery)
                 .setFirstResult(page * NUMBER_OF_PAGING)

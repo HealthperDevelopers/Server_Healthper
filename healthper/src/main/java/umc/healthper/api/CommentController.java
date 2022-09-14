@@ -62,12 +62,14 @@ public class CommentController {
                     "**Response**\n\n" +
                     "- `status`: `NORMAL`, `REMOVED`(삭제된 댓글), `BLOCKED`(차단된 댓글)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = CommentResponseDto.class)))
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = CommentResponseDtoWithChildren.class)))
     })
     @GetMapping("/comment/{commentId}")
-    public CommentResponseDto getComment(@PathVariable Long commentId) {
+    public CommentResponseDtoWithChildren getComment(@PathVariable Long commentId,
+                                                     @Parameter(hidden = true) @Login Long loginMemberId) {
         Comment comment = commentService.findById(commentId);
-        return new CommentResponseDto(comment);
+        Member loginMember = memberService.findById(loginMemberId);
+        return new CommentResponseDtoWithChildren(comment, loginMember, false);
     }
 
     @Operation(summary = "댓글 수정",

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import umc.healthper.exception.block.MemberBlockDuplicateException;
+import umc.healthper.exception.block.MemberBlockNotFoundException;
 import umc.healthper.exception.comment.CommentAlreadyRemovedException;
 import umc.healthper.exception.comment.CommentNotFoundException;
 import umc.healthper.exception.comment.CommentUnauthorizedException;
@@ -73,6 +75,28 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT,
                 getMessage("memberDuplicate.code"),
                 getMessage("memberDuplicate.message")
+        );
+    }
+
+    @ExceptionHandler(MemberBlockNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse memberBlockNotFoundExceptionHandle(MemberBlockNotFoundException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.NOT_FOUND,
+                getMessage("memberBlockNotFound.code"),
+                getMessage("memberBlockNotFound.message")
+        );
+    }
+
+    @ExceptionHandler(MemberBlockDuplicateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse memberBlockDuplicateExceptionHandle(MemberBlockDuplicateException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.CONFLICT,
+                getMessage("memberBlockDuplicate.code"),
+                getMessage("memberBlockDuplicate.message")
         );
     }
 
