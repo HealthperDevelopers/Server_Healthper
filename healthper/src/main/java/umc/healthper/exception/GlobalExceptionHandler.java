@@ -31,6 +31,8 @@ import umc.healthper.exception.record.RecordNotFoundByIdException;
 
 import java.util.Locale;
 
+import javax.validation.ConstraintViolationException;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -41,7 +43,7 @@ public class GlobalExceptionHandler {
     /**
      * Global
      */
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class,
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class,
             MissingServletRequestParameterException.class, MismatchedInputException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse badRequestExceptionHandle(Exception e) {

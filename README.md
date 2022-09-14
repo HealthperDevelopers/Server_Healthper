@@ -1,2 +1,2 @@
 # Server_Healthper
-Team Server's developers
+Team Healthper's server developers
