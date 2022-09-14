@@ -1,5 +1,7 @@
 package umc.healthper.domain.completeExercise;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,8 @@ import javax.persistence.*;
 @Table(name ="DETAILS")
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class CompleteExerciseInfoEntity {
     @Id
     @GeneratedValue
@@ -17,15 +21,11 @@ public class CompleteExerciseInfoEntity {
     @Embedded
     private CompleteExerciseInfo detail;
 
-    public CompleteExerciseInfoEntity(CompleteExerciseInfo detail) {
-        this.detail = detail;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COMPLETE_EXERCISE_ID")
+    private CompleteExercise completeExercise;
 
-    public CompleteExerciseInfo getDetail() {
-        return this.detail == null ? new CompleteExerciseInfo() : this.detail;
-    }
-
-    public Long getId() {
-        return id;
+    public CompleteExerciseInfoEntity(CompleteExerciseInfo exDetail) {
+        this.detail = exDetail;
     }
 }

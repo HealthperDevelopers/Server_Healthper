@@ -5,7 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import umc.healthper.domain.completeExercise.CompleteExerciseInfo;
+import umc.healthper.global.collectionValid.CustomValid;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -15,10 +19,12 @@ import java.util.List;
 public class PostExercises {
     @NotNull
     private String exerciseName;
-    @NotNull
+    @Min(0)
+    @Max(9)
     private int sectionId;
-    @NotNull
+    @Min(1)
     private Long exerciseTime;
-    @NotNull
+    @NotEmpty
+    @CustomValid
     private List<CompleteExerciseInfo> details;
 }
