@@ -16,15 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import umc.healthper.dto.record.GetCalenderRes;
 import umc.healthper.dto.record.GetRecordRes;
 import umc.healthper.dto.record.PostRecordReq;
-import umc.healthper.exception.ExceptionResponse;
 import umc.healthper.global.Swagger;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.service.RecordService;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;

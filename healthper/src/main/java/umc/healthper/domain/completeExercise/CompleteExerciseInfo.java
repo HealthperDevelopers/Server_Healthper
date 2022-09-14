@@ -4,25 +4,19 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Objects;
+import javax.validation.constraints.Min;
 
 
 @Embeddable
 @Getter @Slf4j @Setter
-@EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 public class CompleteExerciseInfo {
 
+    @Min(1)
     private Long setNumber;
+    @Min(1)
     private Long repeatTime;
+    @Min(1)
     private Long weight;
-
-    public CompleteExerciseInfo() {
-        setNumber = 0l;
-        repeatTime = 0l;
-        weight = 0l;
-    }
 }

@@ -1,38 +1,31 @@
 package umc.healthper.global.collectionValid;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 
-import javax.validation.Validation;
-import java.util.Collection;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 @Component
-@Slf4j
-public class CollectionValidator implements Validator {
-    private SpringValidatorAdapter validator;
+@RequiredArgsConstructor
+public class CollectionValidator implements ConstraintValidator<CustomValid, Object> {
 
-    public CollectionValidator() {
-        this.validator = new SpringValidatorAdapter(
-                Validation.buildDefaultValidatorFactory().getValidator()
-        );
-    }
+    private final ElementValidator validator;
+
     @Override
-    public boolean supports(Class<?> clazz) {
+    public void initialize(CustomValid constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
+    }
+
+    @Override
+    public boolean isValid(Object values, ConstraintValidatorContext context) {
+        DataBinder dataBinder = new DataBinder(values);
+        BindingResult bindingResult = dataBinder.getBindingResult();
+        validator.validate(values,bindingResult);
+        if(bindingResult.hasErrors())return false;
         return true;
     }
 
-    @Override
-    public void validate(Object target, Errors errors) {
-        if(target instanceof Collection){
-            Collection collection = (Collection) target;
-
-            for (Object o : collection) {
-                validator.validate(o,errors);
-            }
-        }
-        else validator.validate(target,errors);
-    }
 }

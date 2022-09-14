@@ -37,8 +37,7 @@ public class CompleteExercise {
     @JoinColumn(name = "RECORD_ID")
     private RecordJPA record;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "COMPLETE_EXERCISE_ID")
+    @OneToMany(mappedBy = "completeExercise")
     private List<CompleteExerciseInfoEntity> details = new ArrayList<>();
 
     public void addExercise(Member member, RecordJPA record){

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import umc.healthper.Section;
 import umc.healthper.global.BaseExerciseEntity;
 
-import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class PostRecordReq {
     @NotNull
     private String comment;
-    @NotNull
+    @NotEmpty
     private List<Section> sections;
     @NotNull
     private BaseExerciseEntity exerciseInfo;
