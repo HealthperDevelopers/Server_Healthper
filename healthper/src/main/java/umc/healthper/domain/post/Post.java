@@ -55,6 +55,11 @@ public abstract class Post extends BaseTimeEntity {
     private int commentCount;
 
     @Formula("(select count(1) " +
+            "from comment c " +
+            "where c.post_id=post_id and c.status='NORMAL')")
+    private int commentCountOnlyNormalStatus;
+
+    @Formula("(select count(1) " +
             "from post_like pl " +
             "where pl.post_id=post_id)")
     private int postLikeCount;
