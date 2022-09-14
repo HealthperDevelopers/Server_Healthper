@@ -1,6 +1,7 @@
 package umc.healthper.dto.post;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostType;
@@ -8,7 +9,8 @@ import umc.healthper.dto.member.MemberInfoDto;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 public class ListPostResponseDto {
 
     private Long postId;
@@ -27,7 +29,7 @@ public class ListPostResponseDto {
 
         this.setPostId(post.getId());
         this.setTitle(post.getTitle());
-        this.setCommentCount(post.getComments().size());
+        this.setCommentCount(post.getCommentCountOnlyNormalStatus());
         this.setLikeCount(post.getPostLikeCount());
         this.setCreatedAt(post.getCreatedAt());
     }
