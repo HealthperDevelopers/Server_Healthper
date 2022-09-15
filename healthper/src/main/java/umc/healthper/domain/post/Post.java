@@ -14,7 +14,7 @@ import java.util.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "post_type")
+@DiscriminatorColumn(name = "type")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Post extends BaseTimeEntity {

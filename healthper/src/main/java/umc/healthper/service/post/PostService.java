@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostStatus;
+import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.PostSortingCriteria;
 import umc.healthper.dto.post.UpdatePostRequestDto;
 import umc.healthper.exception.member.MemberNotFoundByIdException;
@@ -45,10 +46,10 @@ public class PostService {
      * @param loginMemberId 로그인중인 Member의 id
      * @return Post List
      */
-    public List<Post> findPosts(PostSortingCriteria sort, Integer page, Long loginMemberId) {
+    public List<Post> findPosts(PostType postType, PostSortingCriteria sort, Integer page, Long loginMemberId) {
         Member loginMember = memberRepository.findById(loginMemberId)
                 .orElseThrow(MemberNotFoundByIdException::new);
-        return postRepository.findPosts(sort, page, loginMember);
+        return postRepository.findPosts(postType, sort, page, loginMember);
     }
 
     /**
