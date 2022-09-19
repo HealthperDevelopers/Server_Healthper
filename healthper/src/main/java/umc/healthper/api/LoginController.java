@@ -14,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import umc.healthper.dto.completeExercise.GetDetails;
-import umc.healthper.exception.ExceptionResponse;
 import umc.healthper.global.Swagger;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.global.login.SessionConst;
@@ -38,8 +36,8 @@ public class LoginController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = String.class)))})
     @GetMapping("/home")
     @ResponseBody
-    public String home(@Parameter(hidden = true)@Login Long userId) {
-        if(userId == null)
+    public String home(@Parameter(hidden = true) @Login Long userId) {
+        if (userId == null)
             return "로그인 해주세요.";
         return "로그인 완료";
     }
@@ -49,11 +47,9 @@ public class LoginController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = Void.class)))})
     @Swagger
     @GetMapping("/login")
-    public String login(@RequestParam Long kakaoId,
+    public String login(@RequestParam(name = "kakaoId") Long kakaoKey,
                         @RequestParam(defaultValue = "/record/calender") String redirectURL, HttpServletRequest request) throws JsonProcessingException {
-        Long kakaoKey = kakaoId;
-
-        if(kakaoKey == null){
+        if (kakaoKey == null) {
             return "redirect:/home";
         }
         HttpSession session = request.getSession();
@@ -62,16 +58,16 @@ public class LoginController {
         session.setAttribute(SessionConst.LOGIN_MEMBER, userId);
 
         LocalDate now = LocalDate.now();
-        return "redirect:"+redirectURL+"?year="+now.getYear()+"&month="+now.getMonthValue();
+        return "redirect:" + redirectURL + "?year=" + now.getYear() + "&month=" + now.getMonthValue();
     }
 
     @Operation(summary = "Logout", description = "세션에서 MEMBER 정보를 제거합니다.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = Void.class)))})
     @Swagger
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request){
+    public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(session != null) {
+        if (session != null) {
             session.invalidate();
         }
         return "redirect:/home";

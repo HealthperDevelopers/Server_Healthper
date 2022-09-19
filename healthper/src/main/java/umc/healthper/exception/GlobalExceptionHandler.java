@@ -19,6 +19,7 @@ import umc.healthper.exception.comment.CommentUnauthorizedException;
 import umc.healthper.exception.commentlike.CommentLikeAlreadyExistException;
 import umc.healthper.exception.commentlike.CommentLikeNotFoundException;
 import umc.healthper.exception.member.MemberDuplicateException;
+import umc.healthper.exception.member.MemberNicknameDuplicateException;
 import umc.healthper.exception.member.MemberNotFoundByIdException;
 import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
@@ -77,6 +78,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT,
                 getMessage("memberDuplicate.code"),
                 getMessage("memberDuplicate.message")
+        );
+    }
+
+    @ExceptionHandler(MemberNicknameDuplicateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse memberNicknameDuplicateExceptionHandle(MemberNicknameDuplicateException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.CONFLICT,
+                getMessage("memberNicknameDuplicate.code"),
+                getMessage("memberNicknameDuplicate.message")
         );
     }
 

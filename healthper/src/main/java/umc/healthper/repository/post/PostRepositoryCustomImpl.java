@@ -9,7 +9,6 @@ import umc.healthper.dto.post.PostSortingCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,17 +62,17 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         filteringQuery += "and p.status<>'REMOVED' and p.status<>'BLOCKED' ";
 
         // 내가 차단한 회원의 게시글 제외
-        // Todo: 급하게 Bug fix. 추후 좋은 코드로 변경해보도록 하자
-        List<Long> blockedMemberIds = new ArrayList<>();
-        if (!loginMember.getMemberBlocks().isEmpty()) {
-            blockedMemberIds = loginMember.getMemberBlocks().stream()
-                    .map(memberBlock -> memberBlock.getBlockedMember().getId())
-                    .collect(Collectors.toList());
+        List<Long> blockedMemberIds = loginMember.getMemberBlocks().stream()
+                .map(memberBlock -> memberBlock.getBlockedMember().getId())
+                .collect(Collectors.toList());
+        boolean existsBlockedMembers = !blockedMemberIds.isEmpty();
+        if (existsBlockedMembers) {
             filteringQuery += "and p.member.id not in :blockedMemberIds ";
         }
 
+
         TypedQuery<Post> emQuery = em.createQuery("select p from Post p " + filteringQuery + sortingQuery, Post.class);
-        if (!loginMember.getMemberBlocks().isEmpty()) {
+        if (existsBlockedMembers) {
             emQuery.setParameter("blockedMemberIds", blockedMemberIds);
         }
         return emQuery.setFirstResult(page * NUMBER_OF_PAGING)
