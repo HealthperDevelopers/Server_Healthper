@@ -3,6 +3,8 @@ package umc.healthper.domain.member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
+import umc.healthper.domain.block.MemberBlock;
 import umc.healthper.domain.completeExercise.CompleteExercise;
 import umc.healthper.domain.comment.CommentLike;
 import umc.healthper.domain.post.Post;

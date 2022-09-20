@@ -1,11 +1,11 @@
-package umc.healthper.domain.member;
+package umc.healthper.domain.block;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import umc.healthper.domain.member.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberBlock {
 
@@ -41,5 +40,14 @@ public class MemberBlock {
         memberBlock.setBlockedMember(blockedMember);
         member.getMemberBlocks().add(memberBlock);
         return memberBlock;
+    }
+
+    //== Setter ==//
+    private void setMember(Member member) {
+        this.member = member;
+    }
+
+    private void setBlockedMember(Member blockedMember) {
+        this.blockedMember = blockedMember;
     }
 }
