@@ -21,8 +21,9 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "회원 가입",
-            description = "가입할 회원의 정보(`kakaoKey`, `nickname`)을 받아 회원가입을 진행합니다.")
+    @Operation(summary = "회원 등록(가입)",
+            description = "가입할 회원의 정보(`kakaoKey`, `nickname`)을 받아 회원가입을 진행합니다.\n\n" +
+                    "이전에 탈퇴했던 회원인 경우 닉네임 변경 후 탈퇴 상태(`status=RESIGNED`)를 해제합니다.")
     @PostMapping
     public void joinMember(@RequestBody @Valid CreateMemberRequestDto requestDto) {
         memberService.joinMember(requestDto.getKakaoKey(), requestDto.getNickname());

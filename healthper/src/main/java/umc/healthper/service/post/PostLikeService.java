@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostLike;
-import umc.healthper.exception.member.MemberNotFoundByIdException;
+import umc.healthper.exception.member.MemberNotFoundException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.postlike.PostLikeAlreadyExistException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
@@ -31,7 +31,7 @@ public class PostLikeService {
      */
     @Transactional
     public void addLike(Long memberId, Long postId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundByIdException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
         validateAlreadyLike(member, post);
@@ -48,7 +48,7 @@ public class PostLikeService {
      */
     @Transactional
     public void cancelLike(Long memberId, Long postId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundByIdException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
         PostLike postLike = postLikeRepository.findByMemberAndPost(member, post)

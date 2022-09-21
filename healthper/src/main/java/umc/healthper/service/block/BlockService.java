@@ -7,7 +7,7 @@ import umc.healthper.domain.member.Member;
 import umc.healthper.domain.block.MemberBlock;
 import umc.healthper.exception.block.MemberBlockDuplicateException;
 import umc.healthper.exception.block.MemberBlockNotFoundException;
-import umc.healthper.exception.member.MemberNotFoundByIdException;
+import umc.healthper.exception.member.MemberNotFoundException;
 import umc.healthper.repository.block.MemberBlockRepository;
 import umc.healthper.repository.MemberRepository;
 
@@ -24,14 +24,14 @@ public class BlockService {
      *
      * @param loginMemberId   로그인 Member의 id (주체)
      * @param blockedMemberId 차단할 Member의 id (대상)
-     * @throws MemberNotFoundByIdException   전달받은 id에 해당하는 Member가 존재하지 않는 경우
+     * @throws MemberNotFoundException       전달받은 id에 해당하는 Member가 존재하지 않는 경우
      * @throws MemberBlockDuplicateException 이미 차단한 Member인 경우
      */
     public void blockMember(Long loginMemberId, Long blockedMemberId) {
         Member loginMember = memberRepository.findById(loginMemberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
+                .orElseThrow(MemberNotFoundException::new);
         Member blockedMember = memberRepository.findById(blockedMemberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
+                .orElseThrow(MemberNotFoundException::new);
 
         validateDuplicateBlockedMember(loginMember, blockedMember);
 
@@ -44,14 +44,14 @@ public class BlockService {
      *
      * @param loginMemberId   로그인 Member (주체)
      * @param blockedMemberId 차단했던 Member (대상)
-     * @throws MemberNotFoundByIdException  전달받은 id에 해당하는 Member가 존재하지 않는 경우
+     * @throws MemberNotFoundException      전달받은 id에 해당하는 Member가 존재하지 않는 경우
      * @throws MemberBlockNotFoundException 차단한 적 없는 Member인 경우
      */
     public void deleteBlockedMember(Long loginMemberId, Long blockedMemberId) {
         Member loginMember = memberRepository.findById(loginMemberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
+                .orElseThrow(MemberNotFoundException::new);
         Member blockedMember = memberRepository.findById(blockedMemberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
+                .orElseThrow(MemberNotFoundException::new);
 
         MemberBlock memberBlock = memberBlockRepository.findByMemberAndBlockedMember(loginMember, blockedMember)
                 .orElseThrow(MemberBlockNotFoundException::new);

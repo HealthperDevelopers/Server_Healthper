@@ -58,11 +58,11 @@ public class MemberService {
      *
      * @param memberId 조회할 회원의 id
      * @return 조회한 Member 객체
-     * @throws MemberNotFoundByIdException 조회할 Member가 없는 경우
+     * @throws MemberNotFoundException 조회할 Member가 없는 경우
      */
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     /**
@@ -70,11 +70,11 @@ public class MemberService {
      *
      * @param kakaoKey 조회할 회원의 kakaoKey
      * @return 조회한 Member 객체
-     * @throws MemberNotFoundByKakaoKeyException 조회할 Member가 없는 경우
+     * @throws MemberNotFoundException 조회할 Member가 없는 경우
      */
     public Member findByKakaoKey(Long kakaoKey) {
         return memberRepository.findByKakaoKey(kakaoKey)
-                .orElseThrow(MemberNotFoundByKakaoKeyException::new);
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     /**
@@ -89,7 +89,7 @@ public class MemberService {
         validateDuplicateMemberNickname(nickname);
 
         Member loginMember = memberRepository.findById(loginMemberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
+                .orElseThrow(MemberNotFoundException::new);
         loginMember.update(nickname);
     }
 
@@ -98,12 +98,12 @@ public class MemberService {
      * DB에서 실제로 삭제되지는 않고 status=RESIGNED로 변경됨
      *
      * @param loginMemberId 로그인 Member의 id
-     * @throws MemberNotFoundByIdException    id에 해당하는 회원이 없는 경우
+     * @throws MemberNotFoundException        id에 해당하는 회원이 없는 경우
      * @throws AlreadyResignedMemberException 이미 탈퇴한 회원인 경우
      */
     public void deleteMember(Long loginMemberId) {
         Member member = memberRepository.findById(loginMemberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
+                .orElseThrow(MemberNotFoundException::new);
         validAlreadyResignedMember(member);
         member.delete();
     }

@@ -79,7 +79,7 @@ public class MemberServiceTest {
         assertThat(members.size()).isEqualTo(4);
     }
 
-    @Test(expected = MemberNotFoundByIdException.class)
+    @Test(expected = MemberNotFoundException.class)
     @DisplayName("존재하지 않는 id로 회원 조회")
     public void findByIdNotFound() {
         // when
@@ -102,7 +102,7 @@ public class MemberServiceTest {
         assertThat(member.getKakaoKey()).isEqualTo(100L);
     }
 
-    @Test(expected = MemberNotFoundByKakaoKeyException.class)
+    @Test(expected = MemberNotFoundException.class)
     @DisplayName("존재하지 않는 kakaoKey로 회원 조회")
     public void findByKakaoKeyNotFound() {
         // when

@@ -9,7 +9,7 @@ import umc.healthper.domain.post.PostStatus;
 import umc.healthper.domain.post.PostType;
 import umc.healthper.dto.post.PostSortingCriteria;
 import umc.healthper.dto.post.UpdatePostRequestDto;
-import umc.healthper.exception.member.MemberNotFoundByIdException;
+import umc.healthper.exception.member.MemberNotFoundException;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.post.PostUnauthorizedException;
@@ -41,14 +41,14 @@ public class PostService {
      * Post 목록 조회 - Paging
      * 삭제된 게시글, 차단한 Member 게시글은 제외하고 조회
      *
-     * @param sort 정렬 기준
-     * @param page 페이지 번호
+     * @param sort          정렬 기준
+     * @param page          페이지 번호
      * @param loginMemberId 로그인중인 Member의 id
      * @return Post List
      */
     public List<Post> findPosts(PostType postType, PostSortingCriteria sort, Integer page, Long loginMemberId) {
         Member loginMember = memberRepository.findById(loginMemberId)
-                .orElseThrow(MemberNotFoundByIdException::new);
+                .orElseThrow(MemberNotFoundException::new);
         return postRepository.findPosts(postType, sort, page, loginMember);
     }
 
@@ -76,7 +76,7 @@ public class PostService {
      * Post 수정
      *
      * @param postId 수정할 Post의 id
-     * @param dto 수정 내용이 담긴 DTO
+     * @param dto    수정 내용이 담긴 DTO
      */
     @Transactional
     public void updatePost(Long loginMemberId, Long postId, UpdatePostRequestDto dto) {
@@ -121,7 +121,7 @@ public class PostService {
      * 게시글의 수정/삭제 권한이 없는 사용자라면 PostUnauthorizedException throw
      *
      * @param memberId 수정/삭제 권한 여부를 확인할 Member의 id
-     * @param post 수정/삭제할 Post
+     * @param post     수정/삭제할 Post
      */
     private void validatePostAuthority(Long memberId, Post post) {
         if (!memberId.equals(post.getMember().getId())) {
