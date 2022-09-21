@@ -9,7 +9,7 @@ import umc.healthper.domain.member.Member;
 import umc.healthper.exception.comment.CommentNotFoundException;
 import umc.healthper.exception.commentlike.CommentLikeAlreadyExistException;
 import umc.healthper.exception.commentlike.CommentLikeNotFoundException;
-import umc.healthper.exception.member.MemberNotFoundByIdException;
+import umc.healthper.exception.member.MemberNotFoundException;
 import umc.healthper.repository.MemberRepository;
 import umc.healthper.repository.comment.CommentLikeRepository;
 import umc.healthper.repository.comment.CommentRepository;
@@ -31,7 +31,7 @@ public class CommentLikeService {
      */
     @Transactional
     public void addLike(Long memberId, Long commentId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundByIdException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
 
         validateAlreadyLike(member, comment);
@@ -48,7 +48,7 @@ public class CommentLikeService {
      */
     @Transactional
     public void cancelLike(Long memberId, Long commentId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundByIdException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
 
         CommentLike commentLike = commentLikeRepository.findByMemberAndComment(member, comment)

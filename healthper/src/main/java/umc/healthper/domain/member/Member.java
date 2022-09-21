@@ -3,6 +3,8 @@ package umc.healthper.domain.member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
+import umc.healthper.domain.block.MemberBlock;
 import umc.healthper.domain.completeExercise.CompleteExercise;
 import umc.healthper.domain.comment.CommentLike;
 import umc.healthper.domain.post.Post;
@@ -14,8 +16,6 @@ import umc.healthper.global.BaseTimeEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
-
-import static umc.healthper.domain.member.MemberStatus.*;
 
 @Entity
 @Getter
@@ -63,7 +63,21 @@ public class Member extends BaseTimeEntity {
 
     //== 생성 메서드 ==//
     public static Member createMember(Long kakaoKey, String nickname) {
-        return new Member(kakaoKey, nickname, 0, NORMAL);
+        return new Member(kakaoKey, nickname, 0, MemberStatus.NORMAL);
+    }
+
+    //== Business Logic ==//
+    public void rejoin(String nickname) {
+        this.setStatus(MemberStatus.NORMAL);
+        this.setNickname(nickname);
+    }
+
+    public void update(String nickname) {
+        this.setNickname(nickname);
+    }
+
+    public void delete() {
+        this.setStatus(MemberStatus.RESIGNED);
     }
 
     //== Constructor ==//
@@ -72,5 +86,14 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
         this.reportedCount = reportedCount;
         this.status = status;
+    }
+
+    //== Setter ==//
+    private void setStatus(MemberStatus status) {
+        this.status = status;
+    }
+
+    private void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

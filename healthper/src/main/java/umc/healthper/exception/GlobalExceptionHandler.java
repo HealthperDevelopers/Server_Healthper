@@ -19,8 +19,8 @@ import umc.healthper.exception.comment.CommentUnauthorizedException;
 import umc.healthper.exception.commentlike.CommentLikeAlreadyExistException;
 import umc.healthper.exception.commentlike.CommentLikeNotFoundException;
 import umc.healthper.exception.member.MemberDuplicateException;
-import umc.healthper.exception.member.MemberNotFoundByIdException;
-import umc.healthper.exception.member.MemberNotFoundByKakaoKeyException;
+import umc.healthper.exception.member.MemberNicknameDuplicateException;
+import umc.healthper.exception.member.MemberNotFoundException;
 import umc.healthper.exception.post.PostAlreadyRemovedException;
 import umc.healthper.exception.post.PostNotFoundException;
 import umc.healthper.exception.post.PostUnauthorizedException;
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     /**
      * Member
      */
-    @ExceptionHandler({MemberNotFoundByIdException.class, MemberNotFoundByKakaoKeyException.class})
+    @ExceptionHandler(MemberNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse memberNotFoundExceptionHandle(Exception e) {
         log.error(String.valueOf(e));
@@ -77,6 +77,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT,
                 getMessage("memberDuplicate.code"),
                 getMessage("memberDuplicate.message")
+        );
+    }
+
+    @ExceptionHandler(MemberNicknameDuplicateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse memberNicknameDuplicateExceptionHandle(MemberNicknameDuplicateException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.CONFLICT,
+                getMessage("memberNicknameDuplicate.code"),
+                getMessage("memberNicknameDuplicate.message")
         );
     }
 

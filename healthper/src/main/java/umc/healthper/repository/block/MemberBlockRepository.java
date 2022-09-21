@@ -1,8 +1,8 @@
-package umc.healthper.repository;
+package umc.healthper.repository.block;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import umc.healthper.domain.member.Member;
-import umc.healthper.domain.member.MemberBlock;
+import umc.healthper.domain.block.MemberBlock;
 
 import java.util.Optional;
 

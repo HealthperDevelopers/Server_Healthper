@@ -28,8 +28,8 @@ public class PostServiceTest {
     @Test
     public void 게시글_등록() {
         // given
-        Member member = Member.createMember(100L, "woogie");
-        memberService.join(member);
+        memberService.joinMember(100L, "회원");
+        Member member = memberService.findByKakaoKey(100L);
         Post post = Post.createPost(member, PostType.NORMAL, "제목1", "테스트입니다");
         postService.savePost(post);
 
@@ -47,8 +47,8 @@ public class PostServiceTest {
     @Test
     public void 게시글_수정() {
         // given
-        Member member = Member.createMember(100L, "woogie");
-        memberService.join(member);
+        memberService.joinMember(100L, "회원");
+        Member member = memberService.findByKakaoKey(100L);
         Post post = Post.createPost(member, PostType.NORMAL, "제목1", "테스트입니다");
         postService.savePost(post);
 
@@ -65,10 +65,10 @@ public class PostServiceTest {
     @Test(expected = PostUnauthorizedException.class)
     public void 게시글_수정_권한예외_발생() {
         // given
-        Member member1 = Member.createMember(100L, "woogie");
-        memberService.join(member1);
-        Member member2 = Member.createMember(101L, "peter");
-        memberService.join(member2);
+        memberService.joinMember(100L, "회원1");
+        Member member1 = memberService.findByKakaoKey(100L);
+        memberService.joinMember(101L, "회원2");
+        Member member2 = memberService.findByKakaoKey(101L);
 
         Post post = Post.createPost(member1, PostType.NORMAL, "제목1", "테스트입니다");
         postService.savePost(post);
@@ -83,8 +83,8 @@ public class PostServiceTest {
     @Test(expected = PostAlreadyRemovedException.class)
     public void 게시글_삭제() {
         // given
-        Member member = Member.createMember(100L, "woogie");
-        memberService.join(member);
+        memberService.joinMember(100L, "회원");
+        Member member = memberService.findByKakaoKey(100L);
         Post post = Post.createPost(member, PostType.NORMAL, "제목1", "테스트입니다");
         postService.savePost(post);
 
@@ -101,10 +101,10 @@ public class PostServiceTest {
     @Test(expected = PostUnauthorizedException.class)
     public void 게시글_삭제_권한예외_발생() {
         // given
-        Member member1 = Member.createMember(100L, "woogie");
-        memberService.join(member1);
-        Member member2 = Member.createMember(101L, "peter");
-        memberService.join(member2);
+        memberService.joinMember(100L, "회원1");
+        Member member1 = memberService.findByKakaoKey(100L);
+        memberService.joinMember(101L, "회원2");
+        Member member2 = memberService.findByKakaoKey(101L);
 
         Post post = Post.createPost(member1, PostType.NORMAL, "제목1", "테스트입니다");
         postService.savePost(post);

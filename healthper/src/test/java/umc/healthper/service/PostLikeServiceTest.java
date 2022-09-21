@@ -31,12 +31,12 @@ public class PostLikeServiceTest {
     @Test
     public void 좋아요_추가() {
         // given
-        Member member1 = Member.createMember(100L, "James");
-        memberService.join(member1);
-        Member member2 = Member.createMember(101L, "Anne");
-        memberService.join(member2);
-        Member member3 = Member.createMember(102L, "Max");
-        memberService.join(member3);
+        memberService.joinMember(100L, "회원1");
+        Member member1 = memberService.findByKakaoKey(100L);
+        memberService.joinMember(101L, "회원2");
+        Member member2 = memberService.findByKakaoKey(101L);
+        memberService.joinMember(102L, "회원3");
+        Member member3 = memberService.findByKakaoKey(102L);
 
         Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
         postService.savePost(post1);
@@ -63,15 +63,15 @@ public class PostLikeServiceTest {
     @Test(expected = PostLikeAlreadyExistException.class)
     public void 좋아요_중복_추가() {
         // given
-        Member member1 = Member.createMember(100L, "James");
-        memberService.join(member1);
+        memberService.joinMember(100L, "우기");
+        Member member = memberService.findByKakaoKey(100L);
 
-        Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
-        postService.savePost(post1);
+        Post post = Post.createPost(member, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
+        postService.savePost(post);
 
         // when
-        postLikeService.addLike(member1.getId(), post1.getId());
-        postLikeService.addLike(member1.getId(), post1.getId());
+        postLikeService.addLike(member.getId(), post.getId());
+        postLikeService.addLike(member.getId(), post.getId());
 
         // then
         fail("중복으로 좋아요 했기 때문에 예외가 발생해야 한다.");
@@ -80,10 +80,10 @@ public class PostLikeServiceTest {
     @Test
     public void 좋아요_취소() {
         // given
-        Member member1 = Member.createMember(100L, "James");
-        memberService.join(member1);
-        Member member2 = Member.createMember(101L, "Anne");
-        memberService.join(member2);
+        memberService.joinMember(100L, "회원1");
+        Member member1 = memberService.findByKakaoKey(100L);
+        memberService.joinMember(101L, "회원2");
+        Member member2 = memberService.findByKakaoKey(101L);
 
         Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
         postService.savePost(post1);
@@ -107,14 +107,14 @@ public class PostLikeServiceTest {
     @Test(expected = PostLikeNotFoundException.class)
     public void 좋아요_하지_않은_경우의_취소() {
         // given
-        Member member1 = Member.createMember(100L, "James");
-        memberService.join(member1);
+        memberService.joinMember(100L, "회원");
+        Member member = memberService.findByKakaoKey(100L);
 
-        Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
-        postService.savePost(post1);
+        Post post = Post.createPost(member, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
+        postService.savePost(post);
 
         // when
-        postLikeService.cancelLike(member1.getId(), post1.getId());
+        postLikeService.cancelLike(member.getId(), post.getId());
 
         // then
         fail("좋아요 한 적 없는 게시글을 좋아요 취소하고 있기 때문에 예외가 발생해야 한다.");
