@@ -38,10 +38,10 @@ public class PostResponseDto {
         Member writer = post.getMember();
         this.setWriter(new MemberInfoDto(writer.getId(), writer.getNickname(), writer.getStatus()));
 
-        this.setLikeCount(post.getPostLikeCount());
         this.setPostId(post.getId());
         this.setTitle(post.getTitle());
         this.setContent(post.getContent());
+        this.setLikeCount(post.getPostLikeCount());
         this.setStatus(post.getStatus());
         this.setCreatedAt(post.getCreatedAt());
         post.getComments().stream()

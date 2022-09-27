@@ -50,9 +50,9 @@ public abstract class Post extends BaseTimeEntity {
     private Set<PostLike> likes = new HashSet<>();
 
     @Formula("(select count(1) " +
-            "from comment c " +
-            "where c.post_id=post_id)")
-    private int commentCount;
+            "from post_report pr " +
+            "where pr.reported_post_id=post_id)")
+    private int reportedCount;
 
     @Formula("(select count(1) " +
             "from comment c " +
@@ -63,6 +63,15 @@ public abstract class Post extends BaseTimeEntity {
             "from post_like pl " +
             "where pl.post_id=post_id)")
     private int postLikeCount;
+
+    //== Constructor ==//
+    protected Post(Member member, String title, String content, int viewCount, PostStatus postStatus) {
+        this.member = member;
+        this.title = title;
+        this.content = content;
+        this.viewCount = viewCount;
+        this.status = postStatus;
+    }
 
     //== 생성 메서드 ==//
     public static Post createPost(Member member, PostType postType, String title, String content) {
@@ -90,15 +99,6 @@ public abstract class Post extends BaseTimeEntity {
 
     public void delete() {
         this.setStatus(PostStatus.REMOVED);
-    }
-
-    //== Constructor ==//
-    protected Post(Member member, String title, String content, int viewCount, PostStatus postStatus) {
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.viewCount = viewCount;
-        this.status = postStatus;
     }
 
     //== Setter ==//
