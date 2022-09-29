@@ -11,6 +11,8 @@ import umc.healthper.domain.comment.Comment;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostType;
+import umc.healthper.dto.comment.CreateCommentRequestDto;
+import umc.healthper.dto.post.CreatePostRequestDto;
 import umc.healthper.exception.report.CommentReportDuplicateException;
 import umc.healthper.exception.report.PostReportDuplicateException;
 import umc.healthper.service.MemberService;
@@ -39,8 +41,8 @@ public class ReportServiceTest {
         // given
         memberService.joinMember(100L, "회원");
         Member member = memberService.findByKakaoKey(100L);
-        Post post = Post.createPost(member, PostType.NORMAL, "제목", "내용");
-        postService.savePost(post);
+        Long postId = postService.savePost(member.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글"));
+        Post post = postService.findPost(postId);
 
         // when
         reportService.reportPost(member.getId(), post.getId());
@@ -56,10 +58,10 @@ public class ReportServiceTest {
         // given
         memberService.joinMember(100L, "회원");
         Member member = memberService.findByKakaoKey(100L);
-        Post post = Post.createPost(member, PostType.NORMAL, "제목", "내용");
-        postService.savePost(post);
-        Comment comment = Comment.createComment(member, post, "댓글 내용");
-        commentService.saveComment(comment);
+        Long postId = postService.savePost(member.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글"));
+        Post post = postService.findPost(postId);
+        Long commentId = commentService.saveComment(member.getId(), new CreateCommentRequestDto(post.getId(), "댓글 내용"));
+        Comment comment = commentService.findById(commentId);
 
         // when
         reportService.reportComment(member.getId(), comment.getId());

@@ -11,13 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import umc.healthper.domain.comment.Comment;
 import umc.healthper.domain.member.Member;
-import umc.healthper.domain.post.Post;
 import umc.healthper.dto.comment.*;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.service.comment.CommentLikeService;
 import umc.healthper.service.comment.CommentService;
 import umc.healthper.service.MemberService;
-import umc.healthper.service.post.PostService;
 
 import javax.validation.Valid;
 
@@ -27,7 +25,6 @@ import javax.validation.Valid;
 public class CommentController {
 
     private final MemberService memberService;
-    private final PostService postService;
     private final CommentService commentService;
     private final CommentLikeService commentLikeService;
 
@@ -35,26 +32,18 @@ public class CommentController {
     @Operation(summary = "댓글 생성",
             description = "댓글 정보를 받아 새로운 댓글을 생성합니다.")
     @PostMapping("/comment")
-    public void saveComment(@RequestBody @Valid CreateCommentRequestDto request,
+    public void saveComment(@RequestBody @Valid CreateCommentRequestDto requestDto,
                             @Parameter(hidden = true) @Login Long loginMemberId) {
-        Member member = memberService.findById(loginMemberId);
-        Post post = postService.findPost(request.getPostId(), false);
-        Comment comment = Comment.createComment(member, post, request.getContent());
-        commentService.saveComment(comment);
+        commentService.saveComment(loginMemberId, requestDto);
     }
 
     @Operation(summary = "대댓글 생성",
             description = "대댓글 정보를 받아 새로운 대댓글을 생성합니다.")
     @PostMapping("/comment-nested")
     public void saveNestedComment(@RequestBody @Valid CreateNestedCommentRequestDto requestDto,
-                            @Parameter(hidden = true) @Login Long loginMemberId) {
-        Member findMember = memberService.findById(loginMemberId);
-        Post findPost = postService.findPost(requestDto.getPostId(), false);
+                                  @Parameter(hidden = true) @Login Long loginMemberId) {
 
-        Comment comment = Comment.createComment(findMember, findPost, requestDto.getContent());
-        Comment parentComment = commentService.findById(requestDto.getParentId());
-        parentComment.addChildComment(comment);
-        commentService.saveComment(comment);
+        commentService.saveNestedComment(loginMemberId, requestDto);
     }
 
     @Operation(summary = "댓글 조회",

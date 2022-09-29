@@ -1,8 +1,10 @@
 package umc.healthper.dto.comment;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CreateCommentRequestDto {
     private Long postId;
     private String content;
