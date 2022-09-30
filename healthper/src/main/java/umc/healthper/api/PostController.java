@@ -37,11 +37,8 @@ public class PostController {
     @PostMapping("/post")
     public CreatePostResponseDto savePost(@RequestBody @Valid CreatePostRequestDto requestDto,
                                           @Parameter(hidden = true) @Login Long loginMemberId) {
-        Member member = memberService.findById(loginMemberId);
 
-        Post post = Post.createPost(member, requestDto.getType(), requestDto.getTitle(), requestDto.getContent());
-
-        return new CreatePostResponseDto(postService.savePost(post).getId());
+        return new CreatePostResponseDto(postService.savePost(loginMemberId, requestDto));
     }
 
     @Operation(summary = "게시글 조회",
@@ -55,7 +52,7 @@ public class PostController {
     @GetMapping("/post/{postId}")
     public PostResponseDto viewPost(@PathVariable Long postId,
                                     @Parameter(hidden = true) @Login Long loginMemberId) {
-        Post post = postService.findPost(postId, true);
+        Post post = postService.findPost(postId);
         Member loginMember = memberService.findById(loginMemberId);
         return new PostResponseDto(post, loginMember);
     }

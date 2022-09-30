@@ -7,6 +7,7 @@ import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostStatus;
 import umc.healthper.domain.post.PostType;
+import umc.healthper.dto.post.CreatePostRequestDto;
 import umc.healthper.dto.post.PostSortingCriteria;
 import umc.healthper.dto.post.UpdatePostRequestDto;
 import umc.healthper.exception.member.MemberNotFoundException;
@@ -23,18 +24,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
     /**
-     * Post 등록(저장)
+     * 게시글 등록(저장)
      *
-     * @param post 등록할 Post 객체
-     * @return 생성된 Post 객체 return
+     * @param loginMemberId 게시글 작성자(로그인 사용자)의 id
+     * @param dto 게시글 생성에 필요한 정보를 담은 DTO
+     * @return 생성된 게시글의 id
      */
     @Transactional
-    public Post savePost(Post post) {
-        return postRepository.save(post);
+    public Long savePost(Long loginMemberId, CreatePostRequestDto dto) {
+        Member loginMember = memberRepository.findById(loginMemberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        Post post = Post.createPost(loginMember, dto.getType(), dto.getTitle(), dto.getContent());
+
+        return postRepository.save(post).getId();
     }
 
     /**
@@ -56,18 +63,13 @@ public class PostService {
      * Post 조회 - id
      *
      * @param postId 조회할 Post의 id
-     * @param isView 조회수 증가 여부
      * @return 조회된 Post 객체 return
      */
-    public Post findPost(Long postId, boolean isView) {
+    public Post findPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
         validateRemovedPost(post);
-
-        if (isView) {
-            post.addViewCount();
-        }
 
         return post;
     }

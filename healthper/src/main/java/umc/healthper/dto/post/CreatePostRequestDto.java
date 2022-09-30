@@ -1,11 +1,11 @@
 package umc.healthper.dto.post;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import umc.healthper.domain.post.PostType;
 
-@Data
-@NoArgsConstructor
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CreatePostRequestDto {
     private PostType type;
     private String title;
