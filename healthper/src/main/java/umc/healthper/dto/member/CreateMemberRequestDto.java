@@ -1,11 +1,9 @@
 package umc.healthper.dto.member;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CreateMemberRequestDto {
     private Long kakaoKey;

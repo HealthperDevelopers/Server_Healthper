@@ -1,7 +1,6 @@
 package umc.healthper.repository.post;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostType;
@@ -12,7 +11,6 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RequiredArgsConstructor
 public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
@@ -33,7 +31,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
                 sortingQuery += "p.postLikeCount desc, ";
                 break;
             case COMMENT:
-                sortingQuery += "p.commentCount desc, ";
+                sortingQuery += "p.commentCountOnlyNormalStatus desc, ";
                 break;
             default:
                 throw new IllegalArgumentException("잘못된 정렬 기준입니다.");
@@ -69,7 +67,6 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         if (existsBlockedMembers) {
             filteringQuery += "and p.member.id not in :blockedMemberIds ";
         }
-
 
         TypedQuery<Post> emQuery = em.createQuery("select p from Post p " + filteringQuery + sortingQuery, Post.class);
         if (existsBlockedMembers) {

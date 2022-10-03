@@ -1,6 +1,7 @@
 package umc.healthper.domain.comment;
 
 import lombok.Getter;
+import org.hibernate.annotations.Formula;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.global.BaseTimeEntity;
@@ -57,6 +58,11 @@ public class Comment extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private Set<CommentLike> likes = new HashSet<>();
+
+    @Formula("(select count(1) " +
+            "from comment_report cr " +
+            "where cr.reported_comment_id=comment_id)")
+    private int reportedCount;
 
     //== 생성 메서드 ==//
     public static Comment createComment(Member member, Post post, String content) {

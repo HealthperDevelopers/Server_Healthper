@@ -1,6 +1,7 @@
 package umc.healthper.service;
 
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.post.Post;
 import umc.healthper.domain.post.PostType;
+import umc.healthper.dto.post.CreatePostRequestDto;
 import umc.healthper.exception.postlike.PostLikeAlreadyExistException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.service.post.PostLikeService;
@@ -23,13 +25,18 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 public class PostLikeServiceTest {
 
-    @Autowired MemberService memberService;
-    @Autowired PostService postService;
-    @Autowired PostLikeService postLikeService;
-    @Autowired EntityManager em;
+    @Autowired
+    MemberService memberService;
+    @Autowired
+    PostService postService;
+    @Autowired
+    PostLikeService postLikeService;
+    @Autowired
+    EntityManager em;
 
     @Test
-    public void 좋아요_추가() {
+    @DisplayName("게시글 좋아요 추가")
+    public void addLike() {
         // given
         memberService.joinMember(100L, "회원1");
         Member member1 = memberService.findByKakaoKey(100L);
@@ -38,12 +45,12 @@ public class PostLikeServiceTest {
         memberService.joinMember(102L, "회원3");
         Member member3 = memberService.findByKakaoKey(102L);
 
-        Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
-        postService.savePost(post1);
-        Post post2 = Post.createPost(member1, PostType.NORMAL, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글");
-        postService.savePost(post2);
-        Post post3 = Post.createPost(member1, PostType.NORMAL, "제목" + 3, "테스트를 위한 " + 3 + "번 게시글");
-        postService.savePost(post3);
+        Long post1Id = postService.savePost(member1.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글"));
+        Post post1 = postService.findPost(post1Id);
+        Long post2Id = postService.savePost(member1.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글"));
+        Post post2 = postService.findPost(post2Id);
+        Long post3Id = postService.savePost(member1.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 3, "테스트를 위한 " + 3 + "번 게시글"));
+        Post post3 = postService.findPost(post3Id);
 
         // when
         postLikeService.addLike(member1.getId(), post1.getId());
@@ -60,14 +67,16 @@ public class PostLikeServiceTest {
         assertThat(post2.getLikes().size()).isEqualTo(1);
         assertThat(post3.getLikes().size()).isEqualTo(1);
     }
+
     @Test(expected = PostLikeAlreadyExistException.class)
-    public void 좋아요_중복_추가() {
+    @DisplayName("게시글 좋아요 중복 추가")
+    public void addLikeAlreadyExistException() {
         // given
         memberService.joinMember(100L, "우기");
         Member member = memberService.findByKakaoKey(100L);
 
-        Post post = Post.createPost(member, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
-        postService.savePost(post);
+        Long postId = postService.savePost(member.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글"));
+        Post post = postService.findPost(postId);
 
         // when
         postLikeService.addLike(member.getId(), post.getId());
@@ -78,17 +87,18 @@ public class PostLikeServiceTest {
     }
 
     @Test
-    public void 좋아요_취소() {
+    @DisplayName("게시글 좋아요 취소")
+    public void cancelLike() {
         // given
         memberService.joinMember(100L, "회원1");
         Member member1 = memberService.findByKakaoKey(100L);
         memberService.joinMember(101L, "회원2");
         Member member2 = memberService.findByKakaoKey(101L);
 
-        Post post1 = Post.createPost(member1, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
-        postService.savePost(post1);
-        Post post2 = Post.createPost(member1, PostType.NORMAL, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글");
-        postService.savePost(post2);
+        Long post1Id = postService.savePost(member1.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글"));
+        Post post1 = postService.findPost(post1Id);
+        Long post2Id = postService.savePost(member1.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 2, "테스트를 위한 " + 2 + "번 게시글"));
+        Post post2 = postService.findPost(post2Id);
 
         postLikeService.addLike(member1.getId(), post1.getId());
         postLikeService.addLike(member1.getId(), post2.getId());
@@ -105,13 +115,14 @@ public class PostLikeServiceTest {
     }
 
     @Test(expected = PostLikeNotFoundException.class)
-    public void 좋아요_하지_않은_경우의_취소() {
+    @DisplayName("좋아요 한 적 없는 게시글의 좋아요 취소")
+    public void cancelLikeNeverLikeException() {
         // given
         memberService.joinMember(100L, "회원");
         Member member = memberService.findByKakaoKey(100L);
 
-        Post post = Post.createPost(member, PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글");
-        postService.savePost(post);
+        Long postId = postService.savePost(member.getId(), new CreatePostRequestDto(PostType.NORMAL, "제목" + 1, "테스트를 위한 " + 1 + "번 게시글"));
+        Post post = postService.findPost(postId);
 
         // when
         postLikeService.cancelLike(member.getId(), post.getId());

@@ -29,6 +29,8 @@ import umc.healthper.exception.postlike.PostLikeAlreadyExistException;
 import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.exception.record.EmptySectionException;
 import umc.healthper.exception.record.RecordNotFoundByIdException;
+import umc.healthper.exception.report.CommentReportDuplicateException;
+import umc.healthper.exception.report.PostReportDuplicateException;
 
 import java.util.Locale;
 
@@ -268,6 +270,31 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT,
                 getMessage("commentLikeAlreadyExist.code"),
                 getMessage("commentLikeAlreadyExist.message")
+        );
+    }
+
+    /**
+     * Report
+     */
+    @ExceptionHandler(PostReportDuplicateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse postReportDuplicateExceptionHandle(PostReportDuplicateException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.CONFLICT,
+                getMessage("postReportDuplicate.code"),
+                getMessage("postReportDuplicate.message")
+        );
+    }
+
+    @ExceptionHandler(CommentReportDuplicateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse postReportDuplicateExceptionHandle(CommentReportDuplicateException e) {
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.CONFLICT,
+                getMessage("commentReportDuplicate.code"),
+                getMessage("commentReportDuplicate.message")
         );
     }
 
