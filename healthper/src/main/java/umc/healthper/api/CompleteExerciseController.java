@@ -20,6 +20,8 @@ import umc.healthper.global.Swagger;
 import umc.healthper.global.argumentresolver.Login;
 import umc.healthper.service.CompleteExerciseService;
 
+import javax.validation.constraints.Min;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -32,16 +34,12 @@ public class CompleteExerciseController {
 
     private final CompleteExerciseService service;
 
-    @Operation(summary = "운동 상세 정보 등록", description = "record post 이후 얻어낸 ID를 이용합니다.")
+    @Operation(summary  = "운동 상세 정보 등록", description = "record post 이후 얻어낸 ID를 이용합니다.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = String.class))) })
     @Swagger
     @PostMapping("/{recordId}")
-    public String push(@Parameter(hidden = true)@Login Long userId, @PathVariable Long recordId, @CustomValid @RequestBody List<PostExercises> req){
-        for (PostExercises r : req) {
-            log.info("{}", r.toString());
-        }
-
-        service.save(req, userId, recordId);
+    public String push(@Parameter(hidden = true)@Login Long userId, @Min(1) @PathVariable Long recordId, @CustomValid @RequestBody List<PostExercises> req){
+        service.save(req, userId, recordId, LocalDate.now());
         return "ok";
     }
 
@@ -49,9 +47,8 @@ public class CompleteExerciseController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = GetDetails.class)))})
     @Swagger
     @GetMapping("/{recordId}")
-    public List<GetDetails> getList(@PathVariable Long recordId){
-        List<GetDetails> details = service.exList(recordId);
-
+    public List<GetDetails> getList(@Parameter(hidden = true)@Login Long userId, @PathVariable @Min(1) Long recordId){
+        List<GetDetails> details = service.exList(recordId, userId);
         return details;
     }
 }

@@ -1,9 +1,6 @@
 package umc.healthper.dto.record;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import umc.healthper.Section;
 import umc.healthper.global.BaseExerciseEntity;
 
@@ -15,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class PostRecordReq {
     @NotNull
     private String comment;

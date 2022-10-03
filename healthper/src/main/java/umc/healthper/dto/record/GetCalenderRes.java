@@ -1,9 +1,6 @@
 package umc.healthper.dto.record;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import umc.healthper.Section;
 
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class GetCalenderRes {
     private Integer day;
     private List<Section> sections;

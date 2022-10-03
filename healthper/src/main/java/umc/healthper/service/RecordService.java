@@ -10,6 +10,7 @@ import umc.healthper.domain.RecordJPA;
 import umc.healthper.dto.record.GetCalenderRes;
 import umc.healthper.dto.record.GetRecordRes;
 import umc.healthper.dto.record.PostRecordReq;
+import umc.healthper.exception.completeExercise.NotMatchOwnerException;
 import umc.healthper.exception.record.EmptySectionException;
 import umc.healthper.exception.record.RecordNotFoundByIdException;
 import umc.healthper.global.BaseExerciseEntity;
@@ -65,27 +66,33 @@ public class RecordService {
     }
 
     @Transactional
-    public Long completeToday(Long loginId, PostRecordReq req){
+    public Long completeToday(Long loginId, PostRecordReq req, LocalDate theDate){
         Member member = memberService.findById(loginId);
-        RecordJPA records = postDTOtoDomain(member, req);
+        RecordJPA records = postDTOtoDomainDate(member, req, theDate);
         return repository.add(records);
     }
-
-    private RecordJPA postDTOtoDomain(Member member,PostRecordReq req){
+    @Transactional
+    public Long completeToday(Long loginId, PostRecordReq req){
+        Member member = memberService.findById(loginId);
+        RecordJPA records = postDTOtoDomainDate(member, req, LocalDate.now());
+        return repository.add(records);
+    }
+    public RecordJPA postDTOtoDomainDate(Member member,PostRecordReq req, LocalDate theDate){
         RecordJPA records = new RecordJPA();
         List<Section> sections = req.getSections();
         if(sections.size() == 0)throw new EmptySectionException();
         records.addMemberList(member);
         records.setComment(req.getComment());
         records.setSections(Section.listTostr(sections));
-        records.setCreatedDay(LocalDate.now());
+        records.setCreatedDay(theDate);
         records.setExerciseEntity(req.getExerciseInfo());
         return records;
     }
 
-    public RecordJPA findById(Long recordId){
+    public RecordJPA findById(Long recordId, Long userId){
         RecordJPA target = repository.findById(recordId);
         if(target == null)throw new RecordNotFoundByIdException();
+        if(target.getMember().getId() != userId)throw new NotMatchOwnerException();
         return target;
     }
 }

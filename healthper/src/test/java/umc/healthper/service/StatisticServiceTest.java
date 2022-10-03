@@ -1,6 +1,6 @@
 package umc.healthper.service;
 
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest(classes = {StatisticRepository.class, StatisticServiceImpl.class})
@@ -28,14 +27,14 @@ class StatisticServiceTest {
     StatisticRepository repository;
 
     @Test
+    @DisplayName("통계 정상 로직")
     void getStatistic(){
         //given
         Long userId = 10l;
         String exerciseName = "스쿼트";
         List<DateVolumeDto> dayVolumeList = makeDateVolumeList();
 
-        Mockito.when(repository.getStatisticElements(userId, exerciseName))
-                .thenReturn(dayVolumeList);
+        Mockito.when(repository.getStatisticElements(userId,exerciseName)).thenReturn(dayVolumeList);
 
         GetStatisticRes response = service.getStatisticByExerciseName(userId, exerciseName);
 

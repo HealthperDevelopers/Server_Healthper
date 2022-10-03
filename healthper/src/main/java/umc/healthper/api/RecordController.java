@@ -62,8 +62,7 @@ public class RecordController {
     @PostMapping
     @ResponseBody
     public Long pushRecord(@Parameter(hidden = true)@Login Long loginId, @Validated @RequestBody PostRecordReq req){
-        //log.info("finish: {}", req.toString());
-        return service.completeToday(loginId, req);
+        return service.completeToday(loginId, req, LocalDate.now());
     }
 }
 
