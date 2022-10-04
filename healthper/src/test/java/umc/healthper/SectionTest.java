@@ -16,6 +16,7 @@ public class SectionTest {
         Runnable userA = () ->{
             log.info("userA section start");
             List<Section> sections = Section.strToSection("0000000001");
+            sleep(2000);
             log.info("userA section done {}", sections);
         };
         Runnable userB = () ->{
@@ -30,11 +31,8 @@ public class SectionTest {
         threadB.setName("thread-B");
 
         threadA.start();
-        sleep(10);
         threadB.start();
-
-
-        sleep(2000);
+        sleep(3000);
     }
 
     private void sleep(int millis) {

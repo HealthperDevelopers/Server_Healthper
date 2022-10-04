@@ -71,12 +71,6 @@ public class RecordService {
         RecordJPA records = postDTOtoDomainDate(member, req, theDate);
         return repository.add(records);
     }
-    @Transactional
-    public Long completeToday(Long loginId, PostRecordReq req){
-        Member member = memberService.findById(loginId);
-        RecordJPA records = postDTOtoDomainDate(member, req, LocalDate.now());
-        return repository.add(records);
-    }
     public RecordJPA postDTOtoDomainDate(Member member,PostRecordReq req, LocalDate theDate){
         RecordJPA records = new RecordJPA();
         List<Section> sections = req.getSections();

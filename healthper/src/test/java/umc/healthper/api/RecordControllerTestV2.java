@@ -2,25 +2,30 @@ package umc.healthper.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import umc.healthper.Section;
+import umc.healthper.domain.member.Member;
 import umc.healthper.dto.record.GetCalenderRes;
 import umc.healthper.dto.record.GetRecordRes;
 import umc.healthper.dto.record.PostRecordReq;
+import umc.healthper.exception.GlobalExceptionHandler;
 import umc.healthper.exception.record.EmptySectionException;
 import umc.healthper.global.BaseExerciseEntity;
+import umc.healthper.global.collectionValid.CollectionValidator;
+import umc.healthper.global.collectionValid.CustomValid;
+import umc.healthper.global.collectionValid.ElementValidator;
 import umc.healthper.global.login.SessionConst;
+import umc.healthper.service.MemberService;
 import umc.healthper.service.RecordService;
 
 import java.time.LocalDate;
@@ -39,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @MockBean(JpaMetamodelMappingContext.class)
 @WebMvcTest(RecordController.class)
-//@Import({GlobalExceptionHandler.class, MessageSource.class})
+@Import({ElementValidator.class, CollectionValidator.class, GlobalExceptionHandler.class, EmptySectionException.class})
 public class RecordControllerTestV2 {
 
     @Autowired
@@ -53,12 +58,13 @@ public class RecordControllerTestV2 {
 
     private static MockHttpSession session;
     private static Long loginId;
-
+    private static LocalDate testDate;
     @BeforeAll
     static void login() {
         loginId = 1l;
         session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginId);
+        testDate = LocalDate.now();
     }
 
     @AfterAll
@@ -107,9 +113,8 @@ public class RecordControllerTestV2 {
     @DisplayName("기록 POST")
     void pushRecord() throws Exception {
         PostRecordReq recordReq = postReq();
-
         Long response = 10l;
-        given(recordService.completeToday(loginId,recordReq)).willReturn(response);
+        given(recordService.completeToday(loginId,recordReq,testDate)).willReturn(response);
 
         String req = objectMapper.writeValueAsString(recordReq);
 
@@ -122,7 +127,7 @@ public class RecordControllerTestV2 {
         perform.andExpect(status().isOk())
                         .andExpect(jsonPath("$").value(10l));
 
-        verify(recordService).completeToday(loginId, recordReq);
+        verify(recordService).completeToday(loginId, recordReq,testDate);
     }
 
     private PostRecordReq postReq() {
@@ -136,27 +141,80 @@ public class RecordControllerTestV2 {
         return req;
     }
 
-    @Test
-    @DisplayName("빈 부위 목록 POST")
-    void badPushException() throws Exception {
-        //given
-        PostRecordReq req = PostRecordReq.builder()
-                .comment("good").exerciseInfo(new BaseExerciseEntity(100l,20l))
-                .sections(new ArrayList<>()).build();
+    @Nested
+    @DisplayName("기록 POST 에러")
+    class badRecordPost {
 
-        String reqs = objectMapper.writeValueAsString(req);
+        PostRecordReq getPostRecordReq(){
+            PostRecordReq req = PostRecordReq.builder()
+                    .comment("good").exerciseInfo(new BaseExerciseEntity(100l, 20l))
+                    .sections(Section.strToSection("1010101010")).build();
+            return req;
+        }
+        @Test
+        @DisplayName("빈 부위 목록 POST")
+        void emptySectionsException() throws Exception {
+            //given
+            PostRecordReq req = getPostRecordReq();
+            req.setSections(Section.strToSection("0000000000"));
 
-        given(recordService.completeToday(loginId,req)).willThrow(new EmptySectionException());
+            String reqs = objectMapper.writeValueAsString(req);
 
-        ResultActions perform = mockMvc.perform(post("/record")
-                .contentType(MediaType.APPLICATION_JSON).content(reqs)
-                .characterEncoding("utf-8")
-                .session(session));
+            given(recordService.completeToday(loginId, req, testDate)).willThrow(new EmptySectionException());
 
-        perform.andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.code").value(40));
+            ResultActions perform = doPerform(reqs);
+
+            perform.andExpect(status().is4xxClientError())
+                    .andExpect(jsonPath("$.code").value(40));
+        }
+        @Test
+        @DisplayName("공백 comment POST")
+        void nullCommentException() throws Exception {
+            //given
+            PostRecordReq req = getPostRecordReq();
+            req.setComment("    ");
+
+            String reqs = objectMapper.writeValueAsString(req);
+
+            ResultActions perform = doPerform(reqs);
+
+            perform.andExpect(status().is4xxClientError())
+                    .andExpect(jsonPath("$.code").value(40));
+        }
+
+        private ResultActions doPerform(String reqs) throws Exception {
+            ResultActions perform = mockMvc.perform(post("/record")
+                    .contentType(MediaType.APPLICATION_JSON).content(reqs)
+                    .characterEncoding("utf-8")
+                    .session(session));
+            return perform;
+        }
+
+        @Test
+        @DisplayName("ExerciseInfo null post 에러")
+        void ExerciseInfoError() throws Exception{
+            PostRecordReq req = getPostRecordReq();
+            req.setExerciseInfo(null);
+
+            String reqS = objectMapper.writeValueAsString(req);
+
+            ResultActions perform = doPerform(reqS);
+            perform.andExpect(status().is4xxClientError())
+                    .andExpect(jsonPath("$.code").value(40));
+        }
+        @Test
+        @DisplayName("ExerciseInfo field post 에러")
+        void ExercisseInfoFieldError() throws Exception{
+            PostRecordReq req = getPostRecordReq();
+            req.setExerciseInfo(new BaseExerciseEntity(100l,null));
+
+            String reqS = objectMapper.writeValueAsString(req);
+
+            ResultActions perform = doPerform(reqS);
+            perform.andExpect(status().is4xxClientError())
+                    .andExpect(jsonPath(("$.code")).value(40));
+        }
     }
-
     @Test
     @DisplayName("상세 날짜 조회")
     void getDate() throws Exception{
