@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
@@ -16,7 +18,6 @@ import umc.healthper.dto.statistic.DateVolumeEntity;
 import umc.healthper.dto.statistic.GetStatisticRes;
 import umc.healthper.global.login.SessionConst;
 import umc.healthper.service.statistic.StatisticService;
-import umc.healthper.service.statistic.StatisticServiceImpl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -117,4 +117,6 @@ class StatisticControllerTest {
         List<DateVolumeEntity> chart = new ArrayList<>();
         return response.builder().chart(chart).totalTime(0l).totalVolume(0l).build();
     }
+
+
 }

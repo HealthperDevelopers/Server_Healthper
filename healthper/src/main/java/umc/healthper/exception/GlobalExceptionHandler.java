@@ -18,6 +18,7 @@ import umc.healthper.exception.comment.CommentNotFoundException;
 import umc.healthper.exception.comment.CommentUnauthorizedException;
 import umc.healthper.exception.commentlike.CommentLikeAlreadyExistException;
 import umc.healthper.exception.commentlike.CommentLikeNotFoundException;
+import umc.healthper.exception.completeExercise.NotMatchOwnerException;
 import umc.healthper.exception.member.MemberDuplicateException;
 import umc.healthper.exception.member.MemberNicknameDuplicateException;
 import umc.healthper.exception.member.MemberNotFoundException;
@@ -38,6 +39,7 @@ import javax.validation.ConstraintViolationException;
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
+//@NoArgsConstructor
 public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
@@ -139,6 +141,21 @@ public class GlobalExceptionHandler {
                 getMessage("sectionEmpty.message")
         );
     }
+
+    /**
+     * complete Exercise
+     */
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse unMatchOwner(NotMatchOwnerException e){
+        log.error(String.valueOf(e));
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                getMessage("unMatchUser.code"),
+                getMessage("unMatchUser.message")
+        );
+    }
+
 
     /**
      * Post, PostLike

@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 @Getter @Slf4j @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class CompleteExerciseInfo {
 
     @Min(1)

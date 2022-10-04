@@ -46,11 +46,11 @@ public class CompleteExercise {
         this.setRecord(record);
         record.getComExs().add(this);
     }
-    public CompleteExercise(String exName, Long exTime, Section section, List<CompleteExerciseInfo> exDetails){
+    public CompleteExercise(String exName, Long exTime, Section section, List<CompleteExerciseInfo> exDetails, LocalDate date){
         this.exerciseName = exName;
         this.exerciseTime = exTime;
         this.section = section;
-        this.createdDay = LocalDate.now();
+        this.createdDay = date;
         for (CompleteExerciseInfo exDetail : exDetails) {
             this.details.add(new CompleteExerciseInfoEntity(exDetail));
         }

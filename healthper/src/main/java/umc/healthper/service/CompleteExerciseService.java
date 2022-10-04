@@ -12,6 +12,7 @@ import umc.healthper.dto.completeExercise.GetDetails;
 import umc.healthper.dto.completeExercise.PostExercises;
 import umc.healthper.repository.CompleteExerciseRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,20 +26,32 @@ public class CompleteExerciseService {
     private final RecordService recordService;
 
     @Transactional
-    public void save(List<PostExercises> req, Long memberId, Long recordId){
+    public void save(List<PostExercises> req, Long memberId, Long recordId, LocalDate date){
         Member member = memberService.findById(memberId);
-        RecordJPA record = recordService.findById(recordId);
+        RecordJPA record = recordService.findById(recordId, memberId);
         for (PostExercises exercise : req) {
-            CompleteExercise comEx = new CompleteExercise(exercise.getExerciseName(),
-                    exercise.getExerciseTime(), Section.getSectionById(exercise.getSectionId()),exercise.getDetails());
-            comEx.addExercise(member, record);
+            CompleteExercise comEx = getCompleteExercise(member, record, exercise, date);
             repository.save(comEx);
         }
     }
 
-    public List<GetDetails> exList(Long recordId){
+    public static CompleteExercise getCompleteExercise(Member member, RecordJPA record, PostExercises exercise, LocalDate date) {
+        CompleteExercise comEx = new CompleteExercise(exercise.getExerciseName(),
+                exercise.getExerciseTime(), Section.getSectionById(exercise.getSectionId()), exercise.getDetails(), date);
+        comEx.addExercise(member, record);
+        return comEx;
+    }
+
+    /**
+     *
+     * @param recordId
+     * recordId 를 가진 상세 운동 정보 조회. (이름, 부위, 운동 시간, 운동 정보(세트 번호, 무게, 횟수)
+     * @return
+     */
+
+    public List<GetDetails> exList(Long recordId, Long userId){
         List<GetDetails> res = new ArrayList<>();
-        List<CompleteExercise> details = repository.getDetails(recordService.findById(recordId).getId());
+        List<CompleteExercise> details = repository.getDetails(recordService.findById(recordId, userId).getId());
         for (CompleteExercise detail : details) {
             GetDetails ex = new GetDetails(detail.getExerciseTime(), detail.getExerciseName(), detail.getSection());
             for (CompleteExerciseInfoEntity detailInfo : detail.getDetails())

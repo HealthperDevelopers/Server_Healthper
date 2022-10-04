@@ -1,5 +1,6 @@
 package umc.healthper.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,12 +11,12 @@ import umc.healthper.global.BaseExerciseEntity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
 @Table(name = "RECORDS")
 public class RecordJPA {
     @Id
@@ -26,8 +27,7 @@ public class RecordJPA {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    //    private Long total_exercise_time;
-//    private Long total_volume;
+
     @Column(length = 30)
     private String comment;
     @Size(min = 10, max = 10)
@@ -37,7 +37,7 @@ public class RecordJPA {
     private BaseExerciseEntity exerciseEntity;
 
     @OneToMany(mappedBy = "record")
-    private List<CompleteExercise> comExs;
+    private List<CompleteExercise> comExs = new ArrayList<>();
 
     public void addMemberList(Member member){
         this.setMember(member);

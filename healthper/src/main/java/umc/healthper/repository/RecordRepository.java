@@ -23,7 +23,6 @@ public class RecordRepository{
         String yearStr = Integer.toString(year);
         String monthStr = Integer.toString(month);
         if(monthStr.length() == 1) monthStr = '0'+monthStr;
-        //log.info("{}, {}",yearStr, monthStr);
 
         List<RecordJPA> resultList = em.createQuery("select RR from RecordJPA RR where RR.id in" +
                 "(select min(id) from RecordJPA R WHERE R.member.id = :loginId" +
@@ -35,7 +34,6 @@ public class RecordRepository{
                 .getResultList();
         return resultList;
     }
-
 
     public List<RecordJPA> dayExerciseInfo(Long loginId, LocalDate theDay) {
         List<RecordJPA> resultList = em.createQuery("select R from RecordJPA R WHERE R.member.id = :loginId" +

@@ -1,12 +1,12 @@
 package umc.healthper.dto.record;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.validation.annotation.Validated;
 import umc.healthper.Section;
 import umc.healthper.global.BaseExerciseEntity;
+import umc.healthper.global.collectionValid.CustomValid;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -15,12 +15,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
+@Validated
 public class PostRecordReq {
-    @NotNull
+    @NotBlank
     private String comment;
     @NotEmpty
     private List<Section> sections;
-    @NotNull
+    @NotNull @CustomValid
     private BaseExerciseEntity exerciseInfo;
 
 }
