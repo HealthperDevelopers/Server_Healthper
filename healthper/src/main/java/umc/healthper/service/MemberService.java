@@ -83,6 +83,7 @@ public class MemberService {
      * @param loginMemberId 수정할 Member
      * @param updateDto     수정할 내용이 담긴 DTO
      */
+    @Transactional
     public void updateMember(Long loginMemberId, UpdateMemberRequestDto updateDto) {
         String nickname = updateDto.getNickname();
 
@@ -101,6 +102,7 @@ public class MemberService {
      * @throws MemberNotFoundException        id에 해당하는 회원이 없는 경우
      * @throws AlreadyResignedMemberException 이미 탈퇴한 회원인 경우
      */
+    @Transactional
     public void deleteMember(Long loginMemberId) {
         Member member = memberRepository.findById(loginMemberId)
                 .orElseThrow(MemberNotFoundException::new);
