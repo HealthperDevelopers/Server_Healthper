@@ -65,11 +65,13 @@ public class PostService {
      * @param postId 조회할 Post의 id
      * @return 조회된 Post 객체 return
      */
+    @Transactional
     public Post findPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-
         validateRemovedPost(post);
+
+        post.addViewCount();
 
         return post;
     }
