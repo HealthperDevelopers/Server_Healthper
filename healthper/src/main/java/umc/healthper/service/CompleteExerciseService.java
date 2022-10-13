@@ -1,9 +1,11 @@
 package umc.healthper.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.Section;
+import umc.healthper.domain.completeExercise.CompleteExerciseInfo;
 import umc.healthper.domain.member.Member;
 import umc.healthper.domain.RecordJPA;
 import umc.healthper.domain.completeExercise.CompleteExercise;
@@ -11,17 +13,19 @@ import umc.healthper.domain.completeExercise.CompleteExerciseInfoEntity;
 import umc.healthper.dto.completeExercise.GetDetails;
 import umc.healthper.dto.completeExercise.PostExercises;
 import umc.healthper.repository.CompleteExerciseRepository;
+import umc.healthper.repository.DetailRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Slf4j
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CompleteExerciseService {
     private final CompleteExerciseRepository repository;
+    private final DetailRepository detailRepository;
     private final MemberService memberService;
     private final RecordService recordService;
 
@@ -31,6 +35,11 @@ public class CompleteExerciseService {
         RecordJPA record = recordService.findById(recordId, memberId);
         for (PostExercises exercise : req) {
             CompleteExercise comEx = getCompleteExercise(member, record, exercise, date);
+            List<CompleteExerciseInfo> details = exercise.getDetails();
+            for (CompleteExerciseInfo detail : details) {
+                CompleteExerciseInfoEntity target = new CompleteExerciseInfoEntity(detail, comEx);
+                detailRepository.save(target);
+            }
             repository.save(comEx);
         }
     }
@@ -38,6 +47,8 @@ public class CompleteExerciseService {
     public static CompleteExercise getCompleteExercise(Member member, RecordJPA record, PostExercises exercise, LocalDate date) {
         CompleteExercise comEx = new CompleteExercise(exercise.getExerciseName(),
                 exercise.getExerciseTime(), Section.getSectionById(exercise.getSectionId()), exercise.getDetails(), date);
+//        CompleteExerciseInfo target = comEx.getDetails().get(1).getDetail();
+//        log.info("target: {}, {}, {}",target.getSetNumber(), target.getWeight(), target.getWeight());
         comEx.addExercise(member, record);
         return comEx;
     }

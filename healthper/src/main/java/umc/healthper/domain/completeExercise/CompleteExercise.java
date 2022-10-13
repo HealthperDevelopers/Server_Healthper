@@ -52,7 +52,8 @@ public class CompleteExercise {
         this.section = section;
         this.createdDay = date;
         for (CompleteExerciseInfo exDetail : exDetails) {
-            this.details.add(new CompleteExerciseInfoEntity(exDetail));
+            CompleteExerciseInfoEntity target = new CompleteExerciseInfoEntity(exDetail,this);
+            this.details.add(target);
         }
     }
 }

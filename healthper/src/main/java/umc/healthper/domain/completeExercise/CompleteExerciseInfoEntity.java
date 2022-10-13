@@ -25,7 +25,8 @@ public class CompleteExerciseInfoEntity {
     @JoinColumn(name = "COMPLETE_EXERCISE_ID")
     private CompleteExercise completeExercise;
 
-    public CompleteExerciseInfoEntity(CompleteExerciseInfo exDetail) {
+    public CompleteExerciseInfoEntity(CompleteExerciseInfo exDetail, CompleteExercise completeExercise) {
         this.detail = exDetail;
+        this.completeExercise = completeExercise;
     }
 }
