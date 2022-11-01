@@ -1,6 +1,7 @@
 package umc.healthper.service.post;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.healthper.domain.member.Member;
@@ -13,6 +14,8 @@ import umc.healthper.exception.postlike.PostLikeNotFoundException;
 import umc.healthper.repository.MemberRepository;
 import umc.healthper.repository.post.PostLikeRepository;
 import umc.healthper.repository.post.PostRepository;
+
+import javax.annotation.PostConstruct;
 
 @Service
 @Transactional(readOnly = true)
