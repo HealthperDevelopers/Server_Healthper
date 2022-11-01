@@ -11,6 +11,7 @@ import umc.healthper.Section;
 import umc.healthper.domain.RecordJPA;
 import umc.healthper.domain.completeExercise.CompleteExercise;
 import umc.healthper.domain.completeExercise.CompleteExerciseInfo;
+import umc.healthper.domain.completeExercise.CompleteExerciseInfoEntity;
 import umc.healthper.domain.member.Member;
 import umc.healthper.dto.record.PostRecordReq;
 import umc.healthper.global.BaseExerciseEntity;
@@ -25,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase
-@Import({CompleteExerciseRepository.class, MemberService.class, RecordService.class, RecordRepository.class})
+@Import({CompleteExerciseRepository.class, MemberService.class, RecordService.class, RecordRepository.class, CompleteExerciseInfoEntity.class})
 class CompleteExerciseRepositoryTest {
     @Autowired
     CompleteExerciseRepository repository;
@@ -82,7 +83,6 @@ class CompleteExerciseRepositoryTest {
         assertThat(target.getSection()).isEqualTo(Section.등);
         assertThat(target.getRecord()).isEqualTo(testRecord);
         assertThat(target.getMember()).isEqualTo(testMember);
-        assertThat(target.getDetails().size()).isEqualTo(3);
     }
 
     private void setUpDB() {

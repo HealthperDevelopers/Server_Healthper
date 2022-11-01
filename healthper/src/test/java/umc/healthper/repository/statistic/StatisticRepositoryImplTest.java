@@ -22,6 +22,7 @@ import umc.healthper.dto.statistic.DateVolumeDto;
 import umc.healthper.global.BaseExerciseEntity;
 import umc.healthper.global.collectionValid.CustomValid;
 import umc.healthper.repository.CompleteExerciseRepository;
+import umc.healthper.repository.DetailRepository;
 import umc.healthper.repository.RecordRepository;
 import umc.healthper.service.CompleteExerciseService;
 import umc.healthper.service.MemberService;
@@ -39,8 +40,9 @@ import static org.mockito.ArgumentMatchers.any;
 
 @Slf4j
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({StatisticRepositoryImpl.class, RecordService.class, CompleteExerciseService.class, MemberService.class, RecordRepository.class, CompleteExerciseRepository.class})
+@AutoConfigureTestDatabase
+@Import({StatisticRepositoryImpl.class, RecordService.class, CompleteExerciseService.class, DetailRepository.class,
+        MemberService.class, RecordRepository.class, CompleteExerciseRepository.class})
 class StatisticRepositoryImplTest {
 
     @Autowired
@@ -65,20 +67,19 @@ class StatisticRepositoryImplTest {
 
     @BeforeEach
     void beforeEach(){
-        memberService.joinMember(-1l, "testUser");
+        memberService.joinMember(2022l, "testUser");
         testMember = memberService.findByKakaoKey(2022l);
         //첫날
         LocalDate firstDate = LocalDate.of(2022, 10, 8);
         makeElement(firstDate);
 
         //둘째날
-        //LocalDate secondDate = LocalDate.of(2022, 10, 10);
-       // makeElement(secondDate);
+        LocalDate secondDate = LocalDate.of(2022, 10, 10);
+        makeElement(secondDate);
 
         //셋째날
-        //LocalDate thirdDate = LocalDate.of(2022, 10, 11);
-        //makeElement(thirdDate);
-
+        LocalDate thirdDate = LocalDate.of(2022, 10, 11);
+        makeElement(thirdDate);
     }
 
     private void makeElement(LocalDate theDate) {
@@ -113,9 +114,10 @@ class StatisticRepositoryImplTest {
     @Test
     @DisplayName("통계 쿼리 실행")
     void getStatic(){
-        List<DateVolumeDto> statisticElements = repository.getStatisticElements(testMember.getId(), testExerciseName);
-        for (DateVolumeDto statisticElement : statisticElements) {
-            log.info("statisticElement = {}", statisticElement);
-        }
+        List<DateVolumeDto> statistic = repository.getStatisticElements(testMember.getId(), testExerciseName);
+        DateVolumeDto target = statistic.get(0);
+        assertThat(statistic.size()).isEqualTo(3);
+        assertThat(target.getVolume()).isEqualTo(900l);
+        assertThat(target.getExerciseTime()).isEqualTo(420l);
     }
 }

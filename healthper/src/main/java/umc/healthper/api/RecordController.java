@@ -28,7 +28,7 @@ import java.time.LocalDate;
 import java.util.List;
 @Tag(name = "Record", description = "기록 API")
 @RestController
-@RequestMapping("record")
+@RequestMapping("/record")
 @Slf4j
 @RequiredArgsConstructor
 @Validated
