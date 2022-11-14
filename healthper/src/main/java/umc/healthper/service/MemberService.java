@@ -24,24 +24,26 @@ public class MemberService {
      *
      * @param kakaoKey 가입하려는 회원의 kakaoKey
      * @param nickname 사용하고자 하는 닉네임
+     * @return 등록된 회원의 id
      * @throws MemberNicknameDuplicateException 사용하려고 하는 닉네임이 이미 존재하는 경우
-     * @throws MemberDuplicateException         같은 kakaoKey로 이미 등록된 회원이 존재하는 경우
+     * @throws MemberDuplicateException         전달받은 kakaoKey로 이미 등록된, 탈퇴하지 않은 회원이 존재하는 경우
      */
     @Transactional
-    public void joinMember(Long kakaoKey, String nickname) {
-        validateDuplicateMemberNickname(nickname);
+    public Long joinMember(Long kakaoKey, String nickname) {
+        validateDuplicateNickname(nickname);
 
-        Optional<Member> optionalFindMember = memberRepository.findByKakaoKey(kakaoKey);
-        if (optionalFindMember.isPresent()) {
-            Member findMember = optionalFindMember.get();
-            if (findMember.getStatus() == MemberStatus.RESIGNED) {
-                findMember.rejoin(nickname);
-            }
-            throw new MemberDuplicateException("이미 가입된 회원입니다.");
+        Optional<Member> optionalMember = memberRepository.findByKakaoKey(kakaoKey);
+
+        Member member;
+        if (optionalMember.isPresent()) {
+            member = optionalMember.get();
+            validateAlreadyExistMember(member);
+            member.rejoin(nickname);
+        } else {
+            member = Member.createMember(kakaoKey, nickname);
+            memberRepository.save(member);
         }
-
-        Member member = Member.createMember(kakaoKey, nickname);
-        memberRepository.save(member);
+        return member.getId();
     }
 
     /**
@@ -87,7 +89,7 @@ public class MemberService {
     public void updateMember(Long loginMemberId, UpdateMemberRequestDto updateDto) {
         String nickname = updateDto.getNickname();
 
-        validateDuplicateMemberNickname(nickname);
+        validateDuplicateNickname(nickname);
 
         Member loginMember = memberRepository.findById(loginMemberId)
                 .orElseThrow(MemberNotFoundException::new);
@@ -106,7 +108,7 @@ public class MemberService {
     public void deleteMember(Long loginMemberId) {
         Member member = memberRepository.findById(loginMemberId)
                 .orElseThrow(MemberNotFoundException::new);
-        validAlreadyResignedMember(member);
+        validateAlreadyResignedMember(member);
         member.delete();
     }
 
@@ -116,7 +118,7 @@ public class MemberService {
      * @param nickname 사용하고자 하는 닉네임
      * @throws MemberNicknameDuplicateException 이미 사용중인 닉네임인 경우
      */
-    private void validateDuplicateMemberNickname(String nickname) {
+    private void validateDuplicateNickname(String nickname) {
         if (memberRepository.existsByNicknameIs(nickname)) {
             throw new MemberNicknameDuplicateException("이미 존재하는 닉네임입니다.");
         }
@@ -128,9 +130,21 @@ public class MemberService {
      * @param member 탈퇴하려는 회원
      * @throws AlreadyResignedMemberException 이미 탈퇴한 회원인 경우
      */
-    private void validAlreadyResignedMember(Member member) {
+    private void validateAlreadyResignedMember(Member member) {
         if (member.getStatus() == MemberStatus.RESIGNED) {
             throw new AlreadyResignedMemberException("이미 탈퇴한 회원입니다.");
+        }
+    }
+
+    /**
+     * 이미 존재하는 회원인지 검증
+     *
+     * @param member 검증하고자 하는 회원
+     * @throws MemberDuplicateException 이미 존재하는 회원인 경우
+     */
+    private void validateAlreadyExistMember(Member member) {
+        if (member.getStatus() != MemberStatus.RESIGNED) {
+            throw new MemberDuplicateException("이미 가입된 회원입니다.");
         }
     }
 }
