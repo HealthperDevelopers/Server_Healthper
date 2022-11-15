@@ -1,7 +1,7 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.1'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.7.1'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
 }
 
 group = 'umc'
@@ -9,42 +9,42 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'junit:junit:4.13.2'
-	implementation 'org.springframework.boot:spring-boot-starter-aop'	// for AOP
-	//implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'	// p6psy - DB에 날아가는 query를 확인할 수 있도록 logging하는 library. 필요 없으시다면 주석처리 하시면 되겠습니다.
-	implementation 'org.springdoc:springdoc-openapi-ui:1.6.10'	// Spring-Doc for Swagger
-	testImplementation 'com.google.code.gson:gson:2.9.0'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'mysql:mysql-connector-java'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'junit:junit:4.13.2'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'    // for AOP
+//    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'    // p6psy
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'    // Spring-Doc for Swagger
+    testImplementation 'com.google.code.gson:gson:2.10'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
-	//test code inMemory DB
-	testImplementation 'com.h2database:h2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //test code inMemory DB
+    testImplementation 'com.h2database:h2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-	testCompileOnly "org.springframework.boot:spring-boot-starter-test"
+    testCompileOnly "org.springframework.boot:spring-boot-starter-test"
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

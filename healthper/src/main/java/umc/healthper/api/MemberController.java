@@ -27,7 +27,7 @@ public class MemberController {
                     "`code` 1040: 사용중인 닉네임\n\n" +
                     "`code` 1010: 이미 존재하는 회원")
     @PostMapping("/signup")
-    public void joinMember(@RequestBody @Valid CreateMemberRequestDto requestDto) {
+    public void join(@RequestBody @Valid CreateMemberRequestDto requestDto) {
         memberService.joinMember(requestDto.getKakaoKey(), requestDto.getNickname());
     }
 
@@ -35,7 +35,7 @@ public class MemberController {
             description = "`kakaoKey`에 해당하는 회원의 정보를 조회한다.\n\n" +
                     "(필요 없으시면 안쓰셔도 되고 요구사항 있으시면 말해주세요)")
     @GetMapping("/member")
-    public MemberResponseDto getMember(@RequestParam Long kakaoKey) {
+    public MemberResponseDto find(@RequestParam Long kakaoKey) {
         return new MemberResponseDto(memberService.findByKakaoKey(kakaoKey));
     }
 

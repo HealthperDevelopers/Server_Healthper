@@ -1,9 +1,6 @@
 package umc.healthper.domain.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
+import lombok.*;
 import umc.healthper.domain.block.MemberBlock;
 import umc.healthper.domain.completeExercise.CompleteExercise;
 import umc.healthper.domain.comment.CommentLike;
@@ -31,6 +28,7 @@ public class Member extends BaseTimeEntity {
     private Long kakaoKey;
 
     @NotNull
+    @Setter(AccessLevel.PRIVATE)
     private String nickname;
 
     @NotNull
@@ -38,6 +36,7 @@ public class Member extends BaseTimeEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Setter(AccessLevel.PRIVATE)
     private MemberStatus status;    // NORMAL, RESIGNED, BLOCKED
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -63,7 +62,12 @@ public class Member extends BaseTimeEntity {
 
     //== 생성 메서드 ==//
     public static Member createMember(Long kakaoKey, String nickname) {
-        return new Member(kakaoKey, nickname, 0, MemberStatus.NORMAL);
+        return Member.builder()
+                .kakaoKey(kakaoKey)
+                .nickname(nickname)
+                .reportedCount(0)
+                .status(MemberStatus.NORMAL)
+                .build();
     }
 
     //== Business Logic ==//
@@ -81,19 +85,11 @@ public class Member extends BaseTimeEntity {
     }
 
     //== Constructor ==//
+    @Builder
     private Member(Long kakaoKey, String nickname, Integer reportedCount, MemberStatus status) {
         this.kakaoKey = kakaoKey;
         this.nickname = nickname;
         this.reportedCount = reportedCount;
         this.status = status;
-    }
-
-    //== Setter ==//
-    private void setStatus(MemberStatus status) {
-        this.status = status;
-    }
-
-    private void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 }
